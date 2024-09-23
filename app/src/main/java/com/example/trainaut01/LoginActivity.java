@@ -64,14 +64,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        FirebaseUser cUser = mAuth.getCurrentUser();
-//        if(cUser != null){
-//            Toast.makeText(this, "User not null", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void loginUser(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 public class UserProfileActivity extends AppCompatActivity {
     private TextView _tvChildProfile, _parentName;
     private ImageView _userProfileImage;
+    private Button btnAddChild;
 
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
@@ -39,6 +41,7 @@ public class UserProfileActivity extends AppCompatActivity {
         _tvChildProfile = findViewById(R.id.tvChildProfile);
         _userProfileImage = findViewById(R.id.userProfileImage);
         _parentName = findViewById(R.id.parentName);
+        btnAddChild = findViewById(R.id.btnAddChild);
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -62,6 +65,13 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(UserProfileActivity.this, UpdateUserProfileActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        btnAddChild.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent intent = new Intent(UserProfileActivity.this,)
             }
         });
     }

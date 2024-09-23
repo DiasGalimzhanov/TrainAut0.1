@@ -32,6 +32,17 @@
         app:layout_constraintStart_toEndOf="@+id/userProfileImage"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnAddChild"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="Добавить ребенка"
+        app:layout_constraintBottom_toTopOf="@+id/tvChildProfile"
+        app:layout_constraintTop_toTopOf="@+id/divider"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp" />
+
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
@@ -40,15 +51,15 @@
         android:background="@color/black"
         app:layout_constraintBottom_toTopOf="@id/tvChildProfile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/parentName" />
+        app:layout_constraintTop_toBottomOf="@id/parentName"
+        app:layout_constraintVertical_bias="0.009" />
 
     <TextView
         android:id="@+id/tvChildProfile"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="4dp"
         android:background="#A8B4B4"
         android:clickable="true"
         android:drawableStart="@drawable/icon_child_profile"
@@ -58,10 +69,9 @@
         android:text="Профиль ребенка"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="243dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
