@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:orientation="vertical"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     android:padding="10dp"
     tools:context=".RegisterActivity">
 
@@ -28,123 +29,106 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Имя"
-        android:textColor="@color/primary"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@color/primary"/>
 
     <EditText
         android:id="@+id/etFirstName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
-        android:hint="Введите Имя*"
         android:paddingBottom="16dp"
-        android:textColor="#525050"
-        android:textColorHint="#525050" />
+        android:background="@drawable/rounded_edittext"
+        android:hint="Введите Имя*"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="Фамилия"
-        android:textColor="@color/primary"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@color/primary"/>
 
     <EditText
         android:id="@+id/etLastName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
-        android:hint="Введите Фамилию*"
         android:paddingBottom="16dp"
-        android:textColor="#525050"
-        android:textColorHint="#525050" />
+        android:background="@drawable/rounded_edittext"
+        android:hint="Введите Фамилию*"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="Адрес Эл. Почты"
-        android:textColor="@color/primary"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@color/primary"/>
 
     <EditText
         android:id="@+id/etEmailReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
-        android:hint="Введите Адрес Эл. Почты(Email)*"
-        android:inputType="textEmailAddress"
         android:paddingBottom="16dp"
-        android:textColor="#525050"
-        android:textColorHint="#525050" />
+        android:inputType="textEmailAddress"
+        android:background="@drawable/rounded_edittext"
+        android:hint="Введите Адрес Эл. Почты(Email)*"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="Номер Телефона"
-        android:textColor="@color/primary"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@color/primary"/>
 
     <EditText
         android:id="@+id/etPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
         android:hint="Введите номер телефона*"
-        android:importantForAccessibility="yes"
         android:inputType="phone"
         android:maxLength="15"
         android:paddingBottom="16dp"
-        android:textColor="#525050"
-        android:textColorHint="#525050" />
+        android:background="@drawable/rounded_edittext"
+        android:ems="10"
+        android:importantForAccessibility="yes"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Дата Рождения"
-        android:textColor="@color/primary"
-        android:textSize="16sp" />
+        android:text="Дата Рождения*"
+        android:textSize="16sp"
+        android:textColor="@color/primary"/>
 
     <EditText
         android:id="@+id/etBirthDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
-        android:clickable="true"
-        android:focusable="false"
         android:hint="Выберите дату рождения*"
-        android:inputType="date"
-        android:textColor="#525050"
-        android:textColorHint="#525050" />
+        android:background="@drawable/rounded_edittext"
+        android:focusable="false"
+        android:clickable="true"
+        android:inputType="date" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="Пароль"
-        android:textColor="@color/primary"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@color/primary"/>
 
     <EditText
         android:id="@+id/etPasReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
-        android:hint="Обязательно используйте(A-Z, a-z, 0-9)*"
         android:paddingBottom="16dp"
-        android:textColor="#525050"
-        android:textColorHint="#525050" />
+        android:background="@drawable/rounded_edittext"
+        android:hint="Обязательно используйте(A-Z, a-z, 0-9)*"/>
 
     <Button
         android:id="@+id/btnRegisterReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:backgroundTint="@color/primary"
-        android:text="Регистрация"
-        android:textColor="@color/white" />
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:text="Регистрация"/>
 
 </LinearLayout>
