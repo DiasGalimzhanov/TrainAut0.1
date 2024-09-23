@@ -44,8 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         btnLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String log = etLog.getText().toString();
-                String pas = etPas.getText().toString();
+                String log = etLog.getText().toString().trim();
+                String pas = etPas.getText().toString().trim();
                 if(!log.isEmpty() && !pas.isEmpty()) {
                     loginUser(log,pas);
                 }else{

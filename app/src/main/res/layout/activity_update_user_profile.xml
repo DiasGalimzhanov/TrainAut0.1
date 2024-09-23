@@ -1,10 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".profileActivities.UpdateUserProfileActivity">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".RegisterActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/appNameUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Редактирование профиля"
+        android:textColor="@color/primary"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Имя"
+        android:textColor="@color/primary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/etFirstNameUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edittext"
+        android:hint="Введите Новое Имя"
+        android:paddingBottom="16dp"
+        android:textColor="#504E4E"
+        android:textColorHint="#504E4E" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Фамилия"
+        android:textColor="@color/primary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/etLastNameUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edittext"
+        android:hint="Введите Новую Фамилию"
+        android:paddingBottom="16dp"
+        android:textColor="#504E4E"
+        android:textColorHint="#504E4E" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Адрес Эл. Почты"
+        android:textColor="@color/primary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/etEmailUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edittext"
+        android:hint="Введите Новый Адрес Эл. Почты(Email)"
+        android:inputType="textEmailAddress"
+        android:paddingBottom="16dp"
+        android:textColor="#504E4E"
+        android:textColorHint="#504E4E" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Номер Телефона"
+        android:textColor="@color/primary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/etPhoneUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edittext"
+        android:ems="10"
+        android:hint="Введите новый номер телефона"
+        android:importantForAccessibility="yes"
+        android:inputType="phone"
+        android:maxLength="15"
+        android:paddingBottom="16dp"
+        android:textColor="#504E4E"
+        android:textColorHint="#504E4E" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Дата Рождения"
+        android:textColor="@color/primary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/etBirthDateUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edittext"
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="Выберите новую дату рождения"
+        android:inputType="date"
+        android:textColor="#504E4E"
+        android:textColorHint="#504E4E" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Пароль"
+        android:textColor="@color/primary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/etPasUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edittext"
+        android:hint="Введите новый пароль"
+        android:inputType="textPassword"
+        android:paddingBottom="16dp"
+        android:textColor="#504E4E"
+        android:textColorHint="#504E4E" />
+
+    <Button
+        android:id="@+id/btnUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/primary"
+        android:text="Редактировать"
+        android:textColor="@color/white" />
+
+</LinearLayout>
