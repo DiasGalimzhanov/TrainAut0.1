@@ -2,11 +2,15 @@ package com.example.trainaut01;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 import androidx.activity.EdgeToEdge;
@@ -29,11 +33,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
-    private EditText etEmail,etPasReg,etFN, etLN, etPhone ,etBirthDate;
+    private EditText etEmail,etPasReg,etPasConfirm,etFN, etLN, etPhone ,etBirthDate;
     private Button btnReg;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private DatabaseReference mDb;
+    private TextView tvPasswordMatch;
+//    private DatabaseReference mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +53,27 @@ public class RegisterActivity extends AppCompatActivity {
         etPasReg = findViewById(R.id.etPasReg);
         btnReg = findViewById(R.id.btnRegisterReg);
         etBirthDate = findViewById(R.id.etBirthDate);
+        etPasConfirm = findViewById(R.id.etPasConfirm);
+        tvPasswordMatch = findViewById(R.id.tvPasswordMatch);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        TextWatcher passwordTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                checkPasswordMatch();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        };
+
+        etPasReg.addTextChangedListener(passwordTextWatcher);
+        etPasConfirm.addTextChangedListener(passwordTextWatcher);
 
         btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +113,6 @@ public class RegisterActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
-
     }
 
     private void registerUser(String email, String password, String firstName, String lastName, String phone, String bd) {
@@ -99,36 +121,16 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Регистрация успешна
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             if (firebaseUser != null) {
                                 saveUserData(firebaseUser.getUid(), firstName, lastName, phone, email, bd);
                             }
                         } else {
-                            // Если регистрация не удалась, выводим сообщение
                             Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
-
-//    private void registerUser(String email, String password) {
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Регистрация успешна, обновляем UI
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-//                            // Перейти на другую активность или обновить UI
-//                        } else {
-//                            // Если регистрация не удалась, выводим сообщение
-//                            Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//    }
 
     private void saveUserData(String userId, String firstName, String lastName, String phone, String email, String bd) {
         Map<String, Object> user = new HashMap<>();
@@ -140,7 +142,6 @@ public class RegisterActivity extends AppCompatActivity {
         user.put("birthDate", bd);
         user.put("role", "parent");  // По умолчанию можно назначить роль
 
-        // Добавление данных в коллекцию "users"
         db.collection("users").document(userId)
                 .set(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -148,11 +149,23 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "User data saved", Toast.LENGTH_SHORT).show();
-                            // Перейти на другую активность или обновить UI
                         } else {
                             Toast.makeText(RegisterActivity.this, "Failed to save user data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private void checkPasswordMatch() {
+        String password = etPasReg.getText().toString();
+        String confirmPassword = etPasConfirm.getText().toString();
+
+        if (password.equals(confirmPassword)) {
+            tvPasswordMatch.setText("Пароли совпадают");
+            tvPasswordMatch.setTextColor(Color.GREEN);
+        } else {
+            tvPasswordMatch.setText("Пароли не совпадают");
+            tvPasswordMatch.setTextColor(Color.RED);
+        }
     }
 }
