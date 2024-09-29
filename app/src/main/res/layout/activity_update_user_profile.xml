@@ -120,24 +120,24 @@
         android:textColor="#504E4E"
         android:textColorHint="#504E4E" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Пароль"
-        android:textColor="@color/primary"
-        android:textSize="16sp" />
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:text="Пароль"-->
+<!--        android:textColor="@color/primary"-->
+<!--        android:textSize="16sp" />-->
 
-    <EditText
-        android:id="@+id/etPasUpdate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
-        android:hint="Введите новый пароль"
-        android:inputType="textPassword"
-        android:paddingBottom="16dp"
-        android:textColor="#504E4E"
-        android:textColorHint="#504E4E" />
+<!--    <EditText-->
+<!--        android:id="@+id/etPasUpdate"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/rounded_edittext"-->
+<!--        android:hint="Введите новый пароль"-->
+<!--        android:inputType="textPassword"-->
+<!--        android:paddingBottom="16dp"-->
+<!--        android:textColor="#504E4E"-->
+<!--        android:textColorHint="#504E4E" />-->
 
     <Button
         android:id="@+id/btnUpdate"

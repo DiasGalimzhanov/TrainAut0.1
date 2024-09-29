@@ -54,7 +54,6 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(UserProfileActivity.this, ChildProfileActivity.class));
-                finish();
             }
         });
 
@@ -62,7 +61,6 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(UserProfileActivity.this, UpdateUserProfileActivity.class));
-                finish();
             }
         });
 
@@ -193,9 +191,6 @@ public class UserProfileActivity extends AppCompatActivity {
             _tvBirthDate.setText("Date of birth: " +  birthDate);
             _tvRole.setText("Role: " +  role);
         }
-
-
-
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.trainaut01.model;
+package com.example.trainaut01.models;
 
 import java.util.List;
 
