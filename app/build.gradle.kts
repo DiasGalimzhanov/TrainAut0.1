@@ -35,6 +35,8 @@ android {
     }
 }
 
+
+
 dependencies {
 //    UI
     implementation("com.google.android.material:material:1.12.0")
@@ -42,6 +44,14 @@ dependencies {
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    //Firebase
+    implementation ("com.google.android.gms:play-services-auth:20.6.0")
+    implementation ("com.google.firebase:firebase-auth:22.0.0")
+    implementation("com.google.firebase:firebase-firestore:24.9.0")
+    implementation("com.google.firebase:firebase-database:20.1.0")
+    implementation("com.google.firebase:firebase-analytics:21.3.0")
+    implementation("com.google.firebase:firebase-messaging:23.1.2")
+    implementation("com.google.firebase:firebase-core:21.1.1")
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -56,4 +66,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    apply(plugin = "com.google.gms.google-services")
 }

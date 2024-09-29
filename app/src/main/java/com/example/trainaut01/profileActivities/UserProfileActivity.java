@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,12 +49,12 @@ public class UserProfileActivity extends AppCompatActivity {
             printData();
         }
 
-        _tvChildProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(UserProfileActivity.this, ChildProfileActivity.class));
-            }
-        });
+//        _tvChildProfile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(UserProfileActivity.this, ChildProfileActivity.class));
+//            }
+//        });
 
         _userProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,12 +63,12 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-        btnAddChild.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Ваш код для добавления ребенка
-            }
-        });
+//        btnAddChild.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Ваш код для добавления ребенка
+//            }
+//        });
 
         _btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,36 +90,36 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-        int navHomeId = R.id.nav_home;
-        int navProfileId = R.id.nav_profile;
+//        int navHomeId = R.id.nav_home;
+//        int navProfileId = R.id.nav_profile;
 
-        bottomNavigationView.setSelectedItemId(navProfileId);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if(item.getItemId() == navHomeId){
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    overridePendingTransition(0, 0); // Отключаем анимацию перехода
-                    return true;
-                } else if (item.getItemId() == navProfileId) {
-                    return true;
-                }
-                return false;
-            }
-        });
+//        bottomNavigationView.setSelectedItemId(navProfileId);
+//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                if(item.getItemId() == navHomeId){
+//                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                    overridePendingTransition(0, 0); // Отключаем анимацию перехода
+//                    return true;
+//                } else if (item.getItemId() == navProfileId) {
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
     }
 
     public void init(){
-        _tvChildProfile = findViewById(R.id.tvChildProfile);
+//        _tvChildProfile = findViewById(R.id.tvChildProfile);
         _userProfileImage = findViewById(R.id.userProfileImage);
         _parentName = findViewById(R.id.parentName);
         _tvEmail = findViewById(R.id.tvEmail);
         _tvPhone = findViewById(R.id.tvPhone);
         _tvBirthDate = findViewById(R.id.tvBirthDate);
-        _tvRole = findViewById(R.id.tvRole);
+//        _tvRole = findViewById(R.id.tvRole);
         _btnExit = findViewById(R.id.btnExit);
-        btnAddChild = findViewById(R.id.btnAddChild);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
+//        btnAddChild = findViewById(R.id.btnAddChild);
+//        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -154,6 +153,11 @@ public class UserProfileActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("user_data", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
+        // Проверка на наличие уже сохранённых данных
+        if (sharedPref.contains("userId")) {
+            return;  // Если данные уже сохранены, выходим из метода
+        }
+
         String firstName = user.getString("firstName");
         String lastName = user.getString("lastName");
         String email = user.getString("email");
@@ -186,10 +190,9 @@ public class UserProfileActivity extends AppCompatActivity {
 
         if(firstName != null && lastName != null && email != null && phone != null && birthDate != null){
             _parentName.setText(firstName + " " + lastName);
-            _tvEmail.setText("Email: " + email);
-            _tvPhone.setText("Phone: " +  phone);
-            _tvBirthDate.setText("Date of birth: " +  birthDate);
-            _tvRole.setText("Role: " +  role);
+            _tvEmail.setText(email);
+            _tvPhone.setText(phone);
+            _tvBirthDate.setText(birthDate);
         }
     }
 

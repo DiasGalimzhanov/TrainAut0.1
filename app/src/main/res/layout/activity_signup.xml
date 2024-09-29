@@ -27,7 +27,7 @@
                 app:srcCompat="@drawable/top_intro_background" />
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/etFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginStart="32dp"
@@ -43,7 +43,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/editTextText3"
+                android:id="@+id/etLastName"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginStart="32dp"
@@ -59,7 +59,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/editTextText2"
+                android:id="@+id/etEmailReg"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginStart="32dp"
@@ -75,7 +75,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/editTextText4"
+                android:id="@+id/etPhone"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginStart="32dp"
@@ -109,7 +109,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/editTextText1"
+                android:id="@+id/etPasReg"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginStart="32dp"
@@ -125,7 +125,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/editTextText5"
+                android:id="@+id/etPasConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginStart="32dp"
@@ -140,8 +140,17 @@
                 android:textColorHint="#4d4d4d"
                 android:textSize="18sp" />
 
+            <TextView
+                android:id="@+id/tvPasswordMatch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textColor="@color/primary"
+                android:textSize="16sp" />
+
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btnRegisterReg"
                 style="@android:style/Widget.Button"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -155,7 +164,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/tvLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"

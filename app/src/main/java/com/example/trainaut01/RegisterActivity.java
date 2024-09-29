@@ -1,6 +1,7 @@
 package com.example.trainaut01;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.activity.EdgeToEdge;
 
+import com.example.trainaut01.profileActivities.UserProfileActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,14 +39,14 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnReg;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private TextView tvPasswordMatch;
+    private TextView tvPasswordMatch, tvLogin;
 //    private DatabaseReference mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_signup);
 
         etEmail = findViewById(R.id.etEmailReg);
         etFN = findViewById(R.id.etFirstName);
@@ -55,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
         etBirthDate = findViewById(R.id.etBirthDate);
         etPasConfirm = findViewById(R.id.etPasConfirm);
         tvPasswordMatch = findViewById(R.id.tvPasswordMatch);
+        tvLogin = findViewById(R.id.tvLogin);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -75,6 +78,14 @@ public class RegisterActivity extends AppCompatActivity {
         etPasReg.addTextChangedListener(passwordTextWatcher);
         etPasConfirm.addTextChangedListener(passwordTextWatcher);
 
+        tvLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
         btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,6 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String birthDate = etBirthDate.getText().toString();
                 if(!log.isEmpty() && !pas.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty() && !birthDate.isEmpty()) {
                     registerUser(log, pas,firstName,lastName,phone, birthDate);
+
                 }else{
                     Toast.makeText(RegisterActivity.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
                 }
@@ -149,6 +161,8 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "User data saved", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(RegisterActivity.this, "Failed to save user data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
