@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.trainaut01.adapters.NewsAdapter;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.profileActivities.UserProfileActivity;
+import com.example.trainaut01.training.BaseTrainingActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,11 @@ public class HomeActivity extends AppCompatActivity {
     private void profileInit() {
         LinearLayout profileBtn = findViewById(R.id.btnProfilePage);
         profileBtn.setOnClickListener(view -> startActivity(new Intent(HomeActivity.this, UserProfileActivity.class)));
+    }
+
+    private void TrainingInit(){
+        LinearLayout trainingBtn = findViewById(R.id.btnTrainingPage);
+        trainingBtn.setOnClickListener(view -> startActivity(new Intent(HomeActivity.this, BaseTrainingActivity.class)));
     }
 
     private void initRecyclerView() {
