@@ -31,9 +31,7 @@
         <activity
             android:name=".profileActivities.UpdateUserProfileActivity"
             android:exported="false" />
-        <activity
-            android:name=".profileActivities.ChildProfileActivity"
-            android:exported="false" />
+
         <activity
             android:name=".profileActivities.UserProfileActivity"
             android:exported="false" />

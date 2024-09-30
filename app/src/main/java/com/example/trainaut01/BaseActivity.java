@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 
 import com.example.trainaut01.databinding.ActivityBaseBinding;
+import com.example.trainaut01.training.TrainingWeekFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class BaseActivity extends AppCompatActivity {
@@ -42,7 +43,7 @@ public class BaseActivity extends AppCompatActivity {
                 if(item.getItemId() == R.id.nav_home){
                     selectedFragment = new HomeFragment();
                 } else if (item.getItemId() == R.id.nav_training) {
-                    selectedFragment = new UserProfileFragment();
+                    selectedFragment = new TrainingWeekFragment();
                 } else if (item.getItemId() == R.id.nav_profile) {
                     selectedFragment = new UserProfileFragment();
                 }
