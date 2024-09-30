@@ -1,6 +1,13 @@
 package com.example.trainaut01.repository;
 
+import android.content.Context;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,6 +21,7 @@ import java.util.Map;
 public class UserRepository {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+//    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     public UserRepository() {
         db = FirebaseFirestore.getInstance();
@@ -50,5 +58,22 @@ public class UserRepository {
     // Метод для получения текущего пользователя
     public FirebaseUser getCurrentUser() {
         return mAuth.getCurrentUser();
+    }
+
+    public void updateUser(String userId, Map<String, Object> updatedUserData, Context context){
+        db.collection("users").document(userId)
+                .update(updatedUserData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "Профиль успешно обновлен", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Ошибка при обновлении профиля", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

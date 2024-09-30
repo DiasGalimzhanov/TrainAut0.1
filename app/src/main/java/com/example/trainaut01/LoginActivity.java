@@ -29,7 +29,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private Button btnLog, btnGoogleReg;
-//    private Button btnReg;
     private TextView tvReg, tvForgotPas;
     private EditText etLog;
     private EditText etPas;
@@ -144,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "Google Sign-In successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
                             startActivity(intent);
                         } else {
                             Toast.makeText(LoginActivity.this, "Google Sign-In failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -163,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Вход успешен, обновляем UI
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
                             startActivity(intent);
                             // Перейти на другую активность или обновить UI
                         } else {

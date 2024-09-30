@@ -2,6 +2,7 @@ package com.example.trainaut01.profileActivities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
@@ -15,6 +16,7 @@ import com.example.trainaut01.R;
 public class UpdateUserProfileActivity extends AppCompatActivity {
 
     private EditText _etFirstNameUpdate, _etLastNameUpdate, _etEmailUpdate, _etPhoneUpdate, _etBirthDateUpdate;
+    private Button btnChange, btnCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,8 @@ public class UpdateUserProfileActivity extends AppCompatActivity {
         _etEmailUpdate = findViewById(R.id.etEmailUpdate);
         _etPhoneUpdate = findViewById(R.id.etPhoneUpdate);
         _etBirthDateUpdate = findViewById(R.id.etBirthDateUpdate);
+        btnCancel = findViewById(R.id.btnCancel);
+        btnChange = findViewById(R.id.btnChange);
     }
 
     public void addData_inEditTexts(){

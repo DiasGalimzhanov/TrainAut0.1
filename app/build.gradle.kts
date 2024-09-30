@@ -43,6 +43,8 @@ dependencies {
 
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     //Firebase
     implementation ("com.google.android.gms:play-services-auth:20.6.0")

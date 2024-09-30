@@ -236,7 +236,6 @@
 
                 </ScrollView>
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
@@ -251,10 +250,10 @@
                 android:paddingStart="10dp"
                 android:text="Выйти"
                 android:textColor="@color/white"
-                android:textSize="23dp"
+                android:textSize="23sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
+
     </ScrollView>
 
 
