@@ -1,8 +1,18 @@
 package com.example.trainaut01.models;
 
-public class Training {
-    private long trainingId;
-    private String type;
+import java.io.Serializable;
+
+import kotlin.jvm.internal.SerializedIr;
+
+public class Exercise implements Serializable {
+
+    public enum ExerciseType {
+        BICEPS, PECTORAL_MUSCLES, TRICEPS, DELTOID_MUSCLES, PRESS, UPPER_BACK_MUSCLES,
+        QUADRICEPS, LOWER_BACK_MUSCLES, OTHER
+    }
+
+    private String id;
+    private ExerciseType type;
     private String name;
     private String description;
     private String imageUrl;
@@ -11,37 +21,43 @@ public class Training {
     private int reps;
     private float restTime;
 
-    public Training(String type, String name, String description, String imageUrl, boolean isCompleted, int sets, int reps, float restTime) {
+    public Exercise() {
+    }
+
+    public Exercise(String id, ExerciseType type, String name, String description, String imageUrl, boolean isCompleted, int sets, int reps, float restTime) {
+        this.id = id;
         this.type = type;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
         this.isCompleted = isCompleted;
-        this.sets = sets;
-        this.reps = reps;
-        this.restTime = restTime;
+        setSets(sets);
+        setReps(reps);
+        setRestTime(restTime);
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public ExerciseType getType() {
+        return type;
+    }
+
+    public void setType(ExerciseType type) {
+        this.type = type;
+    }
 
     public String getName() {
         return name;
     }
 
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public long getTrainingId() {
-        return trainingId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getDescription() {
@@ -73,7 +89,9 @@ public class Training {
     }
 
     public void setSets(int sets) {
-        this.sets = sets;
+        if (sets > 0) {
+            this.sets = sets;
+        }
     }
 
     public int getReps() {
@@ -81,7 +99,9 @@ public class Training {
     }
 
     public void setReps(int reps) {
-        this.reps = reps;
+        if (reps > 0) {
+            this.reps = reps;
+        }
     }
 
     public float getRestTime() {
@@ -89,7 +109,8 @@ public class Training {
     }
 
     public void setRestTime(float restTime) {
-        this.restTime = restTime;
+        if (restTime >= 0) {
+            this.restTime = restTime;
+        }
     }
 }
-

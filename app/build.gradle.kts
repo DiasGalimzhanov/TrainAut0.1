@@ -55,6 +55,11 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:23.1.2")
     implementation("com.google.firebase:firebase-core:21.1.1")
 
+//    Dagger
+    implementation("com.google.dagger:dagger:2.52")
+    annotationProcessor ("com.google.dagger:dagger-compiler:2.52")
+
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

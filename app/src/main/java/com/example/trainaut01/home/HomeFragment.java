@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trainaut01.R;
-import com.example.trainaut01.adapters.NewsAdapter;
+import com.example.trainaut01.adapter.NewsAdapter;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.profileActivities.UserProfileActivity;
 

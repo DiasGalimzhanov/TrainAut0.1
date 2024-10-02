@@ -1,4 +1,4 @@
-package com.example.trainaut01.adapters;
+package com.example.trainaut01.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

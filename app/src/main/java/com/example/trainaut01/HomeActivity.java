@@ -2,8 +2,6 @@ package com.example.trainaut01;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
@@ -11,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.trainaut01.adapters.NewsAdapter;
+import com.example.trainaut01.adapter.NewsAdapter;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.profileActivities.UserProfileActivity;
 import com.example.trainaut01.training.BaseTrainingActivity;

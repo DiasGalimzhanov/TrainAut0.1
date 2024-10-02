@@ -29,8 +29,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserProfileFragment extends Fragment {
-    private TextView _parentName, _tvEmail, _tvPhone, _tvBirthDate, _btnExit;
-    private ImageView _userProfileImage;
+    private TextView _parentName, _tvEmail, _tvPhone, _tvBirthDate;
+    private ImageView _userProfileImage, _btnExit;
     private Button _btnUpdateProfile;
 
     private FirebaseFirestore db;

@@ -107,7 +107,6 @@ public class TrainingWeekFragment extends Fragment {
     // Метод для получения текущего дня недели с помощью Calendar
     private int currentDayOfWeek(){
         Calendar calendar = Calendar.getInstance();
-        // Возвращаем текущее значение дня недели (например, 2 для понедельника)
         return calendar.get(Calendar.DAY_OF_WEEK);
     }
 
@@ -126,8 +125,8 @@ public class TrainingWeekFragment extends Fragment {
     private void openTrainingListFragment(String day) {
         TrainingListFragment listFragment = TrainingListFragment.newInstance(day);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main, listFragment)
-                .addToBackStack(null) // Добавляем в back stack для возможности возврата
+                .add(R.id.main, listFragment)
+                .addToBackStack(null)
                 .commit();
     }
 }
