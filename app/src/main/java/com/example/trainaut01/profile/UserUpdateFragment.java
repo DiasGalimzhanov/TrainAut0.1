@@ -16,13 +16,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.R;
+import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.repository.UserRepository;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class UserUpdateFragment extends Fragment {
-    private UserRepository db;
+    private AppComponent appComponent;
+    @Inject
+    UserRepository db;
 
     private EditText _etFirstNameUpdate, _etLastNameUpdate, _etEmailUpdate, _etPhoneUpdate, _etBirthDateUpdate, _etPas, _etPasConf;
     Button _btnCange, _btnCancel;
@@ -34,6 +40,8 @@ public class UserUpdateFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_update, container, false);
 
+        appComponent = DaggerAppComponent.create();
+        appComponent.inject(this);
         // Initialize EditText fields
         _etFirstNameUpdate = view.findViewById(R.id.etFirstNameUpdate);
         _etLastNameUpdate = view.findViewById(R.id.etLastNameUpdate);
@@ -45,7 +53,7 @@ public class UserUpdateFragment extends Fragment {
         _tvPasswordMatch = view.findViewById(R.id.tvPasswordMatch);
         _etPas = view.findViewById(R.id.etPasReg);
         _etPasConf = view.findViewById(R.id.etPasConfirm);
-        db = new UserRepository();
+
 
         _btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -57,6 +57,11 @@ dependencies {
     implementation("com.google.firebase:firebase-core:21.1.1")
     implementation ("com.google.android.gms:play-services-base:17.6.0")
 
+//    Dagger
+    implementation("com.google.dagger:dagger:2.52")
+    annotationProcessor ("com.google.dagger:dagger-compiler:2.52")
+
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

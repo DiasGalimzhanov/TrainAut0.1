@@ -10,323 +10,44 @@
 
     <ImageView
         android:id="@+id/imageView14"
-        android:layout_width="wrap_content"
-        android:layout_height="250dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:scaleType="fitXY"
-        android:src="@drawable/top_tight"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bottom_left"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="План тренировок\n на неделю"
-        android:textColor="#8F1FA8"
-        android:textSize="33dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/top_left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="610dp"
+        android:background="@drawable/background_training_list"
         android:gravity="center"
         android:orientation="vertical"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView20"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.958"
         tools:layout_editor_absoluteX="0dp">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
-                    android:layout_width="160dp"
-                    android:layout_height="140dp"
-                    android:background="@drawable/week_card_background"
-                    android:gravity="center"
-                    android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Ваша Тренировка \n на сегодня"
+            android:textAlignment="center"
+            android:textColor="#10CA2F"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
 
-                    <ImageView
-                        android:id="@+id/imageView23"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:src="@drawable/monday_icon" />
-
-                    <TextView
-                        android:id="@+id/textView12"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="@drawable/btn_exit_back_profile"
-                        android:gravity="center"
-                        android:text="Понедельник"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
-                    android:layout_width="160dp"
-                    android:layout_height="140dp"
-                    android:background="@drawable/week_card_background"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-
-                    <ImageView
-                        android:id="@+id/imageView24"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:src="@drawable/tuesday_icon" />
-
-                    <TextView
-                        android:id="@+id/textView14"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="@drawable/btn_exit_back_profile"
-                        android:gravity="center"
-                        android:text="Вторник"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-
-        </LinearLayout>
-
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDailyList"
             android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
-                    android:layout_width="160dp"
-                    android:layout_height="140dp"
-                    android:background="@drawable/week_card_background"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-
-                    <ImageView
-                        android:id="@+id/imageView19"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:src="@drawable/wednesday_icon" />
-
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="@drawable/btn_exit_back_profile"
-                        android:gravity="center"
-                        android:text="Среда"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
-                    android:layout_width="160dp"
-                    android:layout_height="140dp"
-                    android:background="@drawable/week_card_background"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-
-                    <ImageView
-                        android:id="@+id/imageView17"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:src="@drawable/thursday_icon" />
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="@drawable/btn_exit_back_profile"
-                        android:gravity="center"
-                        android:text="Четверг"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
-                    android:layout_width="160dp"
-                    android:layout_height="140dp"
-                    android:background="@drawable/week_card_background"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-
-                    <ImageView
-                        android:id="@+id/imageView18"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:src="@drawable/friday_icon" />
-
-                    <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="@drawable/btn_exit_back_profile"
-                        android:gravity="center"
-                        android:text="Пятница"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
-                    android:layout_width="160dp"
-                    android:layout_height="140dp"
-                    android:background="@drawable/week_card_background"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-
-                    <ImageView
-                        android:id="@+id/imageView20"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:src="@drawable/saturday_icon" />
-
-                    <TextView
-                        android:id="@+id/textView8"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="@drawable/btn_exit_back_profile"
-                        android:gravity="center"
-                        android:text="Суббота"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
-                    android:layout_width="160dp"
-                    android:layout_height="140dp"
-                    android:background="@drawable/week_card_background"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-
-                    <ImageView
-                        android:id="@+id/imageView22"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:src="@drawable/sunday_icon" />
-
-                    <TextView
-                        android:id="@+id/textView11"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="@drawable/btn_exit_back_profile"
-                        android:gravity="center"
-                        android:text="Воскресенье"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="65dp" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.repository.UserRepository;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,6 +33,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import javax.inject.Inject;
+
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private Button btnLog, btnGoogleReg;
@@ -39,7 +43,10 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPas;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-    private UserRepository db;
+
+    private AppComponent appComponent;
+    @Inject
+    UserRepository db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +54,9 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        db = new UserRepository();
+        appComponent = DaggerAppComponent.create();
+        appComponent.inject(this);
+
         btnLog = findViewById(R.id.btnLogin);
         btnGoogleReg = findViewById(R.id.btnGoogleReg);
         tvForgotPas = findViewById(R.id.tvForgotPas);

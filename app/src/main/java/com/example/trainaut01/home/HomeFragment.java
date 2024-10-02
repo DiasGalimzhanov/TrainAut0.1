@@ -12,28 +12,40 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trainaut01.R;
-import com.example.trainaut01.adapters.NewsAdapter;
+import com.example.trainaut01.adapter.NewsAdapter;
+import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.NewsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class HomeFragment extends Fragment {
     private RecyclerView.Adapter adapterNews;
     private RecyclerView recyclerViewNews;
-    private NewsRepository newsRepository;
+
+    private AppComponent appComponent;
+    @Inject
+    NewsRepository newsRepository;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        initRecyclerView(view);
+
+
+        init(view);
         fetchNews();
         return view;
     }
 
-    private void initRecyclerView(View view) {
+    private void init(View view) {
+        appComponent = DaggerAppComponent.create();
+        appComponent.inject(this);
+
         recyclerViewNews = view.findViewById(R.id.RecyclerView1);
         recyclerViewNews.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     }

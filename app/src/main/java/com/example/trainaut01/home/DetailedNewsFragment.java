@@ -12,30 +12,41 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.trainaut01.R;
+import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.NewsRepository;
+import com.example.trainaut01.repository.UserRepository;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import javax.inject.Inject;
+
 public class DetailedNewsFragment extends Fragment {
 
     private TextView titleTextView;
     private TextView descriptionTextView;
     private ImageView imageView;
-    private NewsRepository newsRepository;
+
+
+    private AppComponent appComponent;
+    @Inject
+    NewsRepository newsRepository;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detailed_news, container, false);
 
+        appComponent = DaggerAppComponent.create();
+        appComponent.inject(this);
+
         titleTextView = view.findViewById(R.id.detail_news_title);
         descriptionTextView = view.findViewById(R.id.detail_news_description);
         imageView = view.findViewById(R.id.detail_news_image);
-        newsRepository = new NewsRepository();
 
         Bundle bundle = getArguments();
         String newsId = bundle.getString("news_id");

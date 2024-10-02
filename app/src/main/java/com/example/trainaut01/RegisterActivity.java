@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.activity.EdgeToEdge;
 
 //import com.example.trainaut01.profileActivities.UserProfileActivity;
+import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.repository.UserRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,11 +37,17 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class RegisterActivity extends AppCompatActivity {
     private EditText etEmail,etPasReg,etPasConfirm,etFN, etLN, etPhone ,etBirthDate;
     private Button btnReg;
-    private UserRepository db;
     private TextView tvPasswordMatch, tvLogin;
+
+    private AppComponent appComponent;
+    @Inject
+    UserRepository db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +55,9 @@ public class RegisterActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
 
-        db = new UserRepository();
+        appComponent = DaggerAppComponent.create();
+        appComponent.inject(this);
+
         etEmail = findViewById(R.id.etEmailReg);
         etFN = findViewById(R.id.etFirstName);
         etLN = findViewById(R.id.etLastName);
