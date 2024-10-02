@@ -54,18 +54,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="144dp"
+                    android:fontFamily="@font/lobster_regular"
                     android:text="Заголовок"
-                    android:textColor="#2d2d2d"
+                    android:textColor="#9567C3"
                     android:textSize="40dp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.537"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/background_training_list"
                     android:orientation="vertical"
+                    android:padding="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageView15">
@@ -74,6 +80,8 @@
                         android:id="@+id/imageView21"
                         android:layout_width="wrap_content"
                         android:layout_height="200dp"
+                        android:background="@drawable/image_exercise_details"
+                        android:clipToOutline="true"
                         android:src="@drawable/default_image_news" />
 
                     <TextView
@@ -82,11 +90,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="10dp"
-                        android:textColor="#2d2d2d"
-                        android:textSize="30dp"
-                        android:drawablePadding="20dp"
                         android:drawableStart="@drawable/circle2"
-                        android:text="n подходов" />
+                        android:drawablePadding="20dp"
+                        android:fontFamily="@font/federo_regular"
+                        android:paddingStart="15dp"
+                        android:text="N подходов"
+                        android:textColor="#F4EBEB"
+                        android:textSize="30dp" />
 
                     <TextView
                         android:id="@+id/textView22"
@@ -94,12 +104,66 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="10dp"
-                        android:textColor="#2d2d2d"
-                        android:textSize="30dp"
-                        android:drawablePadding="20dp"
                         android:drawableStart="@drawable/circle2"
-                        android:text="по n раз" />
+                        android:drawablePadding="20dp"
+                        android:fontFamily="@font/federo_regular"
+                        android:paddingStart="15dp"
+                        android:text="по N раз"
+                        android:textColor="#F4EBEB"
+                        android:textSize="30dp" />
+                </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Начать тренировку"
+                        android:textSize="20dp"
+                        android:background="@drawable/background_week_current_day"
+                        android:textStyle="bold"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/adventpro_semiexpanded_regular"/>
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="10dp"
+                        android:drawablePadding="20dp"
+                        android:fontFamily="@font/adventpro_semiexpanded_regular"
+                        android:paddingStart="15dp"
+                        android:text="Инструкция"
+                        android:textAlignment="center"
+                        android:textColor="#9567C3"
+                        android:textSize="30dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView23"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginBottom="50dp"
+                        android:background="@drawable/blue_background_btn"
+                        android:drawablePadding="20dp"
+                        android:paddingStart="15dp"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:fontFamily="@font/federo_regular"
+                        android:text="Описание Описание Описание Опи саниеОпи саниеОписаниеОписа ниеОписание Описание ОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОпи саниеОписан иеОписаниеОписан иеОпис аниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписание"
+                        android:textColor="#F4EBEB"
+                        android:textSize="25dp" />
 
                 </LinearLayout>
 
