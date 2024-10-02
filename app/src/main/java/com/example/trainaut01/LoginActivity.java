@@ -1,7 +1,9 @@
 package com.example.trainaut01;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,7 +14,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.trainaut01.profileActivities.UserProfileActivity;
+import com.example.trainaut01.repository.UserRepository;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,6 +27,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
@@ -34,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPas;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private UserRepository db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
+        db = new UserRepository();
         btnLog = findViewById(R.id.btnLogin);
         btnGoogleReg = findViewById(R.id.btnGoogleReg);
         tvForgotPas = findViewById(R.id.tvForgotPas);
@@ -108,8 +115,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     private void signInWithGoogle() {
@@ -152,24 +157,20 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-
     private void loginUser(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Вход успешен, обновляем UI
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
-                            startActivity(intent);
-                            // Перейти на другую активность или обновить UI
-                        } else {
-                            // Если вход не удался, выводим сообщение
-                            Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+//        UserRepository userRepository = new UserRepository();
+        db.loginUser(email, password, this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Вход успешен", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
+                    startActivity(intent);
+                } else {
+                    // Если вход не удался, выводим сообщение
+                    Toast.makeText(LoginActivity.this, "Ошибка входа: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

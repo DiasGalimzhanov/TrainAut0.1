@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.trainaut01.home.HomeFragment;
-import com.example.trainaut01.profileActivities.UserProfileActivity;
+//import com.example.trainaut01.profileActivities.UserProfileActivity;
 import com.example.trainaut01.profile.UserProfileFragment;
 
 import androidx.annotation.NonNull;

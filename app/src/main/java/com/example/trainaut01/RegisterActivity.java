@@ -16,7 +16,8 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.activity.EdgeToEdge;
 
-import com.example.trainaut01.profileActivities.UserProfileActivity;
+//import com.example.trainaut01.profileActivities.UserProfileActivity;
+import com.example.trainaut01.repository.UserRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,10 +38,8 @@ import java.util.Map;
 public class RegisterActivity extends AppCompatActivity {
     private EditText etEmail,etPasReg,etPasConfirm,etFN, etLN, etPhone ,etBirthDate;
     private Button btnReg;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
+    private UserRepository db;
     private TextView tvPasswordMatch, tvLogin;
-//    private DatabaseReference mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
 
+        db = new UserRepository();
         etEmail = findViewById(R.id.etEmailReg);
         etFN = findViewById(R.id.etFirstName);
         etLN = findViewById(R.id.etLastName);
@@ -59,8 +59,8 @@ public class RegisterActivity extends AppCompatActivity {
         tvPasswordMatch = findViewById(R.id.tvPasswordMatch);
         tvLogin = findViewById(R.id.tvLogin);
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+//        mAuth = FirebaseAuth.getInstance();
+//        db = FirebaseFirestore.getInstance();
 
         TextWatcher passwordTextWatcher = new TextWatcher() {
             @Override
@@ -128,46 +128,34 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser(String email, String password, String firstName, String lastName, String phone, String bd) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                            if (firebaseUser != null) {
-                                saveUserData(firebaseUser.getUid(), firstName, lastName, phone, email, bd);
-                            }
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+        db.registerUser(email, password, firstName, lastName, phone, bd,this ,new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    if (firebaseUser != null) {
+                        saveUserData(firebaseUser.getUid(), firstName, lastName, phone, email, bd);
                     }
-                });
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void saveUserData(String userId, String firstName, String lastName, String phone, String email, String bd) {
-        Map<String, Object> user = new HashMap<>();
-        user.put("userId", userId);
-        user.put("firstName", firstName);
-        user.put("lastName", lastName);
-        user.put("phone", phone);
-        user.put("email", email);
-        user.put("birthDate", bd);
-        user.put("role", "parent");  // По умолчанию можно назначить роль
-
-        db.collection("users").document(userId)
-                .set(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "User data saved", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Failed to save user data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        db.saveUserData(userId, firstName, lastName, phone, email, bd, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(RegisterActivity.this, "User data saved", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RegisterActivity.this, BaseActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Failed to save user data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void checkPasswordMatch() {

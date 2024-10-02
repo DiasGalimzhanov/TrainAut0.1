@@ -1,37 +1,21 @@
 package com.example.trainaut01.models;
 
 public class News {
+    private String id;
     private String title;
-    private String subtitle;
-    private int imageUrl;
+    private String description;
+    private String imageUrl;
 
-    public News(String title, String subtitle, int imageUrl) {
+    public News(String id, String title, String description, String imageUrl) {
+        this.id = id;
         this.title = title;
-        this.subtitle = subtitle;
+        this.description = description;
         this.imageUrl = imageUrl;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public int getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(int imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+    // Геттеры и сеттеры
+    public String getId() { return id; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public String getImageUrl() { return imageUrl; }
 }

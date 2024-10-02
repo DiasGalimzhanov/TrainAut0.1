@@ -9,18 +9,17 @@ public class User {
     private String phone;
     private String email;
     private String role;
-    private List<Child> children;
+
 
     public User() {}
 
-    public User(long userId, String firstName, String lastName, String phone, String email, String role, List<Child> children) {
+    public User(long userId, String firstName, String lastName, String phone, String email, String role) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.email = email;
         this.role = role;
-        this.children = children;
     }
 
     public long getUserId() {
@@ -71,11 +70,5 @@ public class User {
         this.role = role;
     }
 
-    public List<Child> getChildren() {
-        return children;
-    }
 
-    public void setChildren(List<Child> children) {
-        this.children = children;
-    }
 }

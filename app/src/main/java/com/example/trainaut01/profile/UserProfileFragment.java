@@ -19,23 +19,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.R;
-import com.example.trainaut01.profileActivities.UpdateUserProfileActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+
 
 public class UserProfileFragment extends Fragment {
     private TextView _parentName, _tvEmail, _tvPhone, _tvBirthDate, _btnExit;
     private ImageView _userProfileImage;
     private Button _btnUpdateProfile;
-
-    private FirebaseFirestore db;
-    private FirebaseUser currentUser;
-    private String userId;
 
     @Nullable
     @Override
@@ -43,16 +33,11 @@ public class UserProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
         init(view);
-
-        if (currentUser != null) {
-            userId = currentUser.getUid();
-            getUserDataById(userId);
-        }
+        printData();
 
         _userProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(getActivity(), UpdateUserProfileActivity.class));
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, new UserUpdateFragment());
                 transaction.addToBackStack(null);  // Allows going back to the previous fragment
@@ -101,57 +86,6 @@ public class UserProfileFragment extends Fragment {
         _tvBirthDate = view.findViewById(R.id.tvBirthDate);
         _btnExit = view.findViewById(R.id.btnExit);
         _btnUpdateProfile = view.findViewById(R.id.btnUpdateProfile);
-
-        db = FirebaseFirestore.getInstance();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    }
-
-    public void getUserDataById(String userId) {
-        DocumentReference docRef = db.collection("users").document(userId);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        saveUserToSP(document);
-                        printData();
-                    } else {
-                        Log.d("UserData", "Документ не найден.");
-                    }
-                } else {
-                    Log.d("UserData", "Ошибка запроса: ", task.getException());
-                    Toast.makeText(getActivity(), "Ошибка при получении данных: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    private void saveUserToSP(DocumentSnapshot user) {
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        if (sharedPref.contains("userId")) {
-            return;
-        }
-
-        String firstName = user.getString("firstName");
-        String lastName = user.getString("lastName");
-        String email = user.getString("email");
-        String phone = user.getString("phone");
-        String birthDate = user.getString("birthDate");
-        String role = user.getString("role");
-
-        editor.putString("userId", userId);
-        editor.putString("email", email);
-        editor.putString("firstName", firstName);
-        editor.putString("lastName", lastName);
-        editor.putString("phone", phone);
-        editor.putString("birthDate", birthDate);
-        editor.putString("role", role);
-        editor.apply();
-
-        Toast.makeText(getActivity(), "Данные пользователя сохранены", Toast.LENGTH_SHORT).show();
     }
 
     public void printData() {
@@ -162,7 +96,7 @@ public class UserProfileFragment extends Fragment {
         String phone = sharedPref.getString("phone", null);
         String birthDate = sharedPref.getString("birthDate", null);
 
-        if (firstName != null && lastName != null && email != null && phone != null && birthDate != null) {
+        if (firstName != null && lastName != null && email != null && phone != null) {
             _parentName.setText(firstName + " " + lastName);
             _tvEmail.setText(email);
             _tvPhone.setText(phone);

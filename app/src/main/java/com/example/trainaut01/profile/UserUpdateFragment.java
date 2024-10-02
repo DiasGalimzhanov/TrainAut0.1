@@ -1,12 +1,14 @@
 package com.example.trainaut01.profile;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,11 +16,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.R;
+import com.example.trainaut01.repository.UserRepository;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserUpdateFragment extends Fragment {
+    private UserRepository db;
 
-    private EditText _etFirstNameUpdate, _etLastNameUpdate, _etEmailUpdate, _etPhoneUpdate, _etBirthDateUpdate;
+    private EditText _etFirstNameUpdate, _etLastNameUpdate, _etEmailUpdate, _etPhoneUpdate, _etBirthDateUpdate, _etPas, _etPasConf;
     Button _btnCange, _btnCancel;
+    private TextView _tvPasswordMatch;
 
     @Nullable
     @Override
@@ -33,10 +41,42 @@ public class UserUpdateFragment extends Fragment {
         _etPhoneUpdate = view.findViewById(R.id.etPhoneUpdate);
         _etBirthDateUpdate = view.findViewById(R.id.etBirthDateUpdate);
         _btnCancel = view.findViewById(R.id.btnCancel);
+        _btnCange = view.findViewById(R.id.btnCange);
+        _tvPasswordMatch = view.findViewById(R.id.tvPasswordMatch);
+        _etPas = view.findViewById(R.id.etPasReg);
+        _etPasConf = view.findViewById(R.id.etPasConfirm);
+        db = new UserRepository();
 
         _btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, new UserProfileFragment());
+                transaction.addToBackStack(null);  // Allows going back to the previous fragment
+                transaction.commit();
+            }
+        });
+
+        _btnCange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String newFN = _etFirstNameUpdate.getText().toString();
+                String newLN = _etLastNameUpdate.getText().toString();
+                String newEmail = _etEmailUpdate.getText().toString();
+                String newPhone = _etPhoneUpdate.getText().toString();
+                String newBD = _etBirthDateUpdate.getText().toString();
+                String newPas = _etPas.getText().toString();
+
+                Map<String, Object> updatedUserData = new HashMap<>();
+                updatedUserData.put("firstName", newFN);
+                updatedUserData.put("lastName", newLN);
+                updatedUserData.put("email", newEmail);
+                updatedUserData.put("phone", newPhone);
+                updatedUserData.put("birthDate", newBD);
+                updatedUserData.put("password", newPas);
+
+                db.updateUser(updatedUserData, getActivity());
+
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, new UserProfileFragment());
                 transaction.addToBackStack(null);  // Allows going back to the previous fragment
@@ -65,6 +105,19 @@ public class UserUpdateFragment extends Fragment {
             _etEmailUpdate.setText(email);
             _etPhoneUpdate.setText(phone);
             _etBirthDateUpdate.setText(birthDate);
+        }
+    }
+
+    private void checkPasswordMatch() {
+        String password = _etPas.getText().toString();
+        String confirmPassword = _etPasConf.getText().toString();
+
+        if (password.equals(confirmPassword)) {
+            _tvPasswordMatch.setText("Пароли совпадают");
+            _tvPasswordMatch.setTextColor(Color.GREEN);
+        } else {
+            _tvPasswordMatch.setText("Пароли не совпадают");
+            _tvPasswordMatch.setTextColor(Color.RED);
         }
     }
 }
