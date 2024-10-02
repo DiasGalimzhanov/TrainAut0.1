@@ -1,5 +1,6 @@
 package com.example.trainaut01.dagger.module;
 
+import com.example.trainaut01.profile.SupportFragment;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.ExerciseRepository;
 import com.example.trainaut01.repository.NewsRepository;
@@ -38,6 +39,13 @@ public class RepositoryModule {
     public NewsRepository provideNewsRepository(){
         return new NewsRepository();
     }
+
+    @Provides
+    @Singleton
+    public SupportFragment provideSupportFragment(){
+        return new SupportFragment();
+    }
+
 
 
 }

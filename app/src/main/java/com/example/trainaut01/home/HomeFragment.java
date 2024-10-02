@@ -1,10 +1,13 @@
 package com.example.trainaut01.home;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,6 +27,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class HomeFragment extends Fragment {
+    private TextView tvHello;
     private RecyclerView.Adapter adapterNews;
     private RecyclerView recyclerViewNews;
 
@@ -38,6 +42,9 @@ public class HomeFragment extends Fragment {
 
 
         init(view);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        String firstName = sharedPref.getString("firstName", null);
+        tvHello.setText("Привет, " + firstName);
         fetchNews();
         return view;
     }
@@ -45,6 +52,7 @@ public class HomeFragment extends Fragment {
     private void init(View view) {
         appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
+        tvHello = view.findViewById(R.id.tvHello);
 
         recyclerViewNews = view.findViewById(R.id.RecyclerView1);
         recyclerViewNews.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -52,7 +60,7 @@ public class HomeFragment extends Fragment {
 
 
     private void fetchNews() {
-        newsRepository = new NewsRepository();
+//        newsRepository = new NewsRepository();
         newsRepository.fetchNews(new NewsRepository.NewsFetchCallback() {
             @Override
             public void onNewsFetched(List<News> newsList) {

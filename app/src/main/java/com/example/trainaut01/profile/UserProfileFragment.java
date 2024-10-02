@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class UserProfileFragment extends Fragment {
     private TextView _parentName, _tvEmail, _tvPhone, _tvBirthDate;
     private ImageView _userProfileImage, _btnExit;
-    private Button _btnUpdateProfile;
+    private Button _btnUpdateProfile, _btnSupport;
 
     @Nullable
     @Override
@@ -75,6 +75,16 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+        _btnSupport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, new SupportFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
         return view;
     }
 
@@ -86,6 +96,7 @@ public class UserProfileFragment extends Fragment {
         _tvBirthDate = view.findViewById(R.id.tvBirthDate);
         _btnExit = view.findViewById(R.id.btnExit);
         _btnUpdateProfile = view.findViewById(R.id.btnUpdateProfile);
+        _btnSupport = view.findViewById(R.id.btnSupport);
     }
 
     public void printData() {

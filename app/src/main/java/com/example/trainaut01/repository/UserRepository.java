@@ -2,7 +2,7 @@ package com.example.trainaut01.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -189,5 +189,32 @@ public class UserRepository {
                     }
                 });
 
+    }
+
+    public void saveMessageToFirestore(String theme, String messege, Context context) {
+        // Получаем ID пользователя
+        String userId = mAuth.getCurrentUser().getUid();
+
+        // Создаем объект для сохранения
+        Map<String, Object> messageData = new HashMap<>();
+        messageData.put("userId", userId);
+        messageData.put("theme", theme);
+        messageData.put("message", messege);
+
+        // Сохраняем в коллекцию "messege_users"
+        db.collection("messege_users")
+                .add(messageData)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(context, "Сообщение отправленно", Toast.LENGTH_SHORT).show();
+
+                    // Заменяем текущий фрагмент на новый после успешной отправки
+                    FragmentTransaction ft = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragment_container, new UserProfileFragment());
+                    ft.addToBackStack(null); // Добавляем в стек, если нужно вернуться назад
+                    ft.commit();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Что-то не так, сообщение не отправленно", Toast.LENGTH_SHORT).show();
+                });
     }
 }
