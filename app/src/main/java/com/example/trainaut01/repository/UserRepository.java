@@ -73,6 +73,8 @@ public class UserRepository {
         user.put("phone", phone);
         user.put("email", email);
         user.put("birthDate", bd);
+        user.put("lvl",0);
+        user.put("countDays", 0);
 
         db.collection("users").document(userId)
                 .set(user)
@@ -121,6 +123,8 @@ public class UserRepository {
         String email = document.getString("email");
         String phone = document.getString("phone");
         String birthDate = document.getString("birthDate");
+        int lvl = document.getLong("lvl").intValue();
+        int countDays = document.getLong("countDays").intValue();
 
         // Сохраняем данные в SharedPreferences
         editor.putString("userId", userId);
@@ -129,6 +133,8 @@ public class UserRepository {
         editor.putString("lastName", lastName);
         editor.putString("phone", phone);
         editor.putString("birthDate", birthDate);
+        editor.putInt("lvl", lvl);
+        editor.putInt("countDays", countDays);
         editor.apply();
 
         Toast.makeText(context, "Данные пользователя сохранены", Toast.LENGTH_SHORT).show();
@@ -136,9 +142,9 @@ public class UserRepository {
 
 
     // Метод для получения текущего пользователя
-    public FirebaseUser getCurrentUser() {
-        return mAuth.getCurrentUser();
-    }
+//    public FirebaseUser getCurrentUser() {
+//        return mAuth.getCurrentUser();
+//    }
 
     public void updateUser(Map<String, Object> updatedUserData, Context context){
         String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();

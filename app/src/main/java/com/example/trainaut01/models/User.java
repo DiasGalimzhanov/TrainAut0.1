@@ -8,18 +8,19 @@ public class User {
     private String lastName;
     private String phone;
     private String email;
-    private String role;
-
+    private int lvl;
+    private int countDays;
 
     public User() {}
 
-    public User(long userId, String firstName, String lastName, String phone, String email, String role) {
+    public User(long userId, String firstName, String lastName, String phone, String email, int lvl, int countDays) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.email = email;
-        this.role = role;
+        this.lvl = lvl;
+        this.countDays = countDays;
     }
 
     public long getUserId() {
@@ -62,12 +63,12 @@ public class User {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public int getLvl() {
+        return lvl;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public int getCountDays() {
+        return countDays;
     }
 
 
