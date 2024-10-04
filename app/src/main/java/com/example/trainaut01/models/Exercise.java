@@ -19,18 +19,22 @@ public class Exercise implements Serializable {
     private boolean isCompleted;
     private int sets;
     private int reps;
+    private int rewardPoints;
+    private float completedTime;
     private float restTime;
 
     public Exercise() {
     }
 
-    public Exercise(String id, ExerciseType type, String name, String description, String imageUrl, boolean isCompleted, int sets, int reps, float restTime) {
+    public Exercise(String id, ExerciseType type, String name, String description, String imageUrl, boolean isCompleted, int sets, int reps, int rewardPoints, float completedTime, float restTime) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
         this.isCompleted = isCompleted;
+        this.completedTime = completedTime;
+        setRewardPoints(rewardPoints);
         setSets(sets);
         setReps(reps);
         setRestTime(restTime);
@@ -101,6 +105,24 @@ public class Exercise implements Serializable {
     public void setReps(int reps) {
         if (reps > 0) {
             this.reps = reps;
+        }
+    }
+
+    public float getCompletedTime() {
+        return completedTime;
+    }
+
+    public void setCompletedTime(float completedTime) {
+        this.completedTime = completedTime;
+    }
+
+    public int getRewardPoints() {
+        return rewardPoints;
+    }
+
+    public void setRewardPoints(int rewardPoints) {
+        if (rewardPoints > 0) {
+            this.rewardPoints = rewardPoints;
         }
     }
 

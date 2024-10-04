@@ -35,6 +35,7 @@ public class TrainingDailyAdapter extends RecyclerView.Adapter<TrainingDailyAdap
         Exercise exercise = exerciseList.get(position);
         holder.tvTitle.setText(exercise.getName());
         holder.chbCompleted.setChecked(exercise.isCompleted());
+        holder.tvRewardPoints.setText("+" + exercise.getRewardPoints());
 
         // Обработка нажатия на элемент списка
         holder.itemView.setOnClickListener(v -> {
@@ -56,18 +57,19 @@ public class TrainingDailyAdapter extends RecyclerView.Adapter<TrainingDailyAdap
 
     public static class TrainingViewHolder extends RecyclerView.ViewHolder {
         CheckBox chbCompleted;
-        TextView tvTitle;
+        TextView tvTitle, tvRewardPoints;
 
         public TrainingViewHolder(@NonNull View itemView) {
             super(itemView);
             chbCompleted = itemView.findViewById(R.id.chbCompleted);
             tvTitle = itemView.findViewById(R.id.tvTitle);
+            tvRewardPoints = itemView.findViewById(R.id.tvRewardPoints);
         }
     }
 
     public void updateExerciseList(List<Exercise> newExerciseList) {
         this.exerciseList = newExerciseList;
-        notifyDataSetChanged(); // Обновляем RecyclerView
+        notifyDataSetChanged();
     }
 
     // Интерфейс для обработки кликов на упражнения

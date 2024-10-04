@@ -16,11 +16,6 @@ import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.NewsRepository;
-import com.example.trainaut01.repository.UserRepository;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;

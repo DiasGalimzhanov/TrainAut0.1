@@ -80,7 +80,7 @@ public class UserProfileFragment extends Fragment {
             public void onClick(View view) {
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, new SupportFragment());
-                transaction.addToBackStack(null);
+                transaction.addToBackStack(null);  // Allows going back to the previous fragment
                 transaction.commit();
             }
         });

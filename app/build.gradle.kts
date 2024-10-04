@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+
     //Firebase
     implementation ("com.google.android.gms:play-services-auth:20.6.0")
     implementation ("com.google.firebase:firebase-auth:22.0.0")
@@ -60,6 +61,9 @@ dependencies {
 //    Dagger
     implementation("com.google.dagger:dagger:2.52")
     annotationProcessor ("com.google.dagger:dagger-compiler:2.52")
+
+//    Picasso
+    implementation("com.squareup.picasso:picasso:2.8")
 
 
     implementation(libs.appcompat)

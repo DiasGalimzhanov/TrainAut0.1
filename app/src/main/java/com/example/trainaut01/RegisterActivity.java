@@ -16,7 +16,6 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.activity.EdgeToEdge;
 
-//import com.example.trainaut01.profileActivities.UserProfileActivity;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.repository.UserRepository;
@@ -26,16 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 

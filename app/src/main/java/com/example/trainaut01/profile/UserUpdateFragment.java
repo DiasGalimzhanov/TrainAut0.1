@@ -17,8 +17,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
-import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.repository.UserRepository;
+import com.example.trainaut01.component.DaggerAppComponent;
 
 import java.util.HashMap;
 import java.util.Map;
