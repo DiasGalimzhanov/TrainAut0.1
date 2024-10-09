@@ -8,7 +8,7 @@ public class Exercise implements Serializable {
 
     public enum ExerciseType {
         BICEPS, PECTORAL_MUSCLES, TRICEPS, DELTOID_MUSCLES, PRESS, UPPER_BACK_MUSCLES,
-        QUADRICEPS, LOWER_BACK_MUSCLES, OTHER, FAMILY_COMPETITION
+        QUADRICEPS, LOWER_BACK_MUSCLES, OTHER, FAMILY_COMPETITION;
     }
 
     private String id;
@@ -16,6 +16,7 @@ public class Exercise implements Serializable {
     private String name;
     private String description;
     private String imageUrl;
+    private String duration;
     private boolean isCompleted;
     private int sets;
     private int reps;
@@ -26,7 +27,7 @@ public class Exercise implements Serializable {
     public Exercise() {
     }
 
-    public Exercise(String id, ExerciseType type, String name, String description, String imageUrl, boolean isCompleted, int sets, int reps, int rewardPoints, float completedTime, float restTime) {
+    public Exercise(String id, ExerciseType type, String name, String description, String imageUrl, boolean isCompleted, int sets, int reps, String duration, int rewardPoints, float completedTime, float restTime) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -34,6 +35,7 @@ public class Exercise implements Serializable {
         this.imageUrl = imageUrl;
         this.isCompleted = isCompleted;
         this.completedTime = completedTime;
+        this.duration = duration;
         setRewardPoints(rewardPoints);
         setSets(sets);
         setReps(reps);
@@ -86,6 +88,14 @@ public class Exercise implements Serializable {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public int getSets() {

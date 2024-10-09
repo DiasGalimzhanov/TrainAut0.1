@@ -1,10 +1,13 @@
 package com.example.trainaut01.training;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -123,10 +126,21 @@ public class TrainingWeekFragment extends Fragment {
 
     // Метод для открытия фрагмента с деталями тренировки
     private void openTrainingListFragment(String day) {
-        TrainingListFragment listFragment = TrainingListFragment.newInstance(day);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.main, listFragment)
-                .addToBackStack(null)
-                .commit();
+        // Получаем userId из SharedPreferences
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", null);
+
+        if (userId != null) {
+            // Передаем userId в фрагмент
+            TrainingListFragment listFragment = TrainingListFragment.newInstance(day, userId);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.main, listFragment)
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            // Обработка ситуации, если userId не найден
+            Toast.makeText(getContext(), "User ID не найден", Toast.LENGTH_SHORT).show();
+        }
     }
+
 }
