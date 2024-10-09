@@ -28,6 +28,5 @@ public interface AppComponent {
     void inject(DetailedNewsFragment detailedNewsFragment);
     void inject(HomeFragment homeFragment);
     void inject(SupportFragment supportFragment);
-    void inject (UserRepository userRepository);
 }
 
