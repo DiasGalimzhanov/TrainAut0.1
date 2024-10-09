@@ -2,6 +2,7 @@ package com.example.trainaut01.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -74,6 +75,7 @@ public class UserRepository {
         user.put("email", email);
         user.put("birthDate", bd);
         user.put("lvl",0);
+        user.put("exp",0);
         user.put("countDays", 0);
 
         db.collection("users").document(userId)
@@ -124,7 +126,9 @@ public class UserRepository {
         String phone = document.getString("phone");
         String birthDate = document.getString("birthDate");
         int lvl = document.getLong("lvl").intValue();
+        int exp = document.getLong("exp").intValue();
         int countDays = document.getLong("countDays").intValue();
+        Log.d("REPO", String.valueOf(exp));
 
         // Сохраняем данные в SharedPreferences
         editor.putString("userId", userId);
@@ -134,6 +138,7 @@ public class UserRepository {
         editor.putString("phone", phone);
         editor.putString("birthDate", birthDate);
         editor.putInt("lvl", lvl);
+        editor.putInt("exp", exp);
         editor.putInt("countDays", countDays);
         editor.apply();
 

@@ -8,7 +8,7 @@ public class Exercise implements Serializable {
 
     public enum ExerciseType {
         BICEPS, PECTORAL_MUSCLES, TRICEPS, DELTOID_MUSCLES, PRESS, UPPER_BACK_MUSCLES,
-        QUADRICEPS, LOWER_BACK_MUSCLES, OTHER
+        QUADRICEPS, LOWER_BACK_MUSCLES, OTHER, FAMILY_COMPETITION
     }
 
     private String id;

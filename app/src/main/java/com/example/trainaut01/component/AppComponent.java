@@ -4,6 +4,7 @@ import com.example.trainaut01.BaseActivity;
 import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.RegisterActivity;
 import com.example.trainaut01.dagger.module.RepositoryModule;
+import com.example.trainaut01.home.AchievementsFragment;
 import com.example.trainaut01.home.DetailedNewsFragment;
 import com.example.trainaut01.home.HomeFragment;
 import com.example.trainaut01.profile.SupportFragment;
@@ -27,5 +28,6 @@ public interface AppComponent {
     void inject(DetailedNewsFragment detailedNewsFragment);
     void inject(HomeFragment homeFragment);
     void inject(SupportFragment supportFragment);
+    void inject(AchievementsFragment achievementsFragment);
 }
 

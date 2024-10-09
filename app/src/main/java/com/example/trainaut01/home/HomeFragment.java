@@ -1,5 +1,6 @@
 package com.example.trainaut01.home;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,11 +36,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class HomeFragment extends Fragment {
+//    private ListView listView;
     private TextView tvHello;
     private ImageView _imgAvatar;
-    private RecyclerView.Adapter adapterNews;
+    private NewsAdapter adapterNews;
     private RecyclerView recyclerViewNews;
-    private CardView _cardAchiv;
+    private CardView _cardAchiv, _cardProgress;
     private AvatarRepository avatarRepository;
 
     private AppComponent appComponent;
@@ -53,15 +56,14 @@ public class HomeFragment extends Fragment {
 
         init(view);
         SharedPreferences sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
-        String firstName = sharedPref.getString("firstName", null);
-        tvHello.setText("Привет, " + firstName);
         fetchNews();
 
-        // Получаем уровень пользователя (например, из SharedPreferences или другой логики)
-        int userLevel = 1;
+        int exp = sharedPref.getInt("exp", 0); // Получите опыт
+        int lvl = exp / 5000;
+        Log.d("HOME", String.valueOf(exp));
 
         // Загружаем аватарку в зависимости от уровня пользователя
-        avatarRepository.getAvatarByLevel(userLevel, new AvatarRepository.AvatarCallback() {
+        avatarRepository.getAvatarByLevel(lvl, new AvatarRepository.AvatarCallback() {
             @Override
             public void onSuccess(List<Avatar> avatars) {
                 if (!avatars.isEmpty()) {
@@ -88,6 +90,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        _cardProgress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container,new ProgressFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
         return view;
     }
 
@@ -97,15 +109,24 @@ public class HomeFragment extends Fragment {
         tvHello = view.findViewById(R.id.tvHello);
         _cardAchiv = view.findViewById(R.id.cardAchiv);
         _imgAvatar = view.findViewById(R.id.imgAvatar);
+        _cardProgress = view.findViewById(R.id.cardProgress);
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        String firstName = sharedPref.getString("firstName", null);
+        tvHello.setText("Привет, " + firstName);
 
         avatarRepository = new AvatarRepository();
         recyclerViewNews = view.findViewById(R.id.RecyclerView1);
-        recyclerViewNews.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+//        listView = view.findViewById(R.id.RecyclerView1);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerViewNews.setLayoutManager(layoutManager);
+        recyclerViewNews.setAdapter(adapterNews);
+//        recyclerViewNews.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     }
 
 
     private void fetchNews() {
-//        newsRepository = new NewsRepository();
+
         newsRepository.fetchNews(new NewsRepository.NewsFetchCallback() {
             @Override
             public void onNewsFetched(List<News> newsList) {
