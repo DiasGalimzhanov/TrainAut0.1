@@ -7,25 +7,6 @@
     android:background="#C6DDE7"
     android:orientation="vertical">
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/tvExerciseTitle"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:textSize="24sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        android:text="Title"-->
-    <!--        android:textColor="#2d2d2d"-->
-    <!--        android:layout_marginBottom="8dp" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/tvExerciseDescription"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="Desc"-->
-    <!--        android:textColor="#2d2d2d"-->
-    <!--        android:textSize="16sp" />-->
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -82,6 +63,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="200dp"
                         android:layout_marginTop="20dp"
+                        android:layout_gravity="center"
                         android:background="@drawable/image_exercise_details"
                         android:clipToOutline="true"
                         android:src="@drawable/default_image_news" />
@@ -112,7 +94,6 @@
                             android:layout_marginTop="20dp"
                             android:layout_marginBottom="10dp"
                             android:fontFamily="@font/federo_regular"
-                            android:paddingStart="10dp"
                             android:text="по N раз"
                             android:textColor="#F4EBEB"
                             android:textSize="20sp" />
@@ -175,7 +156,7 @@
                         android:layout_marginEnd="16dp"
                         android:background="@drawable/background_week_current_day"
                         android:fontFamily="@font/adventpro_semiexpanded_regular"
-                        android:text="Начать тренировку"
+                        android:text="Начать упражнение"
                         android:textColor="#091D1A"
                         android:textSize="20sp"
                         android:textStyle="bold" />

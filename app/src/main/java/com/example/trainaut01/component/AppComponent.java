@@ -9,6 +9,7 @@ import com.example.trainaut01.home.HomeFragment;
 import com.example.trainaut01.profile.SupportFragment;
 import com.example.trainaut01.profile.UserUpdateFragment;
 import com.example.trainaut01.repository.AppInitializer;
+import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.training.TrainingListFragment;
 
 import javax.inject.Singleton;
@@ -27,5 +28,6 @@ public interface AppComponent {
     void inject(DetailedNewsFragment detailedNewsFragment);
     void inject(HomeFragment homeFragment);
     void inject(SupportFragment supportFragment);
+    void inject (UserRepository userRepository);
 }
 

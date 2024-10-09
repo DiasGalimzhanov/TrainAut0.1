@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.R;
+import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.profile.UserProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,8 +26,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 public class UserRepository {
     private FirebaseFirestore db;
@@ -40,7 +47,7 @@ public class UserRepository {
     }
 
     // Метод для регистрации пользователя
-    public void registerUser(String email, String password, String firstName, String lastName, String phone, String bd, Context context ,OnCompleteListener<AuthResult> onCompleteListener) {
+    public void registerUser(String email, String password, String firstName, String lastName, String phone, String bd, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -65,7 +72,8 @@ public class UserRepository {
     }
 
     // Метод для сохранения данных пользователя
-    public void saveUserData(String userId, String firstName, String lastName, String phone, String email, String bd, OnCompleteListener<Void> onCompleteListener) {
+    public void saveUserData(String userId, String firstName, String lastName, String phone, String email, String bd, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener) {
+
         Map<String, Object> user = new HashMap<>();
         user.put("userId", userId);
         user.put("firstName", firstName);
@@ -73,13 +81,15 @@ public class UserRepository {
         user.put("phone", phone);
         user.put("email", email);
         user.put("birthDate", bd);
-        user.put("lvl",0);
+        user.put("lvl", 0);
         user.put("countDays", 0);
 
         db.collection("users").document(userId)
                 .set(user)
-                .addOnCompleteListener(onCompleteListener);
+                .addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
     }
+
 
     // Метод для получения данных пользователя по ID
     public void getUserDataById(String userId, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
@@ -146,7 +156,7 @@ public class UserRepository {
 //        return mAuth.getCurrentUser();
 //    }
 
-    public void updateUser(Map<String, Object> updatedUserData, Context context){
+    public void updateUser(Map<String, Object> updatedUserData, Context context) {
         String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         String newLog = (String) updatedUserData.get("email");
         String newPas = (String) updatedUserData.get("password");

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -18,15 +19,24 @@ import androidx.activity.EdgeToEdge;
 
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.models.DayPlan;
+import com.example.trainaut01.repository.AppInitializer;
+import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.UserRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -38,6 +48,9 @@ public class RegisterActivity extends AppCompatActivity {
     private AppComponent appComponent;
     @Inject
     UserRepository db;
+
+    @Inject
+    DayPlanRepository dayPlanRepository;
 
 
     @Override
@@ -96,14 +109,15 @@ public class RegisterActivity extends AppCompatActivity {
                 String lastName = etLN.getText().toString();
                 String phone = etPhone.getText().toString();
                 String birthDate = etBirthDate.getText().toString();
-                if(!log.isEmpty() && !pas.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty() && !birthDate.isEmpty()) {
-                    registerUser(log, pas,firstName,lastName,phone, birthDate);
 
-                }else{
+                if (!log.isEmpty() && !pas.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty() && !birthDate.isEmpty()) {
+                    registerUser(log, pas, firstName, lastName, phone, birthDate);
+                } else {
                     Toast.makeText(RegisterActivity.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
 
         etBirthDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,20 +143,73 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser(String email, String password, String firstName, String lastName, String phone, String bd) {
-        db.registerUser(email, password, firstName, lastName, phone, bd,this ,new OnCompleteListener<AuthResult>() {
+        db.registerUser(email, password, firstName, lastName, phone, bd, this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     if (firebaseUser != null) {
+                        // Сохранение данных пользователя
                         saveUserData(firebaseUser.getUid(), firstName, lastName, phone, email, bd);
+
+                        // Получение планов из Firestore
+                        getWeekPlansFromFirestore(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    List<DayPlan> weekPlans = new ArrayList<>();
+                                    for (DocumentSnapshot document : task.getResult()) {
+                                        DayPlan dayPlan = document.toObject(DayPlan.class);
+                                        weekPlans.add(dayPlan);
+                                    }
+
+                                    if (!weekPlans.isEmpty()) {
+                                        saveUserDayPlans(firebaseUser.getUid(), weekPlans);
+                                    } else {
+                                        Toast.makeText(RegisterActivity.this, "Нет планов для сохранения", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } else {
+                                    Toast.makeText(RegisterActivity.this, "Не удалось загрузить планы на неделю", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
                 } else {
-                    Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Ошибка регистрации: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
+
+    private void getWeekPlansFromFirestore(OnCompleteListener<QuerySnapshot> onCompleteListener) {
+        dayPlanRepository.getWeekPlansCollection()
+                .get()
+                .addOnCompleteListener(onCompleteListener);
+    }
+
+
+    private void saveUserDayPlans(String userId, List<DayPlan> weekPlans) {
+        dayPlanRepository.saveUserDayPlans(userId, weekPlans, new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                runOnUiThread(() -> {
+                    Toast.makeText(RegisterActivity.this, "Планы на неделю сохранены", Toast.LENGTH_SHORT).show();
+                });
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                runOnUiThread(() -> {
+                    Toast.makeText(RegisterActivity.this, "Ошибка при сохранении планов: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
+
+
+
 
     private void saveUserData(String userId, String firstName, String lastName, String phone, String email, String bd) {
         db.saveUserData(userId, firstName, lastName, phone, email, bd, new OnCompleteListener<Void>() {
@@ -156,8 +223,14 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Failed to save user data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(RegisterActivity.this, "Error saving user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
+
 
     private void checkPasswordMatch() {
         String password = etPasReg.getText().toString();

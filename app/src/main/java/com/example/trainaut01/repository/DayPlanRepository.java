@@ -1,14 +1,21 @@
 package com.example.trainaut01.repository;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.example.trainaut01.models.DayPlan;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 
@@ -22,6 +29,12 @@ public class DayPlanRepository implements Repository<DayPlan> {
         this.db = db;
         this.collection = db.collection("dayPlans");
     }
+
+    // Публичный метод для получения коллекции
+    public CollectionReference getWeekPlansCollection() {
+        return db.collection("dayPlans");
+    }
+
 
     // Метод для добавления нового плана дня
     @Override
@@ -74,4 +87,52 @@ public class DayPlanRepository implements Repository<DayPlan> {
                 })
                 .addOnFailureListener(onFailure); // Обработка ошибки
     }
+
+
+
+    public void saveUserDayPlans(String userId, List<DayPlan> weekPlans, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
+        CollectionReference userDayPlansCollection = db.collection("users").document(userId).collection("dayPlans");
+        CountDownLatch latch = new CountDownLatch(weekPlans.size());
+        Handler handler = new Handler(Looper.getMainLooper()); // Создаем Handler для основного потока
+
+        for (DayPlan dayPlan : weekPlans) {
+            userDayPlansCollection.add(dayPlan)
+                    .addOnSuccessListener(aVoid -> {
+                        latch.countDown();
+                    })
+                    .addOnFailureListener(e -> {
+                        latch.countDown();
+                        handler.post(() -> onFailureListener.onFailure(e)); // Вызов onFailure на основном потоке
+                    });
+        }
+
+        new Thread(() -> {
+            try {
+                latch.await();
+                handler.post(() -> onSuccessListener.onSuccess(null)); // Успешное завершение на основном потоке
+            } catch (InterruptedException e) {
+                handler.post(() -> onFailureListener.onFailure(e));
+            }
+        }).start();
+    }
+
+    public void getUserDayPlans(String userId, DayPlan.WeekDay weekDay, OnSuccessListener<List<DayPlan>> onSuccessListener, OnFailureListener onFailureListener) {
+        // Ссылка на коллекцию dayPlans конкретного пользователя
+        CollectionReference userDayPlansCollection = db.collection("users").document(userId).collection("dayPlans");
+
+        // Запрос для получения планов, соответствующих конкретному дню недели
+        userDayPlansCollection.whereEqualTo("weekDay", weekDay.toString())
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // Преобразуем документы в объекты DayPlan
+                        List<DayPlan> dayPlans = queryDocumentSnapshots.toObjects(DayPlan.class);
+                        onSuccessListener.onSuccess(dayPlans);
+                    } else {
+                        onSuccessListener.onSuccess(Collections.emptyList());
+                    }
+                })
+                .addOnFailureListener(onFailureListener);
+    }
+
 }

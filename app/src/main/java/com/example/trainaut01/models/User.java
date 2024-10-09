@@ -10,6 +10,7 @@ public class User {
     private String email;
     private int lvl;
     private int countDays;
+    private List<DayPlan> dayPlans;
 
     public User() {}
 
@@ -69,6 +70,18 @@ public class User {
 
     public int getCountDays() {
         return countDays;
+    }
+
+    public List<DayPlan> getDayPlans() {
+        return dayPlans;
+    }
+
+    public void setDayPlans(List<DayPlan> dayPlans) {
+        this.dayPlans = dayPlans;
+    }
+
+    public void addDayPlan(DayPlan dayPlan) {
+        this.dayPlans.add(dayPlan);
     }
 
 
