@@ -61,7 +61,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/imageButton"
+                    android:id="@+id/imgMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="44dp"
@@ -71,41 +71,6 @@
                     app:layout_constraintStart_toEndOf="@+id/tvHello"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/notification" />
-
-                <TextView
-                    android:id="@+id/textView10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="120dp"
-                    android:text="Найдите нужную статью здесь"
-                    android:textAlignment="center"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.495"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/imageView5" />
-
-                <EditText
-                    android:id="@+id/editTextText6"
-                    android:layout_width="0dp"
-                    android:layout_height="55dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
-                    android:background="@drawable/search_edit_text_background"
-                    android:drawableStart="@drawable/search2"
-                    android:drawablePadding="16dp"
-                    android:ems="10"
-                    android:hint="Поиск"
-                    android:inputType="text"
-                    android:padding="16dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -119,7 +84,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardProgress"
                     android:layout_width="100dp"
-                    android:layout_height="120dp"
+                    android:layout_height="125dp"
                     android:layout_margin="10dp"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="3dp">
@@ -166,7 +131,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardAchiv"
                     android:layout_width="100dp"
-                    android:layout_height="120dp"
+                    android:layout_height="125dp"
                     android:layout_margin="10dp"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="3dp">
@@ -211,8 +176,9 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardDoc"
                     android:layout_width="100dp"
-                    android:layout_height="120dp"
+                    android:layout_height="125dp"
                     android:layout_margin="10dp"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="3dp">
@@ -246,7 +212,7 @@
                             android:id="@+id/textView12"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Что нибудь"
+                            android:text="Связаться с врачем"
                             android:textAlignment="center"
                             android:textColor="#7C7474"
                             android:textStyle="bold" />

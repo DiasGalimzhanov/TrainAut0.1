@@ -7,6 +7,7 @@ import com.example.trainaut01.dagger.module.RepositoryModule;
 import com.example.trainaut01.home.AchievementsFragment;
 import com.example.trainaut01.home.DetailedNewsFragment;
 import com.example.trainaut01.home.HomeFragment;
+import com.example.trainaut01.home.NewsFragment;
 import com.example.trainaut01.profile.SupportFragment;
 import com.example.trainaut01.profile.UserUpdateFragment;
 import com.example.trainaut01.repository.AppInitializer;
@@ -30,5 +31,6 @@ public interface AppComponent {
     void inject(HomeFragment homeFragment);
     void inject(SupportFragment supportFragment);
     void inject(AchievementsFragment achievementsFragment);
+    void inject(NewsFragment newsFragment);
 }
 

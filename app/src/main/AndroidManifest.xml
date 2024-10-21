@@ -32,23 +32,20 @@
             android:value="@string/default_web_client_id" />
 
         <activity
-            android:name=".profileActivities.UpdateUserProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".profileActivities.UserProfileActivity"
-            android:exported="false" />
-        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
-        <activity
-            android:name=".HomeActivity"
-            android:exported="false" />
+
+        <service
+            android:name=".service.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
         <activity
             android:name=".IntroActivity"
             android:exported="true">
