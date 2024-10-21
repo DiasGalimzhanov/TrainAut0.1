@@ -15,6 +15,7 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
@@ -134,5 +135,47 @@ public class DayPlanRepository implements Repository<DayPlan> {
                 })
                 .addOnFailureListener(onFailureListener);
     }
+
+    public void markExerciseAsCompleted(String userId, String weekDay, String exerciseId, float timeElapsed, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
+        // Ссылка на коллекцию dayPlans конкретного пользователя
+        CollectionReference userDayPlansCollection = db.collection("users").document(userId).collection("dayPlans");
+
+        // Запрос для получения плана, соответствующего конкретному дню недели
+        userDayPlansCollection.whereEqualTo("id", weekDay)
+                .limit(1) // Ограничиваем до одного результата
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // Получаем первый документ
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        // Получаем массив exercises
+                        List<Map<String, Object>> exercises = (List<Map<String, Object>>) document.get("exercises");
+                        if (exercises != null) {
+                            // Ищем нужное упражнение по ID
+                            for (Map<String, Object> exercise : exercises) {
+                                if (exercise.get("id").equals(exerciseId)) {
+                                    // Обновляем состояние completed
+                                    exercise.put("completed", true);
+                                    exercise.put("completedTime", timeElapsed);
+                                    break;
+                                }
+                            }
+
+                            // Сохраняем обновленный массив обратно в Firestore
+                            document.getReference().update("exercises", exercises)
+                                    .addOnSuccessListener(onSuccessListener)
+                                    .addOnFailureListener(onFailureListener);
+                        } else {
+                            onFailureListener.onFailure(new Exception("Exercises not found"));
+                        }
+                    } else {
+                        onFailureListener.onFailure(new Exception("No day plan found for the specified week day"));
+                    }
+                })
+                .addOnFailureListener(onFailureListener);
+    }
+
+
 
 }

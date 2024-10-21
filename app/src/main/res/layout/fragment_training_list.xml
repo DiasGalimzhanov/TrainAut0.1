@@ -2,14 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/mainTraining"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#C6DDE7"
     tools:context=".training.TrainingListFragment">
 
     <ImageView
-        android:id="@+id/imageView14"
+        android:id="@+id/iv14"
         android:layout_width="170dp"
         android:layout_height="170dp"
         android:scaleType="fitXY"
@@ -18,17 +18,31 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <TextView
+        android:id="@+id/tvTitleDayOfWeek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="День недели"
+        android:textAlignment="center"
+        android:textColor="#40A951"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toEndOf="@+id/iv14"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="610dp"
         android:background="@drawable/background_training_list"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv14"
         app:layout_constraintVertical_bias="0.958"
+        android:paddingTop="10dp"
         tools:layout_editor_absoluteX="0dp">
 
         <TextView
@@ -36,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Ваша Тренировка \n на сегодня"
+            android:text="Список упражнений"
             android:textAlignment="center"
             android:textColor="#65F87D"
             android:textSize="20sp"

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.trainaut01.BottomNavigationUpdater;
 import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -113,5 +114,15 @@ public class UserProfileFragment extends Fragment {
             _tvPhone.setText(phone);
             _tvBirthDate.setText(birthDate);
         }
+    }
+
+    public void updateBottomNavigation() {
+        ((BottomNavigationUpdater) getActivity()).updateBottomNavigationSelection(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateBottomNavigation();
     }
 }

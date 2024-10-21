@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -13,15 +15,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.trainaut01.BottomNavigationUpdater;
 import com.example.trainaut01.R;
 
 import java.util.Calendar;
 
 public class TrainingWeekFragment extends Fragment {
 
-    // Объявляем переменные для каждого дня недели
+    // Переменные для каждого дня недели
     private LinearLayout _monday, _tuesday, _wednesday, _thursday, _friday, _saturday, _sunday;
-    // Переменная для хранения текущего дня недели
+
+    // Переменная текущего дня недели
     private int dayOfWeek;
 
     @Nullable
@@ -55,7 +59,7 @@ public class TrainingWeekFragment extends Fragment {
         _sunday = view.findViewById(R.id.sundayLayout);
 
         // По умолчанию делаем все дни неактивными
-        inactiveDays();
+//        inactiveDays();
 
         // Устанавливаем обработчики кликов для каждого дня недели
         setOnClickListeners();
@@ -74,37 +78,39 @@ public class TrainingWeekFragment extends Fragment {
 
     // Метод для активации только того дня недели, который соответствует текущему дню
     private void activeDay(){
-        // Используем переменную dayOfWeek для определения текущего дня недели и активации соответствующего LinearLayout
+
+        boolean enabled = true;
+        int drawbleBackgroundResource = R.drawable.background_week_current_day;
+
         switch (dayOfWeek) {
             case Calendar.MONDAY:
-                _monday.setEnabled(true);// Активируем понедельник
-                _monday.setBackgroundResource(R.drawable.background_week_current_day);
+                setUpdates(_monday, enabled, drawbleBackgroundResource);
                 break;
             case Calendar.TUESDAY:
-                _tuesday.setEnabled(true); // Активируем вторник
-                _tuesday.setBackgroundResource(R.drawable.background_week_current_day);
+                setUpdates(_tuesday, enabled, drawbleBackgroundResource);
                 break;
             case Calendar.WEDNESDAY:
-                _wednesday.setEnabled(true); // Активируем среду
-                _wednesday.setBackgroundResource(R.drawable.background_week_current_day);
+                setUpdates(_wednesday, enabled, drawbleBackgroundResource);
                 break;
             case Calendar.THURSDAY:
-                _thursday.setEnabled(true); // Активируем четверг
-                _thursday.setBackgroundResource(R.drawable.background_week_current_day);
+                setUpdates(_thursday, enabled, drawbleBackgroundResource);
                 break;
             case Calendar.FRIDAY:
-                _friday.setEnabled(true); // Активируем пятницу
-                _friday.setBackgroundResource(R.drawable.background_week_current_day);
+                setUpdates(_friday, enabled, drawbleBackgroundResource);
                 break;
             case Calendar.SATURDAY:
-                _saturday.setEnabled(true); // Активируем субботу
-                _saturday.setBackgroundResource(R.drawable.background_week_current_day);
+                setUpdates(_saturday, enabled, drawbleBackgroundResource);
                 break;
             case Calendar.SUNDAY:
-                _sunday.setEnabled(true); // Активируем воскресенье
-                _sunday.setBackgroundResource(R.drawable.background_week_current_day);
+                setUpdates(_sunday, enabled, drawbleBackgroundResource);
                 break;
         }
+    }
+
+    //Метод для установки изменений в LinearLayout
+    private void setUpdates(LinearLayout layout, boolean enabled, int backgroundResource){
+        layout.setEnabled(enabled);
+        layout.setBackgroundResource(backgroundResource);
     }
 
     // Метод для получения текущего дня недели с помощью Calendar
@@ -126,21 +132,29 @@ public class TrainingWeekFragment extends Fragment {
 
     // Метод для открытия фрагмента с деталями тренировки
     private void openTrainingListFragment(String day) {
-        // Получаем userId из SharedPreferences
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", null);
 
         if (userId != null) {
-            // Передаем userId в фрагмент
             TrainingListFragment listFragment = TrainingListFragment.newInstance(day, userId);
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main, listFragment)
+                    .setCustomAnimations(R.anim.fragment_enter, R.anim.fragment_exit, R.anim.fragment_enter, R.anim.fragment_exit)
+                    .add(R.id.mainTraining, listFragment)
                     .addToBackStack(null)
                     .commit();
         } else {
-            // Обработка ситуации, если userId не найден
             Toast.makeText(getContext(), "User ID не найден", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void updateBottomNavigation() {
+        ((BottomNavigationUpdater) getActivity()).updateBottomNavigationSelection(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateBottomNavigation();
     }
 
 }

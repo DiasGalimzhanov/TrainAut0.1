@@ -1,2 +1,7 @@
-package com.example.trainaut01;public interface BottomNavigationUpdater {
+package com.example.trainaut01;
+
+import androidx.fragment.app.Fragment;
+
+public interface BottomNavigationUpdater {
+    void updateBottomNavigationSelection(Fragment fragment);
 }

@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.trainaut01.BottomNavigationUpdater;
 import com.example.trainaut01.R;
 import com.example.trainaut01.adapter.NewsAdapter;
 import com.example.trainaut01.component.AppComponent;
@@ -117,11 +118,9 @@ public class HomeFragment extends Fragment {
 
         avatarRepository = new AvatarRepository();
         recyclerViewNews = view.findViewById(R.id.RecyclerView1);
-//        listView = view.findViewById(R.id.RecyclerView1);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerViewNews.setLayoutManager(layoutManager);
         recyclerViewNews.setAdapter(adapterNews);
-//        recyclerViewNews.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     }
 
 
@@ -146,4 +145,16 @@ public class HomeFragment extends Fragment {
         });
 
     }
+
+
+    public void updateBottomNavigation() {
+        ((BottomNavigationUpdater) getActivity()).updateBottomNavigationSelection(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateBottomNavigation();
+    }
+
 }
