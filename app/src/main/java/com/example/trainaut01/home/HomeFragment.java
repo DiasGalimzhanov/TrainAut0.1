@@ -1,6 +1,7 @@
 package com.example.trainaut01.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,11 +40,11 @@ import javax.inject.Inject;
 
 public class HomeFragment extends Fragment {
 //    private ListView listView;
-    private TextView tvHello;
-    private ImageView _imgAvatar;
+    private TextView tvHello, _tvMoreNews;
+    private ImageView _imgAvatar, _imgMsg;
     private NewsAdapter adapterNews;
     private RecyclerView recyclerViewNews;
-    private CardView _cardAchiv, _cardProgress;
+    private CardView _cardAchiv, _cardProgress, _cardDoc;
     private AvatarRepository avatarRepository;
 
     private AppComponent appComponent;
@@ -101,6 +103,48 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        _cardDoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setType("message/rfc822");
+
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"doc@gamil.com"});
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Тема письма");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "Текст сообщения");
+
+                try {
+                    // Открываем почтовое приложение
+                    startActivity(Intent.createChooser(emailIntent, "Выберите почтовое приложение"));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    // Если нет почтового приложения, выводим сообщение об ошибке
+                    Toast.makeText(view.getContext(), "Почтовое приложение не найдено.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        _tvMoreNews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container,new NewsFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        _imgMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container,new MessageFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
         return view;
     }
 
@@ -109,8 +153,12 @@ public class HomeFragment extends Fragment {
         appComponent.inject(this);
         tvHello = view.findViewById(R.id.tvHello);
         _cardAchiv = view.findViewById(R.id.cardAchiv);
+        _cardDoc = view.findViewById(R.id.cardDoc);
         _imgAvatar = view.findViewById(R.id.imgAvatar);
         _cardProgress = view.findViewById(R.id.cardProgress);
+        _tvMoreNews = view.findViewById(R.id.tvMoreNews);
+        _imgMsg = view.findViewById(R.id.imgMessage);
+
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
         String firstName = sharedPref.getString("firstName", null);

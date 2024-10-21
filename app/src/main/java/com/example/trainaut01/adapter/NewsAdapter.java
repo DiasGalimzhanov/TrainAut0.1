@@ -21,11 +21,13 @@ import com.example.trainaut01.home.DetailedNewsFragment;
 import com.example.trainaut01.models.News;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
     private List<News> newsList;
+    private List<News> filteredNewsList;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -34,6 +36,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     public NewsAdapter(List<News> newsList, OnItemClickListener listener) {
         this.newsList = newsList;
+        this.filteredNewsList = new ArrayList<>(newsList);
         this.listener = listener;
     }
 
@@ -45,13 +48,29 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @Override
     public void onBindViewHolder(NewsViewHolder holder, int position) {
-        News newsItem = newsList.get(position);
+        News newsItem = filteredNewsList.get(position); // Используем filteredNewsList
         holder.bind(newsItem, listener);
     }
 
     @Override
     public int getItemCount() {
-        return newsList.size();
+        return filteredNewsList.size(); // Возвращаем размер filteredNewsList
+    }
+
+    // Метод для фильтрации новостей по заголовку
+    public void filter(String text) {
+        filteredNewsList.clear();
+        if (text.isEmpty()) {
+            filteredNewsList.addAll(newsList);
+        } else {
+            text = text.toLowerCase();
+            for (News news : newsList) {
+                if (news.getTitle().toLowerCase().contains(text)) {
+                    filteredNewsList.add(news);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     static class NewsViewHolder extends RecyclerView.ViewHolder {
