@@ -49,10 +49,25 @@ TrainAut
     Адаптеры для эффективного отображения списков тренировок, новостей и ачивок в RecyclerView, обеспечивая гибкость и оптимизацию производительности.
 
 
-Основные разделы:
-    Главная (Home) – отображает общую информацию и новости.
-    Тренировки (Training) – раздел с планами тренировок для каждой недели.
-    Профиль (Profile) – отображение личной информации пользователя и его прогресса.
+Разделы:
+  Вход (Login)
+   ![image](https://github.com/user-attachments/assets/a88b72d4-a015-40b5-a3a6-193f4aad45e6)
+
+  Главная (Home) – отображает общую информацию и новости.
+    ![image](https://github.com/user-attachments/assets/633885c8-c2b8-4f5f-96a0-b5f02330190c)
+
+  Тренировки (Training) – раздел с планами тренировок для каждой недели.
+
+  ![image](https://github.com/user-attachments/assets/f0748ef4-6d48-4bee-b959-9317e33067d6)
+
+  ![image](https://github.com/user-attachments/assets/890c6505-d68c-439d-8da7-70b1842b13d0)
+
+  ![image](https://github.com/user-attachments/assets/d5a65990-73ca-40d2-9bb0-3f62eb672899)
+
+  
+  Профиль (Profile) – отображение личной информации пользователя и его прогресса.
+
+  ![image](https://github.com/user-attachments/assets/5ed24974-2059-4e1e-998c-f37f70e8244b)
 
 
 
