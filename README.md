@@ -50,7 +50,7 @@ TrainAut
 
 
 Разделы:
-  Вход (Login)
+  Вход (Login) \n\n
    ![image](https://github.com/user-attachments/assets/a88b72d4-a015-40b5-a3a6-193f4aad45e6)
 
   Главная (Home) – отображает общую информацию и новости.
