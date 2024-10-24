@@ -154,6 +154,7 @@ public class HomeFragment extends Fragment {
 
         appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
+
         tvHello = view.findViewById(R.id.tvHello);
         _cardAchiv = view.findViewById(R.id.cardAchiv);
         _cardDoc = view.findViewById(R.id.cardDoc);
