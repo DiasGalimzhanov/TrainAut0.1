@@ -12,43 +12,50 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+// Модуль Dagger для предоставления репозиториев
 @Module
 public class RepositoryModule {
 
+    // Метод для предоставления экземпляра FirebaseFirestore
     @Provides
-    @Singleton
+    @Singleton // Обозначаем, что этот метод предоставляет синглтон
     public FirebaseFirestore provideFirebaseFirestore() {
-        return FirebaseFirestore.getInstance();
+        return FirebaseFirestore.getInstance(); // Возвращаем экземпляр Firestore
     }
 
+    // Метод для предоставления репозитория упражнений
     @Provides
-    @Singleton
+    @Singleton // Обозначаем, что этот метод предоставляет синглтон
     public ExerciseRepository provideExerciseRepository(FirebaseFirestore db) {
-        return new ExerciseRepository(db);
+        return new ExerciseRepository(db); // Возвращаем новый экземпляр ExerciseRepository
     }
 
+    // Метод для предоставления репозитория пользователей
     @Provides
-    @Singleton
-    public UserRepository provideUserRepository(){
-        return new UserRepository();
+    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    public UserRepository provideUserRepository() {
+        return new UserRepository(); // Возвращаем новый экземпляр UserRepository
     }
 
+    // Метод для предоставления репозитория новостей
     @Provides
-    @Singleton
-    public NewsRepository provideNewsRepository(){
-        return new NewsRepository();
+    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    public NewsRepository provideNewsRepository() {
+        return new NewsRepository(); // Возвращаем новый экземпляр NewsRepository
     }
 
+    // Метод для предоставления репозитория достижений
     @Provides
-    @Singleton
-    public AchievementRepository provideAchievementRepository(){
-        return new AchievementRepository();
+    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    public AchievementRepository provideAchievementRepository() {
+        return new AchievementRepository(); // Возвращаем новый экземпляр AchievementRepository
     }
 
+    // Метод для предоставления репозитория аватаров
     @Provides
-    @Singleton
-    public AvatarRepository provideAvatarRepository(){
-        return new AvatarRepository();
+    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    public AvatarRepository provideAvatarRepository() {
+        return new AvatarRepository(); // Возвращаем новый экземпляр AvatarRepository
     }
 
 }

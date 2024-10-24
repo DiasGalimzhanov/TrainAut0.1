@@ -10,13 +10,15 @@ public class DayPlan {
     private String id;  // Добавлено поле id
     private WeekDay weekDay;
     private List<Exercise> exercises;
+    private boolean isCompleted;
 
     public DayPlan() {}
 
-    public DayPlan(String id, WeekDay weekDay, List<Exercise> exercises) {
+    public DayPlan(String id, WeekDay weekDay, List<Exercise> exercises, boolean isCompleted) {
         this.id = id;
         this.weekDay = weekDay;
         this.exercises = exercises;
+        this.isCompleted = isCompleted;
     }
 
     public String getId() {
@@ -44,6 +46,14 @@ public class DayPlan {
             throw new IllegalArgumentException("Day plan must have at least one exercise.");
         }
         this.exercises = exercises;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
     }
 
     public void addExercise(Exercise exercise) {

@@ -81,8 +81,8 @@ public class UserRepository {
         user.put("phone", phone);
         user.put("email", email);
         user.put("birthDate", bd);
-        user.put("lvl",0);
-        user.put("exp",0);
+        user.put("lvl", 0);
+        user.put("exp", 0);
         user.put("countDays", 0);
 
         db.collection("users").document(userId)
@@ -209,6 +209,51 @@ public class UserRepository {
                 });
 
     }
+
+    public void updateUserItem(String fieldName, Object fieldValue, Context context) {
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+        // Обновление одного поля в Firestore
+        db.collection("users").document(userId)
+                .update(fieldName, fieldValue)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Сохранение данных в SharedPreferences после успешного обновления
+                        SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+
+                        // Определение типа значения и сохранение в SharedPreferences
+                        if (fieldValue instanceof String) {
+                            editor.putString(fieldName, (String) fieldValue);
+                        } else if (fieldValue instanceof Integer) {
+                            editor.putInt(fieldName, (Integer) fieldValue);
+                        } else if (fieldValue instanceof Boolean) {
+                            editor.putBoolean(fieldName, (Boolean) fieldValue);
+                        } else if (fieldValue instanceof Float) {
+                            editor.putFloat(fieldName, (Float) fieldValue);
+                        } else if (fieldValue instanceof Long) {
+                            editor.putLong(fieldName, (Long) fieldValue);
+                        } else {
+                            Toast.makeText(context, "Неподдерживаемый тип данных", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        editor.apply();
+                        Toast.makeText(context, "Поле успешно обновлено", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Ошибка при обновлении поля", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+
+
 
     public void saveMessageToFirestore(String theme, String messege, Context context) {
         // Получаем ID пользователя

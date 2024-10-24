@@ -45,6 +45,9 @@ public class ExerciseDetailFragment extends Fragment {
     private TextView _tvSet, _tvRep, _tvName, _tvDescription, _tvRestTime, _tvRecommendations, _tvPoints;
     private ImageView _ivImageUrl;
     private Button _btnStart;
+
+    private String _text;
+
     private AppComponent _appComponent;
 
     @Inject
@@ -53,6 +56,7 @@ public class ExerciseDetailFragment extends Fragment {
     @Inject
     DayPlanRepository dayPlanRepository;
 
+    // Создание нового экземпляра фрагмента с аргументами
     public static ExerciseDetailFragment newInstance(Exercise exercise, String day) {
         ExerciseDetailFragment fragment = new ExerciseDetailFragment();
         Bundle args = new Bundle();
@@ -77,104 +81,99 @@ public class ExerciseDetailFragment extends Fragment {
             // Получение текущего дня недели
             int currentDay = currentDayOfWeek();
             String[] daysOfWeek = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
-            String today = daysOfWeek[currentDay - 1]; // Преобразуем номер дня в строку
+            String today = daysOfWeek[currentDay - 1];
 
-            // Проверяем, совпадает ли переданный день с текущим
+            // Проверка, совпадает ли переданный день с текущим
             if (!today.equals(weekDay)) {
-                _btnStart.setVisibility(View.GONE); // Скрываем кнопку
+                _btnStart.setVisibility(View.GONE);
             }
 
+            // Если упражнение не пустое, отображаем его и настраиваем кнопку
             if (exercise != null) {
-                _tvRecommendations.setText("Поддерживайте друг друга, чтобы создать дружескую атмосферу и следите за их техникой, чтобы избежать травм.\n\n" +
-                        "Объясняйте ребенку каждое движение.\n\n" +
-                        "Выполняйте упражнения в спокойном темпе, делая акцент на правильную технику.\n\n" +
-                        "Ребенок всегда должен дышать ровно и не спешить.\n\n" +
-                        "Всегда подстраивайте нагрузку под возможности ребёнка.\n\n" +
-                        "Включайте разминку перед началом тренировки: несколько легких упражнений для разогрева мышц");
-
-                _tvName.setText(exercise.getName());
-                _tvDescription.setText(exercise.getDescription());
-
-                if (exercise.getSets() == 1) {
-                    _tvSet.setText(exercise.getSets() + " подход");
-                } else {
-                    _tvSet.setText(exercise.getSets() + " подхода");
-                }
-
-                if (!exercise.getDuration().equals("")) {
-                    _tvRep.setText(" по " + exercise.getReps() + " " + exercise.getDuration());
-                } else {
-                    if (exercise.getReps() >= 2 && exercise.getReps() <= 4) {
-                        _tvRep.setText(" по " + exercise.getReps() + " раза");
-                    } else {
-                        _tvRep.setText(" по " + exercise.getReps() + " раз");
-                    }
-                }
-
-                _tvRestTime.setText(String.format(Locale.getDefault(), "Время отдыха между подходами %.0f минуты", exercise.getRestTime()));
-
-                int rewardPoints = exercise.getRewardPoints();
-                Log.d("ExerciseDetailFragment", "Reward Points: " + rewardPoints);
-                _tvPoints.setText("За выполнение этого упражнения вы получите +" + rewardPoints + " EXP");
-
-                Picasso.get().load(exercise.getImageUrl()).into(_ivImageUrl);
-
-                _btnStart.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (_btnStart.getText().toString().equals("Начать упражнение")) {
-                            // Запуск таймера
-                            startTimer();
-
-                            _btnStart.setText("Завершить упражнение");
-                            _btnStart.setTextColor(getResources().getColor(R.color.white));
-                            _btnStart.setBackgroundResource(R.drawable.background_finish_exercise);
-
-                        } else if (_btnStart.getText().toString().equals("Завершить упражнение")) {
-                            // Остановить таймер
-                            stopTimer();
-
-                            // Получаем количество очков за упражнение
-                            int points = exercise.getRewardPoints();
-
-                            // Сохраняем в SharedPreferences
-                            SharedPreferences sharedPref = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
-                            int currentExp = sharedPref.getInt("exp", 0);
-                            currentExp += points;
-
-                            SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.putInt("exp", currentExp);
-                            editor.apply();
-
-                            // Обновляем Firestore с использованием dayPlanId
-                            String userId = sharedPref.getString("userId", "");
-                            String exerciseId = exercise.getId();
-
-                            Log.d("ExerciseDetailFragment", "userId:" + userId + " dayPlanId: " + weekDay + ", exerciseId: " + exercise.getId());
-
-                            dayPlanRepository.markExerciseAsCompleted(userId, weekDay, exerciseId, _timeElapsed, new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Bundle result = new Bundle();
-                                    result.putBoolean("exerciseCompleted", true);
-                                    getParentFragmentManager().setFragmentResult("exerciseResult", result);
-
-                                    getActivity().onBackPressed();
-                                }
-                            }, new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }
-                });
+                displayExerciseDetails(exercise); // Метод для отображения деталей упражнения
+                setupStartButton(exercise, weekDay); // Метод для настройки кнопки начала упражнения
             } else {
                 _tvPoints.setText("Ошибка: упражнение не найдено.");
             }
         }
         return view;
+    }
+
+    // Метод для отображения деталей упражнения
+    private void displayExerciseDetails(Exercise exercise) {
+        _tvRecommendations.setText(_text);
+        _tvName.setText(exercise.getName());
+        _tvDescription.setText(exercise.getDescription());
+
+        // Установка количества подходов
+        _tvSet.setText(exercise.getSets() == 1 ? exercise.getSets() + " подход" : exercise.getSets() + " подхода");
+
+        // Установка количества повторений
+        String durationText = !exercise.getDuration().isEmpty() ? " по " + exercise.getReps() + " " + exercise.getDuration()
+                : (exercise.getReps() >= 2 && exercise.getReps() <= 4) ? " по " + exercise.getReps() + " раза" : " по " + exercise.getReps() + " раз";
+        _tvRep.setText(durationText);
+
+        // Установка времени отдыха
+        _tvRestTime.setText(String.format(Locale.getDefault(), "Время отдыха между подходами %.0f минуты", exercise.getRestTime()));
+
+        // Отображение очков за выполнение упражнения
+        int rewardPoints = exercise.getRewardPoints();
+        Log.d("ExerciseDetailFragment", "Reward Points: " + rewardPoints);
+        _tvPoints.setText("За выполнение этого упражнения вы получите +" + rewardPoints + " EXP");
+
+        // Загрузка изображения упражнения
+        Picasso.get().load(exercise.getImageUrl()).into(_ivImageUrl);
+    }
+
+    // Метод для настройки кнопки начала упражнения
+    private void setupStartButton(Exercise exercise, String weekDay) {
+        _btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (_btnStart.getText().toString().equals("Начать упражнение")) {
+                    startTimer();
+                    _btnStart.setText("Завершить упражнение");
+                    _btnStart.setTextColor(getResources().getColor(R.color.white));
+                    _btnStart.setBackgroundResource(R.drawable.background_finish_exercise);
+                } else {
+                    stopTimer();
+                    completeExercise(exercise, weekDay);
+                }
+            }
+        });
+    }
+
+    // Метод для завершения упражнения
+    private void completeExercise(Exercise exercise, String weekDay) {
+        // Получение количества очков за упражнение
+        int points = exercise.getRewardPoints();
+        SharedPreferences sharedPref = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        int currentExp = sharedPref.getInt("exp", 0);
+        currentExp += points;
+
+        // Обновление данных пользователя в Firestore
+        userRepository.updateUserItem("exp", currentExp, getContext());
+
+        String userId = sharedPref.getString("userId", "");
+        String exerciseId = exercise.getId();
+
+        Log.d("ExerciseDetailFragment", "userId:" + userId + " dayPlanId: " + weekDay + ", exerciseId: " + exerciseId);
+
+        // Отметить упражнение как выполненное
+        dayPlanRepository.markExerciseAsCompleted(userId, weekDay, exerciseId, _timeElapsed, new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Bundle result = new Bundle();
+                result.putBoolean("exerciseCompleted", true);
+                getParentFragmentManager().setFragmentResult("exerciseResult", result);
+                getActivity().onBackPressed();
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // Метод для запуска таймера
@@ -189,9 +188,7 @@ public class ExerciseDetailFragment extends Fragment {
             }
 
             @Override
-            public void onFinish() {
-                // Mетод никогда не будет вызван, так как таймер бесконечный
-            }
+            public void onFinish() {}
         };
         _timer.start();
     }
@@ -219,10 +216,16 @@ public class ExerciseDetailFragment extends Fragment {
         _btnStart = view.findViewById(R.id.btnStart);
         _tvTimer = view.findViewById(R.id.tvTimer);
 
+        _text = "Поддерживайте друг друга, чтобы создать дружескую атмосферу и следите за их техникой, чтобы избежать травм.\n\n" +
+                "Объясняйте ребенку каждое движение.\n\n" +
+                "Выполняйте упражнения в спокойном темпе, делая акцент на правильную технику.\n\n" +
+                "Ребенок всегда должен дышать ровно и не спешить.\n\n" +
+                "Всегда подстраивайте нагрузку под возможности ребёнка.\n\n" +
+                "Включайте разминку перед началом тренировки: несколько легких упражнений для разогрева мышц";
     }
 
     // Метод для получения текущего дня недели с помощью Calendar
-    private int currentDayOfWeek(){
+    private int currentDayOfWeek() {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.DAY_OF_WEEK);
     }

@@ -26,7 +26,7 @@
                 <ImageView
                     android:id="@+id/imageView5"
                     android:layout_width="0dp"
-                    android:layout_height="350dp"
+                    android:layout_height="380dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -38,6 +38,7 @@
                     android:id="@+id/textView10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
                     android:text="Достижения"
                     android:textAlignment="center"
                     android:textColor="#ffffff"
@@ -49,15 +50,16 @@
 
                 <ImageView
                     android:id="@+id/imgAvatar"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
-
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:background="@drawable/rounded_image"
                     android:clipToOutline="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView10"
+                    app:layout_constraintVertical_bias="0.215"
                     app:srcCompat="@drawable/default_image_news" />
 
                 <TextView
@@ -65,9 +67,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Level"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
+                    android:textColor="@color/white"
                     android:textSize="24sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

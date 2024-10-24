@@ -35,6 +35,17 @@
                     app:srcCompat="@drawable/top_background_blue" />
 
                 <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="124dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/arc_1" />
+
+                <ImageView
                     android:id="@+id/imgAvatar"
                     android:layout_width="95dp"
                     android:layout_height="95dp"
@@ -78,7 +89,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="-90dp"
+                android:layout_marginTop="-170dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -228,7 +239,10 @@
                 android:id="@+id/currentTraining"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_margin="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/background_with_border"
                 android:padding="10dp">
 
@@ -240,7 +254,7 @@
                     android:layout_marginTop="32dp"
                     android:fontFamily="@font/lobster_regular"
                     android:text="Тренировка на сегодня"
-                    android:textColor="@color/black"
+                    android:textColor="#5A3CE0"
                     android:textSize="24sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -249,8 +263,8 @@
                     android:layout_width="130dp"
                     android:layout_height="150dp"
                     android:background="@drawable/rounded_corners"
-                    android:scaleType="centerCrop"
                     android:clipToOutline="true"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/boy_with_dumbbells_homepage"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -263,11 +277,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginBottom="24dp"
-                    android:background="@drawable/background_week_current_day"
+                    android:background="@drawable/background_btn_intro"
                     android:fontFamily="@font/adventpro_semiexpanded_regular"
                     android:padding="20dp"
                     android:text="Перейти к упражнениям"
-                    android:textColor="#000000"
+                    android:textColor="#D9E7ED"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
