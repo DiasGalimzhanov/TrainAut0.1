@@ -24,9 +24,9 @@ import javax.inject.Inject;
 
 public class BaseActivity extends AppCompatActivity implements BottomNavigationUpdater {
 
-    private BottomNavigationView _bottomNavigationView; // BottomNavigationView для навигации
-    private AppComponent _appComponent; // Компонент Dagger для внедрения зависимостей
-    private int _previousPosition = 0; // Переменная для отслеживания предыдущей выбранной позиции
+    private BottomNavigationView _bottomNavigationView;
+    private AppComponent _appComponent;
+    private int _previousPosition = 0;
 
     // Внедренные репозитории для управления упражнениями и планами на день
     @Inject
@@ -42,19 +42,15 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Инициализация компонентов Dagger
         _appComponent = DaggerAppComponent.create();
         _appComponent.inject(this);
 
         setContentView(R.layout.activity_base);
 
-        // Устанавливаем фрагмент по умолчанию
         loadFragment(new HomeFragment());
 
-        // Настраиваем BottomNavigationView и слушатели для его элементов
         setupBottomNavigationView();
 
-        // Инициализация упражнений и планов на день
         initializeData();
     }
 
@@ -74,7 +70,6 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
                 Fragment selectedFragment = null;
                 int newPosition = 0;
 
-                // Определяем, какой фрагмент выбрать в зависимости от нажатого элемента
                 if (item.getItemId() == R.id.nav_home) {
                     selectedFragment = new HomeFragment();
                     newPosition = 0;
@@ -86,7 +81,6 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
                     newPosition = 2;
                 }
 
-                // Проверяем, не является ли выбранный фрагмент текущим
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 if (selectedFragment != null && (currentFragment == null || !selectedFragment.getClass().equals(currentFragment.getClass()))) {
                     animateFragmentTransition(selectedFragment, newPosition);
@@ -101,27 +95,21 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
     private void animateFragmentTransition(Fragment fragment, int newPosition) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        // Определяем направление анимации
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (currentFragment != null) {
             if (newPosition > _previousPosition) {
-                // Переход вправо
                 transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
             } else if (newPosition < _previousPosition) {
-                // Переход влево
                 transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left);
             }
         }
 
-        // Обновляем предыдущую позицию
         _previousPosition = newPosition;
 
-        // Заменяем фрагмент и добавляем его в стек
         transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null); // Добавляем в стек при каждом переходе
-        transaction.commit(); // Выполняем транзакцию
+        transaction.addToBackStack(null);
+        transaction.commit();
 
-        // Используем post для обновления навигации
         _bottomNavigationView.post(() -> updateBottomNavigationSelection(fragment));
     }
 
@@ -140,7 +128,7 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
                 itemId = R.id.nav_profile;
                 break;
             default:
-                return; // Неизвестный фрагмент
+                return;
         }
         _bottomNavigationView.setSelectedItemId(itemId);
     }
@@ -161,15 +149,12 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
     // Обработка нажатия кнопки "Назад"
     @Override
     public void onBackPressed() {
-        // Проверяем, есть ли фрагменты в стеке
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack(); // Возвращаемся к предыдущему фрагменту
+            getSupportFragmentManager().popBackStack();
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-            // Обновляем навигацию
             if (currentFragment != null) {
                 updateBottomNavigationSelection(currentFragment);
-                // Обновляем предыдущую позицию на основе текущего фрагмента
                 if (currentFragment instanceof HomeFragment) {
                     _previousPosition = 0;
                 } else if (currentFragment instanceof TrainingWeekFragment) {
@@ -179,14 +164,12 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
                 }
             }
         } else {
-            // Если текущий фрагмент - HomeFragment, завершаем активность
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             if (currentFragment instanceof HomeFragment) {
-                super.onBackPressed(); // Завершение активности
+                super.onBackPressed();
             } else {
-                // Возврат к HomeFragment
                 loadFragment(new HomeFragment());
-                _previousPosition = 0; // Обновляем предыдущую позицию
+                _previousPosition = 0;
             }
         }
     }

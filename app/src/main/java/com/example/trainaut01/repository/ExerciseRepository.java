@@ -12,7 +12,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-// Репозиторий для работы с упражнениями в Firebase Firestore
 public class ExerciseRepository implements Repository<Exercise> {
     private final FirebaseFirestore _db;
     private final CollectionReference _collection;
@@ -26,52 +25,49 @@ public class ExerciseRepository implements Repository<Exercise> {
     // Метод для добавления нового упражнения
     @Override
     public void add(Exercise exercise, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        _collection.add(exercise) // Добавляем упражнение в коллекцию
-                .addOnSuccessListener(docRef -> onSuccess.onSuccess(null)) // Успешное добавление
-                .addOnFailureListener(onFailure); // Обработка ошибки
+        _collection.add(exercise)
+                .addOnSuccessListener(docRef -> onSuccess.onSuccess(null))
+                .addOnFailureListener(onFailure);
     }
 
     // Метод для обновления существующего упражнения по ID
     @Override
     public void update(String id, Exercise exercise, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        _collection.document(id).set(exercise) // Обновляем документ с указанным ID
-                .addOnSuccessListener(onSuccess) // Успешное обновление
-                .addOnFailureListener(onFailure); // Обработка ошибки
+        _collection.document(id).set(exercise)
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
     }
 
     // Метод для удаления упражнения по ID
     @Override
     public void delete(String id, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        _collection.document(id).delete() // Удаляем документ с указанным ID
-                .addOnSuccessListener(onSuccess) // Успешное удаление
-                .addOnFailureListener(onFailure); // Обработка ошибки
+        _collection.document(id).delete()
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
     }
 
     // Метод для получения одного упражнения по ID
     @Override
     public void get(String id, OnSuccessListener<Exercise> onSuccess, OnFailureListener onFailure) {
-        _collection.document(id).get() // Получаем документ с указанным ID
+        _collection.document(id).get()
                 .addOnSuccessListener(doc -> {
-                    // Преобразуем документ в объект Exercise
                     Exercise exercise = doc.toObject(Exercise.class);
-                    onSuccess.onSuccess(exercise); // Успешное получение
+                    onSuccess.onSuccess(exercise);
                 })
-                .addOnFailureListener(onFailure); // Обработка ошибки
+                .addOnFailureListener(onFailure);
     }
 
     // Метод для получения всех упражнений из коллекции
     @Override
     public void getAll(OnSuccessListener<List<Exercise>> onSuccess, OnFailureListener onFailure) {
-        _collection.get() // Получаем все документы из коллекции
+        _collection.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Exercise> exercises = new ArrayList<>(); // Список для хранения полученных упражнений
-                    // Итерация по всем документам в коллекции
+                    List<Exercise> exercises = new ArrayList<>();
                     for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        // Преобразуем каждый документ в объект Exercise и добавляем в список
                         exercises.add(document.toObject(Exercise.class));
                     }
-                    onSuccess.onSuccess(exercises); // Успешное получение всех упражнений
+                    onSuccess.onSuccess(exercises);
                 })
-                .addOnFailureListener(onFailure); // Обработка ошибки
+                .addOnFailureListener(onFailure);
     }
 }

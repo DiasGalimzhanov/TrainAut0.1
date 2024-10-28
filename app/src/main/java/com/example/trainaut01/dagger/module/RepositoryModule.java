@@ -18,44 +18,44 @@ public class RepositoryModule {
 
     // Метод для предоставления экземпляра FirebaseFirestore
     @Provides
-    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    @Singleton
     public FirebaseFirestore provideFirebaseFirestore() {
-        return FirebaseFirestore.getInstance(); // Возвращаем экземпляр Firestore
+        return FirebaseFirestore.getInstance();
     }
 
     // Метод для предоставления репозитория упражнений
     @Provides
-    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    @Singleton
     public ExerciseRepository provideExerciseRepository(FirebaseFirestore db) {
-        return new ExerciseRepository(db); // Возвращаем новый экземпляр ExerciseRepository
+        return new ExerciseRepository(db);
     }
 
     // Метод для предоставления репозитория пользователей
     @Provides
-    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    @Singleton
     public UserRepository provideUserRepository() {
-        return new UserRepository(); // Возвращаем новый экземпляр UserRepository
+        return new UserRepository();
     }
 
     // Метод для предоставления репозитория новостей
     @Provides
-    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    @Singleton
     public NewsRepository provideNewsRepository() {
-        return new NewsRepository(); // Возвращаем новый экземпляр NewsRepository
+        return new NewsRepository();
     }
 
     // Метод для предоставления репозитория достижений
     @Provides
-    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    @Singleton
     public AchievementRepository provideAchievementRepository() {
-        return new AchievementRepository(); // Возвращаем новый экземпляр AchievementRepository
+        return new AchievementRepository();
     }
 
     // Метод для предоставления репозитория аватаров
     @Provides
-    @Singleton // Обозначаем, что этот метод предоставляет синглтон
+    @Singleton
     public AvatarRepository provideAvatarRepository() {
-        return new AvatarRepository(); // Возвращаем новый экземпляр AvatarRepository
+        return new AvatarRepository();
     }
 
 }

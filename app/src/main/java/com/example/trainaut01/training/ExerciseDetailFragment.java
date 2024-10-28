@@ -78,20 +78,17 @@ public class ExerciseDetailFragment extends Fragment {
             Exercise exercise = (Exercise) getArguments().getSerializable(ARG_EXERCISE);
             String weekDay = getArguments().getString(ARG_DAY).toLowerCase();
 
-            // Получение текущего дня недели
             int currentDay = currentDayOfWeek();
             String[] daysOfWeek = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
             String today = daysOfWeek[currentDay - 1];
 
-            // Проверка, совпадает ли переданный день с текущим
             if (!today.equals(weekDay)) {
                 _btnStart.setVisibility(View.GONE);
             }
 
-            // Если упражнение не пустое, отображаем его и настраиваем кнопку
             if (exercise != null) {
-                displayExerciseDetails(exercise); // Метод для отображения деталей упражнения
-                setupStartButton(exercise, weekDay); // Метод для настройки кнопки начала упражнения
+                displayExerciseDetails(exercise);
+                setupStartButton(exercise, weekDay);
             } else {
                 _tvPoints.setText("Ошибка: упражнение не найдено.");
             }
@@ -105,23 +102,18 @@ public class ExerciseDetailFragment extends Fragment {
         _tvName.setText(exercise.getName());
         _tvDescription.setText(exercise.getDescription());
 
-        // Установка количества подходов
         _tvSet.setText(exercise.getSets() == 1 ? exercise.getSets() + " подход" : exercise.getSets() + " подхода");
 
-        // Установка количества повторений
         String durationText = !exercise.getDuration().isEmpty() ? " по " + exercise.getReps() + " " + exercise.getDuration()
                 : (exercise.getReps() >= 2 && exercise.getReps() <= 4) ? " по " + exercise.getReps() + " раза" : " по " + exercise.getReps() + " раз";
         _tvRep.setText(durationText);
 
-        // Установка времени отдыха
         _tvRestTime.setText(String.format(Locale.getDefault(), "Время отдыха между подходами %.0f минуты", exercise.getRestTime()));
 
-        // Отображение очков за выполнение упражнения
         int rewardPoints = exercise.getRewardPoints();
         Log.d("ExerciseDetailFragment", "Reward Points: " + rewardPoints);
         _tvPoints.setText("За выполнение этого упражнения вы получите +" + rewardPoints + " EXP");
 
-        // Загрузка изображения упражнения
         Picasso.get().load(exercise.getImageUrl()).into(_ivImageUrl);
     }
 
@@ -145,13 +137,11 @@ public class ExerciseDetailFragment extends Fragment {
 
     // Метод для завершения упражнения
     private void completeExercise(Exercise exercise, String weekDay) {
-        // Получение количества очков за упражнение
         int points = exercise.getRewardPoints();
         SharedPreferences sharedPref = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         int currentExp = sharedPref.getInt("exp", 0);
         currentExp += points;
 
-        // Обновление данных пользователя в Firestore
         userRepository.updateUserItem("exp", currentExp, getContext());
 
         String userId = sharedPref.getString("userId", "");
@@ -159,7 +149,6 @@ public class ExerciseDetailFragment extends Fragment {
 
         Log.d("ExerciseDetailFragment", "userId:" + userId + " dayPlanId: " + weekDay + ", exerciseId: " + exerciseId);
 
-        // Отметить упражнение как выполненное
         dayPlanRepository.markExerciseAsCompleted(userId, weekDay, exerciseId, _timeElapsed, new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

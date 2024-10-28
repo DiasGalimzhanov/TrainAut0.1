@@ -34,8 +34,7 @@ import javax.inject.Inject;
 
 public class TrainingListFragment extends Fragment implements TrainingDailyAdapter.OnExerciseClickListener {
 
-    // Константы для передачи аргументов между фрагментами
-    private static final String ARG_DAY = "day";
+     private static final String ARG_DAY = "day";
     private static final String USER_ID = "userId";
     private static final String PREFS_NAME = "TrainingPrefs";
     private static final String KEY_COUNT_DAYS = "countDays";
@@ -46,7 +45,6 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
 
     private AppComponent appComponent;
 
-    // Массив с названиями дней недели на русском языке
     private String[] daysOfWeek = {
             "Понедельник",
             "Вторник",
@@ -58,10 +56,10 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
     };
 
     @Inject
-    DayPlanRepository dayPlanRepository; // Внедрение зависимостей для работы с репозиторием планов тренировок
+    DayPlanRepository dayPlanRepository;
 
     @Inject
-    UserRepository userRepository; // Внедрение зависимостей для работы с репозиторием пользователей
+    UserRepository userRepository;
 
     public static TrainingListFragment newInstance(String day, String userId) {
         TrainingListFragment fragment = new TrainingListFragment();
@@ -78,21 +76,18 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
 
         View view = inflater.inflate(R.layout.fragment_training_list, container, false);
 
-        init(view); // Инициализация компонентов интерфейса
+        init(view);
 
-        _recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Установка менеджера компоновки для RecyclerView
+        _recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Получаем день и userId из аргументов
         String day = getArguments() != null ? getArguments().getString(ARG_DAY).toUpperCase() : "";
 
         if (day.equals("SUNDAY")) {
-            // Если день воскресенье, отображаем сообщение о том, что упражнений нет
             String text = "На сегодня упражнений нет\n\n" +
                     "Воскресенье — это время для отдыха и восстановления после активной недели. \n\n" +
                     "Для детей и их родителей это может быть день, посвящённый расслаблению, эмоциональной гармонии и приятным семейным занятиям.";
             _tvTitleTrainingList.setText(text);
         } else {
-            // Загружаем план тренировок для выбранного дня
             loadDayPlan(DayPlan.WeekDay.valueOf(day));
         }
 
@@ -102,7 +97,6 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 boolean exerciseCompleted = result.getBoolean("exerciseCompleted", false);
                 if (exerciseCompleted) {
-                    // Обновляем данные, если упражнение завершено
                     loadDayPlan(DayPlan.WeekDay.valueOf(day));
                 }
             }
@@ -114,7 +108,7 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
     // Инициализация компонентов пользовательского интерфейса
     private void init(View view) {
         appComponent = DaggerAppComponent.create();
-        appComponent.inject(this); // Внедрение зависимостей
+        appComponent.inject(this);
 
         _recyclerView = view.findViewById(R.id.rvDailyList);
         _tvTitleTrainingList = view.findViewById(R.id.tvTitleTrainingList);
@@ -124,12 +118,11 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
     // Метод для загрузки данных по планам тренировок конкретного пользователя
     private void loadDayPlan(DayPlan.WeekDay weekDay) {
 
-        String userId = getArguments().getString(USER_ID); // Получаем userId из аргументов
-        int dayIndex = weekDay.ordinal(); // Получаем индекс дня недели
+        String userId = getArguments().getString(USER_ID);
+        int dayIndex = weekDay.ordinal();
 
-        _tvTitleDayOfWeek.setText(daysOfWeek[dayIndex]); // Устанавливаем день недели на русском
+        _tvTitleDayOfWeek.setText(daysOfWeek[dayIndex]);
 
-        // Загружаем планы тренировок для конкретного пользователя и дня
         dayPlanRepository.getUserDayPlans(userId, weekDay, new OnSuccessListener<List<DayPlan>>() {
             @Override
             public void onSuccess(List<DayPlan> dayPlans) {
@@ -138,60 +131,52 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
                     DayPlan dayPlan = dayPlans.get(0);
                     List<Exercise> exercises = dayPlan.getExercises();
 
-                    // Проверяем, выполнены ли все упражнения
                     allExerciseIsCompleted(exercises, dayPlan);
 
-                    // Создаем адаптер и устанавливаем его для RecyclerView
                     _adapter = new TrainingDailyAdapter(exercises, TrainingListFragment.this, weekDay.name());
                     _recyclerView.setAdapter(_adapter);
                 } else {
-                    _tvTitleTrainingList.setText("На сегодня нет упражнений."); // Если упражнений нет
+                    _tvTitleTrainingList.setText("На сегодня нет упражнений.");
                 }
             }
         }, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                e.printStackTrace(); // Логирование ошибки
+                e.printStackTrace();
             }
         });
     }
 
-    // Метод для проверки, выполнены ли все упражнения
     private void allExerciseIsCompleted(List<Exercise> exercises, DayPlan dayPlan) {
         boolean allCompleted = exercises.stream().allMatch(Exercise::isCompleted);
 
         if (allCompleted && !dayPlan.isCompleted()) {
-            // Если все упражнения выполнены, обновляем статус дня
             DayPlan.WeekDay weekDay = dayPlan.getWeekDay();
             updateDayPlanCompletion(weekDay);
         }
     }
 
-    // Метод для обновления поля completed в Firestore и инкрементирования countDays
     private void updateDayPlanCompletion(DayPlan.WeekDay weekDay) {
         String userId = getArguments().getString(USER_ID);
 
-        Log.d("TrainingList", weekDay.toString()); // Логирование текущего дня
+        Log.d("TrainingList", weekDay.toString());
         dayPlanRepository.updateDayPlanCompletion(userId, weekDay, true, new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // Получаем текущее значение countDays и увеличиваем его на 1
                 Integer currentCountDays = getCountDays();
-                currentCountDays++; // Увеличиваем значение на 1
+                currentCountDays++;
 
-                // Сохраняем обновленное значение в SharedPreferences
                 saveCountDays(currentCountDays);
 
-                // Обновляем countDays в Firestore
                 userRepository.updateUserItem("countDays", currentCountDays, getContext());
 
-                Toast.makeText(getContext(), "Все упражнения выполнены!", Toast.LENGTH_SHORT).show(); // Сообщение об успешном завершении
+                Toast.makeText(getContext(), "Все упражнения выполнены!", Toast.LENGTH_SHORT).show();
             }
         }, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                e.printStackTrace(); // Логирование ошибки
-                Toast.makeText(getContext(), "Ошибка при обновлении статуса", Toast.LENGTH_SHORT).show(); // Сообщение об ошибке
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Ошибка при обновлении статуса", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -207,16 +192,15 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
     // Метод для получения значения countDays из SharedPreferences
     private Integer getCountDays() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getInt(KEY_COUNT_DAYS, 0); // По умолчанию 0
+        return sharedPreferences.getInt(KEY_COUNT_DAYS, 0);
     }
 
     @Override
     public void onExerciseClick(Exercise exercise, String day) {
-        // Создаем новый фрагмент для деталей упражнения
         Fragment detailFragment = ExerciseDetailFragment.newInstance(exercise, day);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, detailFragment) // Добавляем фрагмент в контейнер
-                .addToBackStack(null) // Добавляем в стек возврата
-                .commit(); // Выполняем транзакцию
+                .add(R.id.fragment_container, detailFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
