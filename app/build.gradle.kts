@@ -58,14 +58,14 @@ dependencies {
     implementation("com.google.firebase:firebase-core:21.1.1")
     implementation ("com.google.android.gms:play-services-base:17.6.0")
 
-
-//    Dagger
+    //Dagger
     implementation("com.google.dagger:dagger:2.52")
     annotationProcessor ("com.google.dagger:dagger-compiler:2.52")
 
-//    Picasso
+    //Picasso
     implementation("com.squareup.picasso:picasso:2.8")
-
+    
+    implementation ("no.nordicsemi.android:ble:2.5.1")
 
     implementation(libs.appcompat)
     implementation(libs.material)

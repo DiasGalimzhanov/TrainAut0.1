@@ -13,6 +13,7 @@ import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.models.DayPlan;
+import com.example.trainaut01.models.User;
 import com.example.trainaut01.profile.UserProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
