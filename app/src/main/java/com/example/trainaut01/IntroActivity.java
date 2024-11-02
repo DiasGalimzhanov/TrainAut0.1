@@ -10,7 +10,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class IntroActivity extends AppCompatActivity {
-    Button _btnLogIn,_btnReg;
+    Button _btnLogIn, _btnReg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

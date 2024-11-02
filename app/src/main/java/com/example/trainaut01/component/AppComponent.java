@@ -11,7 +11,6 @@ import com.example.trainaut01.home.NewsFragment;
 import com.example.trainaut01.profile.SupportFragment;
 import com.example.trainaut01.profile.UserUpdateFragment;
 import com.example.trainaut01.repository.AppInitializer;
-import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.training.ExerciseDetailFragment;
 import com.example.trainaut01.training.TrainingListFragment;
 
@@ -22,6 +21,7 @@ import dagger.Component;
 @Component(modules = {RepositoryModule.class})
 @Singleton
 public interface AppComponent {
+
     void inject(BaseActivity activity);
     void inject(AppInitializer appInitializer);
     void inject(TrainingListFragment trainingListFragment);

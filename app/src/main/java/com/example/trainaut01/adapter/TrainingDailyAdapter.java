@@ -15,10 +15,11 @@ import com.example.trainaut01.models.Exercise;
 import java.util.List;
 
 public class TrainingDailyAdapter extends RecyclerView.Adapter<TrainingDailyAdapter.TrainingViewHolder> {
-    private List<Exercise> exerciseList; // Список упражнений
-    private OnExerciseClickListener listener; // Слушатель кликов
+    private List<Exercise> exerciseList;
+    private OnExerciseClickListener listener;
     private String day;
 
+    // Конструктор адаптера
     public TrainingDailyAdapter(List<Exercise> exerciseList, OnExerciseClickListener listener, String day) {
         this.exerciseList = exerciseList;
         this.listener = listener;
@@ -40,7 +41,7 @@ public class TrainingDailyAdapter extends RecyclerView.Adapter<TrainingDailyAdap
         holder.chbCompleted.setEnabled(false);
         holder.tvRewardPoints.setText("+" + exercise.getRewardPoints());
 
-        // Проверка на наличие времени и установка значения
+        // Проверка на наличие времени выполнения и установка значения
         if (exercise.getCompletedTime() > 0) {
             float timeInSeconds = exercise.getCompletedTime();
             int minutes = (int) (timeInSeconds / (1000 * 60)) % 60;
@@ -48,12 +49,12 @@ public class TrainingDailyAdapter extends RecyclerView.Adapter<TrainingDailyAdap
             holder.tvTime.setText(String.format("%02d:%02d", minutes, seconds));
         }
 
-        // Отключаем возможность клика, если упражнение выполнено
+        // Отключение возможности клика, если упражнение выполнено
         if (exercise.isCompleted()) {
-            holder.itemView.setEnabled(false); // Отключаем клики
-            holder.itemView.setAlpha(0.5f); // Можно сделать элемент полупрозрачным, чтобы визуально обозначить, что он недоступен
+            holder.itemView.setEnabled(false);
+            holder.itemView.setAlpha(0.5f);
         } else {
-            holder.itemView.setAlpha(1.0f); // Восстанавливаем прозрачность
+            holder.itemView.setAlpha(1.0f);
         }
 
         // Обработка нажатия на элемент списка
@@ -63,25 +64,26 @@ public class TrainingDailyAdapter extends RecyclerView.Adapter<TrainingDailyAdap
             }
         });
 
+        // Обработка изменения состояния чекбокса
         holder.chbCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
             exercise.setCompleted(isChecked);
             notifyItemChanged(position);
-            // Здесь можно добавить логику для сохранения состояния в базе данных
         });
     }
-
 
     @Override
     public int getItemCount() {
         return exerciseList.size();
     }
 
+    // Внутренний класс ViewHolder для хранения ссылок на представления
     public static class TrainingViewHolder extends RecyclerView.ViewHolder {
         CheckBox chbCompleted;
         TextView tvTitle, tvRewardPoints, tvTime;
 
         public TrainingViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Инициализация переменных
             chbCompleted = itemView.findViewById(R.id.chbCompleted);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvRewardPoints = itemView.findViewById(R.id.tvRewardPoints);
@@ -89,10 +91,12 @@ public class TrainingDailyAdapter extends RecyclerView.Adapter<TrainingDailyAdap
         }
     }
 
+    // Метод для обновления списка упражнений
     public void updateExerciseList(List<Exercise> newExerciseList) {
         this.exerciseList = newExerciseList;
         notifyDataSetChanged();
     }
+
 
     // Интерфейс для обработки кликов на упражнения
     public interface OnExerciseClickListener {

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Светлая тема -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#6200EE</color>
     <color name="primary_variant">#3700B3</color>
+    <color name="B5B8D7Light">#B5B8D7</color>
+    <color name="A06EB6Light">#A06EB6</color>
 
+
+    <!-- Темная тема -->
 </resources>

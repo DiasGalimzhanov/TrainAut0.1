@@ -3,13 +3,11 @@ package com.example.trainaut01.repository;
 import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.Exercise;
 import com.example.trainaut01.models.TrainingPlan;
-import com.example.trainaut01.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -446,23 +444,23 @@ public class AppInitializer {
 
         // Создаем список дневных планов
         List<DayPlan> dayPlans = new ArrayList<>();
-        dayPlans.add(new DayPlan("monday", DayPlan.WeekDay.MONDAY, mondayExercises));
-        dayPlans.add(new DayPlan("tuesday", DayPlan.WeekDay.TUESDAY, tuesdayExercises));
-        dayPlans.add(new DayPlan("wednesday", DayPlan.WeekDay.WEDNESDAY, wednesdayExercises));
-        dayPlans.add(new DayPlan("thursday", DayPlan.WeekDay.THURSDAY, thursdayExercises));
-        dayPlans.add(new DayPlan("friday", DayPlan.WeekDay.FRIDAY, fridayExercises));
-        dayPlans.add(new DayPlan("saturday", DayPlan.WeekDay.SATURDAY, saturdayExercises));
+        dayPlans.add(new DayPlan("monday", DayPlan.WeekDay.MONDAY, mondayExercises, false));
+        dayPlans.add(new DayPlan("tuesday", DayPlan.WeekDay.TUESDAY, tuesdayExercises, false));
+        dayPlans.add(new DayPlan("wednesday", DayPlan.WeekDay.WEDNESDAY, wednesdayExercises, false));
+        dayPlans.add(new DayPlan("thursday", DayPlan.WeekDay.THURSDAY, thursdayExercises, false));
+        dayPlans.add(new DayPlan("friday", DayPlan.WeekDay.FRIDAY, fridayExercises, false));
+        dayPlans.add(new DayPlan("saturday", DayPlan.WeekDay.SATURDAY, saturdayExercises, false));
 
-        // Проверяем, существуют ли дневные планы
+        // Проверка, на существование дневных планов
         getAllDayPlans(existingDayPlans -> {
             // Создаем список существующих дней недели
             List<String> existingDays = existingDayPlans.stream()
                     .map(dayPlan -> dayPlan.getWeekDay().name())
                     .collect(Collectors.toList());
 
-            // Перебираем каждый план дня из списка
+            // Перебор каждого плана дня из списка
             for (DayPlan dayPlan : dayPlans) {
-                // Если дня недели нет в списке существующих, добавляем его
+                // Если дня недели нет в списке существующих, он добавится
                 if (!existingDays.contains(dayPlan.getWeekDay().name())) {
                     dayPlanRepository.add(dayPlan, onSuccess, onFailure);
                 } else {

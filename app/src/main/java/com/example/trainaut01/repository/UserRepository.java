@@ -2,6 +2,7 @@ package com.example.trainaut01.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,13 +20,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +42,6 @@ public class UserRepository {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-//    private String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
     public UserRepository() {
@@ -48,7 +51,7 @@ public class UserRepository {
     }
 
     // Метод для регистрации пользователя
-    public void registerUser(String email, String password, String firstName, String lastName, String phone, String bd, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
+    public void registerUser(String email, String password, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -61,7 +64,8 @@ public class UserRepository {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
-                                            saveUserDataToPreferences(document, context);
+                                            User user = createUserFromDocument(document);
+                                            saveUserDataToPreferences(user, context);
                                         }
                                     }
                                 }
@@ -72,19 +76,35 @@ public class UserRepository {
                 });
     }
 
-    // Метод для сохранения данных пользователя
-    public void saveUserData(String userId, String firstName, String lastName, String phone, String email, String bd, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener) {
+    private User createUserFromDocument(DocumentSnapshot document) {
+        // Извлекаем основные данные пользователя
+        String userId = document.getString("userId");
+        String firstName = document.getString("firstName");
+        String lastName = document.getString("lastName");
+        String email = document.getString("email");
+        String phone = document.getString("phone");
+        int lvl = document.getLong("lvl").intValue();
+        int exp = document.getLong("exp").intValue();
+        int countDays = document.getLong("countDays").intValue();
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("userId", userId);
-        user.put("firstName", firstName);
-        user.put("lastName", lastName);
-        user.put("phone", phone);
-        user.put("email", email);
-        user.put("birthDate", bd);
-        user.put("lvl",0);
-        user.put("exp",0);
-        user.put("countDays", 0);
+        // Извлекаем и преобразуем список dayPlans
+        List<Map<String, Object>> dayPlansData = (List<Map<String, Object>>) document.get("dayPlans");
+        List<DayPlan> dayPlans = new ArrayList<>();
+        if (dayPlansData != null) {
+            for (Map<String, Object> planData : dayPlansData) {
+                DayPlan dayPlan = new DayPlan(planData);
+                dayPlans.add(dayPlan);
+            }
+        }
+
+        // Создаем и возвращаем объект User
+        return new User(userId, firstName, lastName, email, phone, lvl, countDays, exp);
+    }
+
+    // Метод для сохранения данных пользователя
+    public void saveUserData(String userId, String firstName, String lastName, String phone, String email, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener) {
+
+        User user = new User(userId, firstName, lastName, phone, email, 0, 0, 0);
 
         db.collection("users").document(userId)
                 .set(user)
@@ -113,7 +133,9 @@ public class UserRepository {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
-                                            saveUserDataToPreferences(document, context);
+                                            User user = createUserFromDocument(document);
+                                            saveUserDataToPreferences(user, context);
+//                                            saveUserDataToPreferences(document, context);
                                         }
                                     }
                                 }
@@ -124,31 +146,19 @@ public class UserRepository {
                 });
     }
 
-    private void saveUserDataToPreferences(DocumentSnapshot document, Context context) {
+    private void saveUserDataToPreferences(User user, Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        // Получаем данные пользователя
-        String userId = document.getString("userId");
-        String firstName = document.getString("firstName");
-        String lastName = document.getString("lastName");
-        String email = document.getString("email");
-        String phone = document.getString("phone");
-        String birthDate = document.getString("birthDate");
-        int lvl = document.getLong("lvl").intValue();
-        int exp = document.getLong("exp").intValue();
-        int countDays = document.getLong("countDays").intValue();
-
-        // Сохраняем данные в SharedPreferences
-        editor.putString("userId", userId);
-        editor.putString("email", email);
-        editor.putString("firstName", firstName);
-        editor.putString("lastName", lastName);
-        editor.putString("phone", phone);
-        editor.putString("birthDate", birthDate);
-        editor.putInt("lvl", lvl);
-        editor.putInt("exp", exp);
-        editor.putInt("countDays", countDays);
+        // Сохраняем данные пользователя из модели User
+        editor.putString("userId", user.getUserId());
+        editor.putString("email", user.getEmail());
+        editor.putString("firstName", user.getFirstName());
+        editor.putString("lastName", user.getLastName());
+        editor.putString("phone", user.getPhone());
+        editor.putInt("lvl", user.getLvl());
+        editor.putInt("exp", user.getExp());
+        editor.putInt("countDays", user.getCountDays());
         editor.apply();
 
         Toast.makeText(context, "Данные пользователя сохранены", Toast.LENGTH_SHORT).show();
@@ -160,19 +170,67 @@ public class UserRepository {
 //        return mAuth.getCurrentUser();
 //    }
 
-    public void updateUser(Map<String, Object> updatedUserData, Context context) {
-        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        String newLog = (String) updatedUserData.get("email");
-        String newPas = (String) updatedUserData.get("password");
+//    public void updateUser(User updatedUser, String password, Context context) {
+//        String userId = updatedUser.getUserId();
+//        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//
+//        if (currentUser != null) {
+//            reAuthenticateUser(currentUser.getEmail(), password, task -> {
+//                if (task.isSuccessful()) {
+//                    // Обновление email в Firebase Authentication
+//                    currentUser.updateEmail(updatedUser.getEmail())
+//                            .addOnCompleteListener(emailTask -> {
+//                                if (emailTask.isSuccessful()) {
+//                                    // Email успешно обновлен в Firebase Authentication
+//                                    Map<String, Object> userMap = new HashMap<>();
+//                                    userMap.put("firstName", updatedUser.getFirstName());
+//                                    userMap.put("lastName", updatedUser.getLastName());
+//                                    userMap.put("email", updatedUser.getEmail());
+//                                    userMap.put("phone", updatedUser.getPhone());
+//
+//                                    // Обновление данных в Firestore
+//                                    db.collection("users").document(userId)
+//                                            .update(userMap)
+//                                            .addOnSuccessListener(unused -> {
+//                                                Toast.makeText(context, "Данные успешно обновлены", Toast.LENGTH_SHORT).show();
+//                                                saveUserDataToPreferences(updatedUser, context); // Обновление SharedPreferences
+//                                            })
+//                                            .addOnFailureListener(e -> {
+//                                                Toast.makeText(context, "Ошибка обновления данных в Firestore", Toast.LENGTH_SHORT).show();
+//                                            });
+//                                } else {
+//                                    Toast.makeText(context, "Ошибка обновления email в Firebase Authentication: " + emailTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                } else {
+//                    Toast.makeText(context, "Ошибка повторной аутентификации: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+//    }
 
-        if (newLog != null && !newLog.isEmpty()) {
-            user.updateEmail(newLog);
+
+
+    // Добавьте метод для повторной аутентификации
+    private void reAuthenticateUser(String email, String password, OnCompleteListener<Void> onCompleteListener) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+        if (currentUser != null) {
+            currentUser.reauthenticate(credential)
+                    .addOnCompleteListener(onCompleteListener);
         }
-        if (newPas != null && !newPas.isEmpty()) {
-            user.updatePassword(newPas);
-        }
+    }
+
+
+
+    public void updateUserItem(String fieldName, Object fieldValue, Context context) {
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+        // Обновление одного поля в Firestore
         db.collection("users").document(userId)
-                .update(updatedUserData)
+                .update(fieldName, fieldValue)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -180,36 +238,37 @@ public class UserRepository {
                         SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
 
-                        // Обновляем поля, только если они не пусты
-                        if (newLog != null && !newLog.isEmpty()) {
-                            editor.putString("email", newLog);
+                        // Определение типа значения и сохранение в SharedPreferences
+                        if (fieldValue instanceof String) {
+                            editor.putString(fieldName, (String) fieldValue);
+                        } else if (fieldValue instanceof Integer) {
+                            editor.putInt(fieldName, (Integer) fieldValue);
+                        } else if (fieldValue instanceof Boolean) {
+                            editor.putBoolean(fieldName, (Boolean) fieldValue);
+                        } else if (fieldValue instanceof Float) {
+                            editor.putFloat(fieldName, (Float) fieldValue);
+                        } else if (fieldValue instanceof Long) {
+                            editor.putLong(fieldName, (Long) fieldValue);
+                        } else {
+                            Toast.makeText(context, "Неподдерживаемый тип данных", Toast.LENGTH_SHORT).show();
+                            return;
                         }
-                        if (newPas != null && !newPas.isEmpty()) {
-                            editor.putString("password", newPas);
-                        }
-                        editor.putString("firstName", (String) updatedUserData.get("firstName"));
-                        editor.putString("lastName", (String) updatedUserData.get("lastName"));
-                        editor.putString("phone", (String) updatedUserData.get("phone"));
-                        editor.putString("birthDate", (String) updatedUserData.get("birthDate"));
+
                         editor.apply();
-
-                        Toast.makeText(context, "Профиль успешно обновлен", Toast.LENGTH_SHORT).show();
-
-                        FragmentTransaction ft = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.fragment_container, new UserProfileFragment());
-                        ft.addToBackStack(null);
-                        ft.commit();
+                        Toast.makeText(context, "Поле успешно обновлено", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "Ошибка при обновлении профиля", Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(context, "Ошибка при обновлении поля", Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
+
+
+
+
 
     public void saveMessageToFirestore(String theme, String messege, Context context) {
         // Получаем ID пользователя

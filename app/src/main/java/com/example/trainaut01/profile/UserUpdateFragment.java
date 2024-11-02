@@ -3,6 +3,7 @@ package com.example.trainaut01.profile;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.models.User;
 import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +33,7 @@ public class UserUpdateFragment extends Fragment {
     @Inject
     UserRepository db;
 
-    private EditText _etFirstNameUpdate, _etLastNameUpdate, _etEmailUpdate, _etPhoneUpdate, _etBirthDateUpdate, _etPas, _etPasConf;
+    private EditText _etFirstNameUpdate, _etLastNameUpdate, _etEmailUpdate, _etPhoneUpdate, _etPas, _etPasConf;
     Button _btnCange, _btnCancel;
     private TextView _tvPasswordMatch;
 
@@ -47,7 +50,6 @@ public class UserUpdateFragment extends Fragment {
         _etLastNameUpdate = view.findViewById(R.id.etLastNameUpdate);
         _etEmailUpdate = view.findViewById(R.id.etEmailUpdate);
         _etPhoneUpdate = view.findViewById(R.id.etPhoneUpdate);
-        _etBirthDateUpdate = view.findViewById(R.id.etBirthDateUpdate);
         _btnCancel = view.findViewById(R.id.btnCancel);
         _btnCange = view.findViewById(R.id.btnCange);
         _tvPasswordMatch = view.findViewById(R.id.tvPasswordMatch);
@@ -65,37 +67,32 @@ public class UserUpdateFragment extends Fragment {
             }
         });
 
-        _btnCange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String newFN = _etFirstNameUpdate.getText().toString();
-                String newLN = _etLastNameUpdate.getText().toString();
-                String newEmail = _etEmailUpdate.getText().toString();
-                String newPhone = _etPhoneUpdate.getText().toString();
-                String newBD = _etBirthDateUpdate.getText().toString();
-                String newPas = _etPas.getText().toString();
+//        _btnCange.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                User updatedUser = createUpdatedUser();
+//                db.updateUser(updatedUser, getActivity());
+//
+//                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+//                transaction.replace(R.id.fragment_container, new UserProfileFragment());
+//                transaction.addToBackStack(null);
+//                transaction.commit();
+//            }
+//        });
 
-                Map<String, Object> updatedUserData = new HashMap<>();
-                updatedUserData.put("firstName", newFN);
-                updatedUserData.put("lastName", newLN);
-                updatedUserData.put("email", newEmail);
-                updatedUserData.put("phone", newPhone);
-                updatedUserData.put("birthDate", newBD);
-                updatedUserData.put("password", newPas);
-
-                db.updateUser(updatedUserData, getActivity());
-
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, new UserProfileFragment());
-                transaction.addToBackStack(null);  // Allows going back to the previous fragment
-                transaction.commit();
-            }
-        });
-
-        // Populate data in EditTexts
         addData_inEditTexts();
 
         return view;
+    }
+
+    private User createUpdatedUser() {
+        String newFN = _etFirstNameUpdate.getText().toString();
+        String newLN = _etLastNameUpdate.getText().toString();
+        String newEmail = _etEmailUpdate.getText().toString();
+        String newPhone = _etPhoneUpdate.getText().toString();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        return new User(userId, newFN, newLN, newEmail, newPhone, 0, 0, 0);
     }
 
     private void addData_inEditTexts() {
@@ -105,14 +102,14 @@ public class UserUpdateFragment extends Fragment {
         String lastName = sharedPref.getString("lastName", null);
         String email = sharedPref.getString("email", null);
         String phone = sharedPref.getString("phone", null);
-        String birthDate = sharedPref.getString("birthDate", null);
 
-        if (firstName != null && lastName != null && email != null && phone != null && birthDate != null) {
+        Log.d("UserUpdate", "firstName:" + firstName + "\n lastName" + lastName + "\n email" + email  + "\n phone" + phone);
+
+        if (firstName != null && lastName != null && email != null && phone != null) {
             _etFirstNameUpdate.setText(firstName);
             _etLastNameUpdate.setText(lastName);
             _etEmailUpdate.setText(email);
             _etPhoneUpdate.setText(phone);
-            _etBirthDateUpdate.setText(birthDate);
         }
     }
 

@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,7 +29,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,9 +44,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class RegisterActivity extends AppCompatActivity {
-    private EditText etEmail,etPasReg,etPasConfirm,etFN, etLN, etPhone ,etBirthDate;
+    private EditText etEmail, etPasReg, etPasConfirm, etFN, etLN, etPhone;
     private Button btnReg;
     private TextView tvPasswordMatch, tvLogin;
+    private CheckBox _chbUserAgreement;
 
     private AppComponent appComponent;
     @Inject
@@ -59,38 +63,32 @@ public class RegisterActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
 
-        appComponent = DaggerAppComponent.create();
-        appComponent.inject(this);
-
-        etEmail = findViewById(R.id.etEmailReg);
-        etFN = findViewById(R.id.etFirstName);
-        etLN = findViewById(R.id.etLastName);
-        etPhone = findViewById(R.id.etPhone);
-        etPasReg = findViewById(R.id.etPasReg);
-        btnReg = findViewById(R.id.btnRegisterReg);
-        etBirthDate = findViewById(R.id.etBirthDate);
-        etPasConfirm = findViewById(R.id.etPasConfirm);
-        tvPasswordMatch = findViewById(R.id.tvPasswordMatch);
-        tvLogin = findViewById(R.id.tvLogin);
+        init();
 
 //        mAuth = FirebaseAuth.getInstance();
 //        db = FirebaseFirestore.getInstance();
 
-        TextWatcher passwordTextWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                checkPasswordMatch();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {}
-        };
-
-        etPasReg.addTextChangedListener(passwordTextWatcher);
-        etPasConfirm.addTextChangedListener(passwordTextWatcher);
+//        etBirthDate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Получение текущей даты
+//                final Calendar calendar = Calendar.getInstance();
+//                int year = calendar.get(Calendar.YEAR);
+//                int month = calendar.get(Calendar.MONTH);
+//                int day = calendar.get(Calendar.DAY_OF_MONTH);
+//
+//                // Открытие DatePickerDialog
+//                DatePickerDialog datePickerDialog = new DatePickerDialog(RegisterActivity.this,
+//                        new DatePickerDialog.OnDateSetListener() {
+//                            @Override
+//                            public void onDateSet(DatePicker view, int year, int month, int day) {
+//                                // Установка выбранной даты в EditText
+//                                etBirthDate.setText(day + "/" + (month + 1) + "/" + year);
+//                            }
+//                        }, year, month, day);
+//                datePickerDialog.show();
+//            }
+//        });
 
         tvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +98,25 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+
+        TextWatcher passwordTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                checkPasswordMatch();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        };
+
+        etPasReg.addTextChangedListener(passwordTextWatcher);
+        etPasConfirm.addTextChangedListener(passwordTextWatcher);
+
         btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,51 +125,44 @@ public class RegisterActivity extends AppCompatActivity {
                 String firstName = etFN.getText().toString();
                 String lastName = etLN.getText().toString();
                 String phone = etPhone.getText().toString();
-                String birthDate = etBirthDate.getText().toString();
 
-                if (!log.isEmpty() && !pas.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty() && !birthDate.isEmpty()) {
-                    registerUser(log, pas, firstName, lastName, phone, birthDate);
+                if (!log.isEmpty() && !pas.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty()) {
+                    if (_chbUserAgreement.isChecked()) {
+                        registerUser(log, pas, firstName, lastName, phone);
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Примите пользовательское соглашение", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(RegisterActivity.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-
-        etBirthDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Получение текущей даты
-                final Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                // Открытие DatePickerDialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(RegisterActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int day) {
-                                // Установка выбранной даты в EditText
-                                etBirthDate.setText(day + "/" + (month + 1) + "/" + year);
-                            }
-                        }, year, month, day);
-                datePickerDialog.show();
-            }
-        });
     }
 
-    private void registerUser(String email, String password, String firstName, String lastName, String phone, String bd) {
-        db.registerUser(email, password, firstName, lastName, phone, bd, this, new OnCompleteListener<AuthResult>() {
+    private void init() {
+        appComponent = DaggerAppComponent.create();
+        appComponent.inject(this);
+
+        etEmail = findViewById(R.id.etEmailReg);
+        etFN = findViewById(R.id.etFirstName);
+        etLN = findViewById(R.id.etLastName);
+        etPhone = findViewById(R.id.etPhone);
+        etPasReg = findViewById(R.id.etPasReg);
+        btnReg = findViewById(R.id.btnRegisterReg);
+        etPasConfirm = findViewById(R.id.etPasConfirm);
+        tvPasswordMatch = findViewById(R.id.tvPasswordMatch);
+        tvLogin = findViewById(R.id.tvLogin);
+        _chbUserAgreement = findViewById(R.id.chbUserAgreement);
+    }
+
+    private void registerUser(String email, String password, String firstName, String lastName, String phone) {
+        db.registerUser(email, password, this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     if (firebaseUser != null) {
-                        // Сохранение данных пользователя
-                        saveUserData(firebaseUser.getUid(), firstName, lastName, phone, email, bd);
-
-                        // Получение планов из Firestore
+                        saveUserData(firebaseUser.getUid(), firstName, lastName, phone, email);
                         getWeekPlansFromFirestore(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -162,13 +172,11 @@ public class RegisterActivity extends AppCompatActivity {
                                         DayPlan dayPlan = document.toObject(DayPlan.class);
                                         weekPlans.add(dayPlan);
                                     }
-
-                                    if (!weekPlans.isEmpty()) {
-                                        saveUserDayPlans(firebaseUser.getUid(), weekPlans);
-                                    } else {
-                                        Toast.makeText(RegisterActivity.this, "Нет планов для сохранения", Toast.LENGTH_SHORT).show();
-                                    }
-
+                                    saveUserDayPlans(firebaseUser.getUid(), weekPlans);
+//                                    dayPlanRepository.saveUserDayPlans(firebaseUser.getUid(), weekPlans,
+//                                            aVoid -> Toast.makeText(RegisterActivity.this, "Планы на неделю успешно сохранены", Toast.LENGTH_SHORT).show(),
+//                                            e -> Toast.makeText(RegisterActivity.this, "Ошибка при сохранении планов на неделю: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+//                                    );
                                 } else {
                                     Toast.makeText(RegisterActivity.this, "Не удалось загрузить планы на неделю", Toast.LENGTH_SHORT).show();
                                 }
@@ -180,6 +188,18 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    private boolean validatePhoneNumber() {
+        String phone = etPhone.getText().toString();
+
+        if (phone.matches("^\\d{10,12}$")) {
+            return true;
+        } else {
+            etPhone.setError("Введите корректный номер телефона");
+            return false;
+        }
     }
 
 
@@ -209,10 +229,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-
-
-    private void saveUserData(String userId, String firstName, String lastName, String phone, String email, String bd) {
-        db.saveUserData(userId, firstName, lastName, phone, email, bd, new OnCompleteListener<Void>() {
+    private void saveUserData(String userId, String firstName, String lastName, String phone, String email) {
+        db.saveUserData(userId, firstName, lastName, phone, email, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {

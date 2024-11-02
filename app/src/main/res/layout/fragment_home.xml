@@ -21,18 +21,30 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:animateLayoutChanges="true">
 
                 <ImageView
                     android:id="@+id/imageView5"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="350dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
+                    android:scaleType="fitXY"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/top_background_blue" />
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="124dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/arc_1" />
 
                 <ImageView
                     android:id="@+id/imgAvatar"
@@ -78,22 +90,22 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="-200dp"
+                android:layout_marginTop="-170dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardProgress"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
                     android:layout_height="125dp"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="3dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#d2d2d2"
+                        android:background="@drawable/back_home_cards"
                         android:orientation="vertical">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -121,7 +133,8 @@
                             android:layout_height="wrap_content"
                             android:text="Прогресс"
                             android:textAlignment="center"
-                            android:textColor="#7C7474"
+                            android:paddingStart="5dp"
+                            android:textColor="#4444B8"
                             android:textStyle="bold" />
 
 
@@ -131,16 +144,16 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardAchiv"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
                     android:layout_height="125dp"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="3dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#d2d2d2"
+                        android:background="@drawable/back_home_cards"
                         android:orientation="vertical">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -167,8 +180,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Достижения"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="5dp"
                             android:textAlignment="center"
-                            android:textColor="#7C7474"
+                            android:textColor="#4444B8"
                             android:textStyle="bold" />
 
 
@@ -178,16 +193,16 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardDoc"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
                     android:layout_height="125dp"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="3dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#d2d2d2"
+                        android:background="@drawable/back_home_cards"
                         android:orientation="vertical">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -215,7 +230,8 @@
                             android:layout_height="wrap_content"
                             android:text="Связаться с врачем"
                             android:textAlignment="center"
-                            android:textColor="#7C7474"
+                            android:textColor="#4444B8"
+                            android:paddingStart="5dp"
                             android:textStyle="bold" />
 
 
@@ -228,7 +244,10 @@
                 android:id="@+id/currentTraining"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_margin="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/background_with_border"
                 android:padding="10dp">
 
@@ -240,7 +259,7 @@
                     android:layout_marginTop="32dp"
                     android:fontFamily="@font/lobster_regular"
                     android:text="Тренировка на сегодня"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="24sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -249,8 +268,8 @@
                     android:layout_width="130dp"
                     android:layout_height="150dp"
                     android:background="@drawable/rounded_corners"
-                    android:scaleType="centerCrop"
                     android:clipToOutline="true"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/boy_with_dumbbells_homepage"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -261,13 +280,12 @@
                     android:id="@+id/button_today_exercise"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginBottom="24dp"
-                    android:background="@drawable/background_week_current_day"
-                    android:fontFamily="@font/adventpro_semiexpanded_regular"
+                    android:background="#C6DDE7"
                     android:padding="20dp"
                     android:text="Перейти к упражнениям"
-                    android:textColor="#000000"
+                    android:textColor="#4444B8"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -305,7 +323,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RecyclerView1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
                 android:paddingStart="24dp"
