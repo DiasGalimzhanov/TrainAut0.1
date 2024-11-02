@@ -23,6 +23,7 @@ import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.models.Exercise;
 import com.example.trainaut01.repository.DayPlanRepository;
+import com.example.trainaut01.repository.ExerciseRepository;
 import com.example.trainaut01.repository.UserRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +56,9 @@ public class ExerciseDetailFragment extends Fragment {
 
     @Inject
     DayPlanRepository dayPlanRepository;
+
+    @Inject
+    ExerciseRepository exerciseRepository;
 
     // Создание нового экземпляра фрагмента с аргументами
     public static ExerciseDetailFragment newInstance(Exercise exercise, String day) {
@@ -164,6 +168,41 @@ public class ExerciseDetailFragment extends Fragment {
             }
         });
     }
+
+//    private void completeExercise(Exercise exercise, String weekDay) {
+//        int points = exercise.getRewardPoints();
+//        Log.d("ExerciseDetailFragment", "Reward Points: " + points);
+//
+//        SharedPreferences sharedPref = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+//        int currentExp = sharedPref.getInt("exp", 0);
+//        currentExp += points;
+//
+//        Log.d("ExerciseDetailFragment", "Current EXP before update: " + sharedPref.getInt("exp", 0) + ", After update: " + currentExp);
+//
+//        userRepository.updateUserItem("exp", currentExp, getContext());
+//
+//        String userId = sharedPref.getString("userId", "");
+//        String exerciseId = exercise.getId();
+//
+//        Log.d("ExerciseDetailFragment", "userId: " + userId + ", dayPlanId: " + weekDay + ", exerciseId: " + exerciseId);
+//
+//        exerciseRepository.markExerciseAsCompleted(userId, weekDay, exerciseId, _timeElapsed, new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                Log.d("ExerciseDetailFragment", "Exercise marked as completed successfully.");
+//                Bundle result = new Bundle();
+//                result.putBoolean("exerciseCompleted", true);
+//                getParentFragmentManager().setFragmentResult("exerciseResult", result);
+//                getActivity().onBackPressed();
+//            }
+//        }, new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.e("ExerciseDetailFragment", "Error marking exercise as completed: " + e.getMessage());
+//                Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     // Метод для запуска таймера
     private void startTimer() {

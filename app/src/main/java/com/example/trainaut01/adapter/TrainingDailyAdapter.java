@@ -97,6 +97,7 @@ public class TrainingDailyAdapter extends RecyclerView.Adapter<TrainingDailyAdap
         notifyDataSetChanged();
     }
 
+
     // Интерфейс для обработки кликов на упражнения
     public interface OnExerciseClickListener {
         void onExerciseClick(Exercise exercise, String day);

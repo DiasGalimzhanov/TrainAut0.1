@@ -46,7 +46,6 @@ public class TrainingWeekFragment extends Fragment {
         _thursday = view.findViewById(R.id.thursdayLayout);
         _friday = view.findViewById(R.id.fridayLayout);
         _saturday = view.findViewById(R.id.saturdayLayout);
-        _sunday = view.findViewById(R.id.sundayLayout);
 
         setOnClickListeners();
     }
@@ -101,7 +100,6 @@ public class TrainingWeekFragment extends Fragment {
         _thursday.setOnClickListener(v -> openTrainingListFragment("Thursday"));
         _friday.setOnClickListener(v -> openTrainingListFragment("Friday"));
         _saturday.setOnClickListener(v -> openTrainingListFragment("Saturday"));
-        _sunday.setOnClickListener(v -> openTrainingListFragment("Sunday"));
     }
 
     // Метод для открытия фрагмента с деталями тренировки для выбранного дня

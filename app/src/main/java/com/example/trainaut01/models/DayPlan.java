@@ -1,6 +1,10 @@
 package com.example.trainaut01.models;
 
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DayPlan {
     public enum WeekDay {
@@ -13,6 +17,18 @@ public class DayPlan {
     private boolean isCompleted;
 
     public DayPlan() {}
+
+    public DayPlan(Map<String, Object> map) {
+        this.id = (String) map.get("id");
+
+        String weekDayStr = (String) map.get("weekDay");
+        this.weekDay = weekDayStr != null ? WeekDay.valueOf(weekDayStr.toUpperCase()) : null;
+
+        List<Map<String, Object>> exercisesData = (List<Map<String, Object>>) map.get("exercises");
+        this.exercises = parseExercises(exercisesData);
+
+        this.isCompleted = map.get("isCompleted") != null && (boolean) map.get("isCompleted");
+    }
 
     public DayPlan(String id, WeekDay weekDay, List<Exercise> exercises, boolean isCompleted) {
         this.id = id;
@@ -63,4 +79,45 @@ public class DayPlan {
     public void removeExercise(Exercise exercise) {
         this.exercises.remove(exercise);
     }
+
+    public static DayPlan fromMap(Map<String, Object> map) {
+        Log.d("DayPlan", "Данные для создания DayPlan: " + map);
+        if (map == null) return null;
+
+        DayPlan dayPlan = new DayPlan();
+        dayPlan.setId((String) map.get("id"));
+
+        String weekDayStr = (String) map.get("weekDay");
+        if (weekDayStr != null) {
+            dayPlan.setWeekDay(DayPlan.WeekDay.valueOf(weekDayStr.toUpperCase()));
+        } else {
+            dayPlan.setWeekDay(null);
+        }
+
+        Boolean isCompletedValue = (Boolean) map.get("isCompleted");
+        dayPlan.setCompleted(isCompletedValue != null ? isCompletedValue : false); // Установите false, если значение null
+
+        List<Map<String, Object>> exercisesMap = (List<Map<String, Object>>) map.get("exercises");
+        List<Exercise> exercises = new ArrayList<>();
+        if (exercisesMap != null) {
+            for (Map<String, Object> exerciseMap : exercisesMap) {
+                Exercise exercise = Exercise.fromMap(exerciseMap);
+                exercises.add(exercise);
+            }
+        }
+        dayPlan.setExercises(exercises);
+
+        return dayPlan;
+    }
+
+    private List<Exercise> parseExercises(List<Map<String, Object>> exercisesData) {
+        List<Exercise> exercises = new ArrayList<>();
+        if (exercisesData != null) {
+            for (Map<String, Object> exerciseData : exercisesData) {
+                exercises.add(new Exercise(exerciseData));
+            }
+        }
+        return exercises;
+    }
+
 }

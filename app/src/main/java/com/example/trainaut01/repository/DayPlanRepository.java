@@ -5,9 +5,11 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.example.trainaut01.models.DayPlan;
+import com.example.trainaut01.models.Exercise;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -72,21 +74,28 @@ public class DayPlanRepository implements Repository<DayPlan> {
 
     // Метод для получения одного плана дня по дню недели и ID пользователя
     public void getDayPlanByWeekDay(String userId, DayPlan.WeekDay weekDay, OnSuccessListener<DayPlan> onSuccessListener, OnFailureListener onFailureListener) {
+        Log.d("DayPlanRepository", "Запрос плана дня для пользователя: " + userId + ", день недели: " + weekDay);
         CollectionReference userDayPlansCollection = _db.collection("users").document(userId).collection("dayPlans");
 
         userDayPlansCollection.whereEqualTo("weekDay", weekDay.toString())
                 .limit(1)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Log.d("DayPlanRepository", "Запрос успешно выполнен. Найдено документов: " + queryDocumentSnapshots.size());
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DayPlan dayPlan = queryDocumentSnapshots.getDocuments().get(0).toObject(DayPlan.class);
                         dayPlan.setId(queryDocumentSnapshots.getDocuments().get(0).getId());
+                        Log.d("DayPlanRepository", "План дня загружен: " + dayPlan);
                         onSuccessListener.onSuccess(dayPlan);
                     } else {
+                        Log.d("DayPlanRepository", "План дня не найден для дня недели: " + weekDay);
                         onSuccessListener.onSuccess(null);
                     }
                 })
-                .addOnFailureListener(onFailureListener);
+                .addOnFailureListener(e -> {
+                    Log.e("DayPlanRepository", "Ошибка при получении плана дня: " + e.getMessage());
+                    onFailureListener.onFailure(e);
+                });
     }
 
     // Метод для получения всех планов дня из коллекции
@@ -148,6 +157,10 @@ public class DayPlanRepository implements Repository<DayPlan> {
                 })
                 .addOnFailureListener(onFailureListener);
     }
+
+
+
+
 
     // Метод для обновления статуса завершенности плана дня
     public void updateDayPlanCompletion(String userId, DayPlan.WeekDay weekDay, boolean completed, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {

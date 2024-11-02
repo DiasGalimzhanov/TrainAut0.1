@@ -65,7 +65,8 @@ dependencies {
 
 //    Picasso
     implementation("com.squareup.picasso:picasso:2.8")
-
+//    Gson
+    implementation ("com.google.code.gson:gson:2.8.9")
 
     implementation(libs.appcompat)
     implementation(libs.material)

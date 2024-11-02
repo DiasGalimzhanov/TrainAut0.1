@@ -3,18 +3,18 @@ package com.example.trainaut01.models;
 import java.util.List;
 
 public class User {
-    private long userId;
+    private String userId;
     private String firstName;
     private String lastName;
     private String phone;
     private String email;
     private int lvl;
     private int countDays;
-    private List<DayPlan> dayPlans;
+    private int exp;
 
     public User() {}
 
-    public User(long userId, String firstName, String lastName, String phone, String email, int lvl, int countDays) {
+    public User(String userId, String firstName, String lastName, String phone, String email, int lvl, int countDays, int exp) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -22,13 +22,14 @@ public class User {
         this.email = email;
         this.lvl = lvl;
         this.countDays = countDays;
+        this.exp = exp;
     }
 
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -72,17 +73,19 @@ public class User {
         return countDays;
     }
 
-    public List<DayPlan> getDayPlans() {
-        return dayPlans;
+    public void setLvl(int lvl) {
+        this.lvl = lvl;
     }
 
-    public void setDayPlans(List<DayPlan> dayPlans) {
-        this.dayPlans = dayPlans;
+    public void setCountDays(int countDays) {
+        this.countDays = countDays;
     }
 
-    public void addDayPlan(DayPlan dayPlan) {
-        this.dayPlans.add(dayPlan);
+    public int getExp() {
+        return exp;
     }
 
-
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
 }

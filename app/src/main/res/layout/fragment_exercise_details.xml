@@ -155,7 +155,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="30dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@drawable/background_week_current_day"
+                        android:background="@drawable/back_start_exercise"
                         android:fontFamily="@font/adventpro_semiexpanded_regular"
                         android:text="Начать упражнение"
                         android:textColor="#091D1A"
