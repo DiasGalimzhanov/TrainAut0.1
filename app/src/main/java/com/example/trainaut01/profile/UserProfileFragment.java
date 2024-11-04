@@ -31,7 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class UserProfileFragment extends Fragment {
     private TextView _parentName, _tvEmail, _tvPhone;
     private ImageView _userProfileImage, _btnExit;
-    private CardView _btnUpdateProfile, _btnSupport;
+    private CardView _btnUpdateProfile, _btnSupport, _btnWatchConnect;
 
     @Nullable
     @Override
@@ -80,7 +80,17 @@ public class UserProfileFragment extends Fragment {
             public void onClick(View view) {
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, new SupportFragment());
-                transaction.addToBackStack(null);  // Allows going back to the previous fragment
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        _btnWatchConnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, new WhatchFragment());
+                transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
@@ -93,9 +103,11 @@ public class UserProfileFragment extends Fragment {
         _parentName = view.findViewById(R.id.parentName);
         _tvEmail = view.findViewById(R.id.tvEmail);
         _tvPhone = view.findViewById(R.id.tvPhone);
+        _btnWatchConnect = view.findViewById(R.id.btnWatchConnect);
         _btnExit = view.findViewById(R.id.btnExit);
         _btnUpdateProfile = view.findViewById(R.id.btnUpdateProfile);
         _btnSupport = view.findViewById(R.id.btnSupport);
+//        _btnWhatch = view.findViewById(R.id.btnWatch);
     }
 
     private void showPasswordDialog() {
@@ -160,11 +172,13 @@ public class UserProfileFragment extends Fragment {
         String lastName = sharedPref.getString("lastName", null);
         String email = sharedPref.getString("email", null);
         String phone = sharedPref.getString("phone", null);
+        String birthDate = sharedPref.getString("birthDate", null);
 
         if (firstName != null && lastName != null && email != null && phone != null) {
             _parentName.setText(firstName + " " + lastName);
             _tvEmail.setText(email);
             _tvPhone.setText(phone);
+//            _tvBirthDate.setText(birthDate);
         }
     }
 

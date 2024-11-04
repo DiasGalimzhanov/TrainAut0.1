@@ -68,6 +68,8 @@ dependencies {
 //    Gson
     implementation ("com.google.code.gson:gson:2.8.9")
 
+    implementation ("no.nordicsemi.android:ble:2.5.1")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
