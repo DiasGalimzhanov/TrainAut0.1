@@ -45,6 +45,8 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
 
     private AppComponent appComponent;
 
+    private boolean isDayPlanUpdated = false;
+
     private String[] daysOfWeek = {
             "Понедельник",
             "Вторник",
@@ -96,7 +98,6 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 boolean exerciseCompleted = result.getBoolean("exerciseCompleted", false);
-                Log.d("TrainingListFragment", "Exercise completed: " + exerciseCompleted);
                 if (exerciseCompleted) {
                     loadDayPlan(DayPlan.WeekDay.valueOf(day));
                 }
@@ -107,7 +108,6 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
     }
 
     private void init(View view) {
-        Log.d("TrainingListFragment", "Initializing components");
         appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
 
@@ -117,7 +117,6 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
     }
 
     private void loadDayPlan(DayPlan.WeekDay weekDay) {
-
         String userId = getArguments().getString(USER_ID);
         int dayIndex = weekDay.ordinal();
 
@@ -127,7 +126,6 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
             @Override
             public void onSuccess(List<DayPlan> dayPlans) {
                 if (!dayPlans.isEmpty()) {
-
                     DayPlan dayPlan = dayPlans.get(0);
                     List<Exercise> exercises = dayPlan.getExercises();
 
@@ -151,25 +149,28 @@ public class TrainingListFragment extends Fragment implements TrainingDailyAdapt
         boolean allCompleted = exercises.stream().allMatch(Exercise::isCompleted);
         Log.d("TrainingListFragment", "All exercises completed: " + allCompleted);
 
-        if (allCompleted && !dayPlan.isCompleted()) {
-            DayPlan.WeekDay weekDay = dayPlan.getWeekDay();
-            updateDayPlanCompletion(weekDay);
+        // Проверяем, что все упражнения завершены и обновление не было выполнено ранее
+        if (allCompleted && !dayPlan.isCompleted() && !isDayPlanUpdated) {
+            dayPlan.setCompleted(true);
+            isDayPlanUpdated = true; // Устанавливаем флаг, чтобы предотвратить повторное обновление
+            updateDayPlanCompletion(dayPlan.getWeekDay(), dayPlan);
         }
     }
 
-    private void updateDayPlanCompletion(DayPlan.WeekDay weekDay) {
+    private void updateDayPlanCompletion(DayPlan.WeekDay weekDay, DayPlan dayPlan) {
         String userId = getArguments().getString(USER_ID);
         Log.d("TrainingListFragment", "Updating day plan completion for weekDay: " + weekDay);
 
         dayPlanRepository.updateDayPlanCompletion(userId, weekDay, true, new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                dayPlan.setCompleted(true);
                 Log.d("TrainingListFragment", "Day plan updated successfully");
+
                 Integer currentCountDays = getCountDays();
                 currentCountDays++;
 
                 saveCountDays(currentCountDays);
-
                 userRepository.updateUserItem("countDays", currentCountDays, getContext());
 
                 Toast.makeText(getContext(), "Все упражнения выполнены!", Toast.LENGTH_SHORT).show();

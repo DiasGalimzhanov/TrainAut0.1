@@ -173,10 +173,6 @@ public class RegisterActivity extends AppCompatActivity {
                                         weekPlans.add(dayPlan);
                                     }
                                     saveUserDayPlans(firebaseUser.getUid(), weekPlans);
-//                                    dayPlanRepository.saveUserDayPlans(firebaseUser.getUid(), weekPlans,
-//                                            aVoid -> Toast.makeText(RegisterActivity.this, "Планы на неделю успешно сохранены", Toast.LENGTH_SHORT).show(),
-//                                            e -> Toast.makeText(RegisterActivity.this, "Ошибка при сохранении планов на неделю: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-//                                    );
                                 } else {
                                     Toast.makeText(RegisterActivity.this, "Не удалось загрузить планы на неделю", Toast.LENGTH_SHORT).show();
                                 }
