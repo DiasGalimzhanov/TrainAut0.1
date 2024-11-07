@@ -1,5 +1,6 @@
 package com.example.trainaut01.models;
 
+
 public class User {
 
     public enum Role {

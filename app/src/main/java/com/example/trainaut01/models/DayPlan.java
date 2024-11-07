@@ -8,10 +8,10 @@ import java.util.Map;
 
 public class DayPlan {
     public enum WeekDay {
-        MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+        MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
     }
 
-    private String id;  // Добавлено поле id
+    private String id;
     private WeekDay weekDay;
     private List<Exercise> exercises;
     private boolean isCompleted;
@@ -95,7 +95,7 @@ public class DayPlan {
         }
 
         Boolean isCompletedValue = (Boolean) map.get("isCompleted");
-        dayPlan.setCompleted(isCompletedValue != null ? isCompletedValue : false); // Установите false, если значение null
+        dayPlan.setCompleted(isCompletedValue != null ? isCompletedValue : false);
 
         List<Map<String, Object>> exercisesMap = (List<Map<String, Object>>) map.get("exercises");
         List<Exercise> exercises = new ArrayList<>();

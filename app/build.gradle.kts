@@ -70,6 +70,10 @@ dependencies {
 
     implementation ("no.nordicsemi.android:ble:2.5.1")
 
+//    Lombok
+    compileOnly("org.projectlombok:lombok:1.18.34")
+
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
