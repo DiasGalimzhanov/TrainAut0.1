@@ -68,6 +68,10 @@ dependencies {
 //    Gson
     implementation ("com.google.code.gson:gson:2.8.9")
 
+//    Lombok
+    compileOnly("org.projectlombok:lombok:1.18.34")
+
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

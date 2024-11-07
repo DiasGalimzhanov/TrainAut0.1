@@ -44,7 +44,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class RegisterActivity extends AppCompatActivity {
-    private EditText etEmail, etPasReg, etPasConfirm, etFN, etLN, etPhone;
+    private EditText etFN, etLN, etPhone, etEmail, etPasReg, etPasConfirm;
     private Button btnReg;
     private TextView tvPasswordMatch, tvLogin;
     private CheckBox _chbUserAgreement;
