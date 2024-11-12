@@ -2,21 +2,28 @@ package com.example.trainaut01.models;
 
 import android.util.Log;
 
+import com.example.trainaut01.enums.FineMotorMuscleGroup;
+import com.example.trainaut01.enums.GrossMotorMuscleGroup;
+import com.example.trainaut01.enums.WeekDay;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DayPlan {
-    public enum WeekDay {
-        MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
-    }
 
     private String id;
     private WeekDay weekDay;
-    private List<Exercise> exercises;
+    private List<Exercise> exercisesGrossMotor;
+    private List<Exercise> exercisesFineMotor;
     private boolean isCompleted;
-
-    public DayPlan() {}
 
     public DayPlan(Map<String, Object> map) {
         this.id = (String) map.get("id");
@@ -25,59 +32,10 @@ public class DayPlan {
         this.weekDay = weekDayStr != null ? WeekDay.valueOf(weekDayStr.toUpperCase()) : null;
 
         List<Map<String, Object>> exercisesData = (List<Map<String, Object>>) map.get("exercises");
-        this.exercises = parseExercises(exercisesData);
+        this.exercisesGrossMotor = parseExercises(exercisesData, GrossMotorMuscleGroup.class);
+        this.exercisesFineMotor = parseExercises(exercisesData, FineMotorMuscleGroup.class);
 
         this.isCompleted = map.get("isCompleted") != null && (boolean) map.get("isCompleted");
-    }
-
-    public DayPlan(String id, WeekDay weekDay, List<Exercise> exercises, boolean isCompleted) {
-        this.id = id;
-        this.weekDay = weekDay;
-        this.exercises = exercises;
-        this.isCompleted = isCompleted;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public WeekDay getWeekDay() {
-        return weekDay;
-    }
-
-    public void setWeekDay(WeekDay weekDay) {
-        this.weekDay = weekDay;
-    }
-
-    public List<Exercise> getExercises() {
-        return exercises;
-    }
-
-    public void setExercises(List<Exercise> exercises) {
-        if (exercises == null || exercises.isEmpty()) {
-            throw new IllegalArgumentException("Day plan must have at least one exercise.");
-        }
-        this.exercises = exercises;
-    }
-
-    public boolean isCompleted() {
-        return isCompleted;
-    }
-
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
-    }
-
-    public void addExercise(Exercise exercise) {
-        this.exercises.add(exercise);
-    }
-
-    public void removeExercise(Exercise exercise) {
-        this.exercises.remove(exercise);
     }
 
     public static DayPlan fromMap(Map<String, Object> map) {
@@ -89,7 +47,7 @@ public class DayPlan {
 
         String weekDayStr = (String) map.get("weekDay");
         if (weekDayStr != null) {
-            dayPlan.setWeekDay(DayPlan.WeekDay.valueOf(weekDayStr.toUpperCase()));
+            dayPlan.setWeekDay(WeekDay.valueOf(weekDayStr.toUpperCase()));
         } else {
             dayPlan.setWeekDay(null);
         }
@@ -98,26 +56,36 @@ public class DayPlan {
         dayPlan.setCompleted(isCompletedValue != null ? isCompletedValue : false);
 
         List<Map<String, Object>> exercisesMap = (List<Map<String, Object>>) map.get("exercises");
-        List<Exercise> exercises = new ArrayList<>();
+        List<Exercise> exercisesGrossMotor = new ArrayList<>();
+        List<Exercise> exercisesFineMotor = new ArrayList<>();
         if (exercisesMap != null) {
             for (Map<String, Object> exerciseMap : exercisesMap) {
                 Exercise exercise = Exercise.fromMap(exerciseMap);
-                exercises.add(exercise);
+
+                if (exercise.getMuscleGroup() instanceof GrossMotorMuscleGroup) {
+                    exercisesGrossMotor.add(exercise);
+                } else if (exercise.getMuscleGroup() instanceof FineMotorMuscleGroup) {
+                    exercisesFineMotor.add(exercise);
+                }
             }
         }
-        dayPlan.setExercises(exercises);
+        dayPlan.setExercisesGrossMotor(exercisesGrossMotor);
+        dayPlan.setExercisesFineMotor(exercisesFineMotor);
 
         return dayPlan;
     }
 
-    private List<Exercise> parseExercises(List<Map<String, Object>> exercisesData) {
+    private List<Exercise> parseExercises(List<Map<String, Object>> exercisesData, Class<?> muscleGroupEnum) {
         List<Exercise> exercises = new ArrayList<>();
         if (exercisesData != null) {
             for (Map<String, Object> exerciseData : exercisesData) {
-                exercises.add(new Exercise(exerciseData));
+                Exercise exercise = new Exercise(exerciseData);
+
+                if (muscleGroupEnum.isAssignableFrom(exercise.getMuscleGroup().getClass())) {
+                    exercises.add(exercise);
+                }
             }
         }
         return exercises;
     }
-
 }

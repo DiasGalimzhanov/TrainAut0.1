@@ -1,16 +1,15 @@
 package com.example.trainaut01;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Color;
@@ -20,8 +19,8 @@ import androidx.activity.EdgeToEdge;
 
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.DayPlan;
-import com.example.trainaut01.repository.AppInitializer;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.UserRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,23 +37,24 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class RegisterActivity extends AppCompatActivity {
-    private EditText etFN, etLN, etPhone, etEmail, etPasReg, etPasConfirm;
-    private Button btnReg;
-    private TextView tvPasswordMatch, tvLogin;
+    private EditText _etFN, _etLN, _etPhone, _etCity, _etEmail, _etPasReg, _etPasConfirm;
+    private Spinner _spGender;
+    private Button _btnReg;
+    private TextView _tvPasswordMatch, _tvLogin;
     private CheckBox _chbUserAgreement;
 
-    private AppComponent appComponent;
-    @Inject
-    UserRepository db;
+    private AppComponent _appComponent;
 
     @Inject
-    DayPlanRepository dayPlanRepository;
+    UserRepository _userRepository;
+
+    @Inject
+    DayPlanRepository _dayPlanRepository;
 
 
     @Override
@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
 //            }
 //        });
 
-        tvLogin.setOnClickListener(new View.OnClickListener() {
+        _tvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -114,21 +114,23 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
 
-        etPasReg.addTextChangedListener(passwordTextWatcher);
-        etPasConfirm.addTextChangedListener(passwordTextWatcher);
+        _etPasReg.addTextChangedListener(passwordTextWatcher);
+        _etPasConfirm.addTextChangedListener(passwordTextWatcher);
 
-        btnReg.setOnClickListener(new View.OnClickListener() {
+        _btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String log = etEmail.getText().toString();
-                String pas = etPasReg.getText().toString();
-                String firstName = etFN.getText().toString();
-                String lastName = etLN.getText().toString();
-                String phone = etPhone.getText().toString();
+                String firstName = _etFN.getText().toString();
+                String lastName = _etLN.getText().toString();
+                String phone = _etPhone.getText().toString();
+                String city = _etCity.getText().toString();
+                String selectedGender = _spGender.getSelectedItem().toString();
+                String email = _etEmail.getText().toString();
+                String pas = _etPasReg.getText().toString();
 
-                if (!log.isEmpty() && !pas.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty()) {
-                    if (_chbUserAgreement.isChecked()) {
-                        registerUser(log, pas, firstName, lastName, phone);
+                if (areFieldsValid(firstName, lastName, phone, city, selectedGender, email, pas)) {
+                    if (isUserAgreementChecked()) {
+                        registerUser(firstName, lastName, phone, city, selectedGender, email, pas);
                     } else {
                         Toast.makeText(RegisterActivity.this, "Примите пользовательское соглашение", Toast.LENGTH_LONG).show();
                     }
@@ -140,23 +142,46 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void init() {
-        appComponent = DaggerAppComponent.create();
-        appComponent.inject(this);
+        _appComponent = DaggerAppComponent.create();
+        _appComponent.inject(this);
 
-        etEmail = findViewById(R.id.etEmailReg);
-        etFN = findViewById(R.id.etFirstName);
-        etLN = findViewById(R.id.etLastName);
-        etPhone = findViewById(R.id.etPhone);
-        etPasReg = findViewById(R.id.etPasReg);
-        btnReg = findViewById(R.id.btnRegisterReg);
-        etPasConfirm = findViewById(R.id.etPasConfirm);
-        tvPasswordMatch = findViewById(R.id.tvPasswordMatch);
-        tvLogin = findViewById(R.id.tvLogin);
+        _tvLogin = findViewById(R.id.tvLogin);
+        _tvPasswordMatch = findViewById(R.id.tvPasswordMatch);
+
+        _etFN = findViewById(R.id.etFirstName);
+        _etLN = findViewById(R.id.etLastName);
+        _etPhone = findViewById(R.id.etPhone);
+        _etCity = findViewById(R.id.etCity);
+        _etEmail = findViewById(R.id.etEmailReg);
+        _etPasReg = findViewById(R.id.etPasReg);
+        _etPasConfirm = findViewById(R.id.etPasConfirm);
+
         _chbUserAgreement = findViewById(R.id.chbUserAgreement);
+
+        _spGender = findViewById(R.id.spGender);
+        setupGenderAdapter(_spGender);
+
+        _btnReg = findViewById(R.id.btnRegisterReg);
     }
 
-    private void registerUser(String email, String password, String firstName, String lastName, String phone) {
-        db.registerUser(email, password, this, new OnCompleteListener<AuthResult>() {
+    private boolean areFieldsValid(String firstName, String lastName, String phone, String city, String selectedGender, String email, String pas) {
+        return !firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty() && !city.isEmpty() && !selectedGender.isEmpty() && !email.isEmpty() && !pas.isEmpty();
+    }
+
+    private boolean isUserAgreementChecked() {
+        return _chbUserAgreement.isChecked();
+    }
+
+    private void setupGenderAdapter(Spinner spGender) {
+        String[] genderOptions = Gender.getGenderValues();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, genderOptions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spGender.setAdapter(adapter);
+    }
+
+    private void registerUser(String firstName, String lastName, String phone, String city, String selectedGender, String email, String password) {
+        _userRepository.registerUser(email, password, this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
@@ -188,26 +213,26 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private boolean validatePhoneNumber() {
-        String phone = etPhone.getText().toString();
+        String phone = _etPhone.getText().toString();
 
         if (phone.matches("^\\d{10,12}$")) {
             return true;
         } else {
-            etPhone.setError("Введите корректный номер телефона");
+            _etPhone.setError("Введите корректный номер телефона");
             return false;
         }
     }
 
 
     private void getWeekPlansFromFirestore(OnCompleteListener<QuerySnapshot> onCompleteListener) {
-        dayPlanRepository.getWeekPlansCollection()
+        _dayPlanRepository.getWeekPlansCollection()
                 .get()
                 .addOnCompleteListener(onCompleteListener);
     }
 
 
     private void saveUserDayPlans(String userId, List<DayPlan> weekPlans) {
-        dayPlanRepository.saveUserDayPlans(userId, weekPlans, new OnSuccessListener<Void>() {
+        _dayPlanRepository.saveUserDayPlans(userId, weekPlans, new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 runOnUiThread(() -> {
@@ -226,7 +251,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void saveUserData(String userId, String firstName, String lastName, String phone, String email) {
-        db.saveUserData(userId, firstName, lastName, phone, email, new OnCompleteListener<Void>() {
+        _userRepository.saveUserData(userId, firstName, lastName, phone, email, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -247,15 +272,15 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void checkPasswordMatch() {
-        String password = etPasReg.getText().toString();
-        String confirmPassword = etPasConfirm.getText().toString();
+        String password = _etPasReg.getText().toString();
+        String confirmPassword = _etPasConfirm.getText().toString();
 
         if (password.equals(confirmPassword)) {
-            tvPasswordMatch.setText("Пароли совпадают");
-            tvPasswordMatch.setTextColor(Color.GREEN);
+            _tvPasswordMatch.setText("Пароли совпадают");
+            _tvPasswordMatch.setTextColor(Color.GREEN);
         } else {
-            tvPasswordMatch.setText("Пароли не совпадают");
-            tvPasswordMatch.setTextColor(Color.RED);
+            _tvPasswordMatch.setText("Пароли не совпадают");
+            _tvPasswordMatch.setTextColor(Color.RED);
         }
     }
 }

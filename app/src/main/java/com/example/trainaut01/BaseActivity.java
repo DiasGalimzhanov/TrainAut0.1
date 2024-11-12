@@ -17,7 +17,7 @@ import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.repository.AppInitializer;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.ExerciseRepository;
-import com.example.trainaut01.training.TrainingWeekFragment;
+import com.example.trainaut01.training.TodayMusclePlanFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import javax.inject.Inject;
@@ -74,7 +74,7 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
                     selectedFragment = new HomeFragment();
                     newPosition = 0;
                 } else if (item.getItemId() == R.id.nav_training) {
-                    selectedFragment = new TrainingWeekFragment();
+                    selectedFragment = new TodayMusclePlanFragment();
                     newPosition = 1;
                 } else if (item.getItemId() == R.id.nav_profile) {
                     selectedFragment = new UserProfileFragment();
@@ -157,7 +157,7 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
                 updateBottomNavigationSelection(currentFragment);
                 if (currentFragment instanceof HomeFragment) {
                     _previousPosition = 0;
-                } else if (currentFragment instanceof TrainingWeekFragment) {
+                } else if (currentFragment instanceof TodayMusclePlanFragment) {
                     _previousPosition = 1;
                 } else if (currentFragment instanceof UserProfileFragment) {
                     _previousPosition = 2;

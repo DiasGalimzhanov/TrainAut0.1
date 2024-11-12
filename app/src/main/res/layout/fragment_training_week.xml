@@ -5,295 +5,194 @@
     android:id="@+id/mainTraining"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C6DDE7"
-    tools:context=".training.TrainingListFragment">
-
+    android:background="@color/white"
+    tools:context=".training.TodayMusclePlanFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/llBackgroundPages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/imageView14"
-                android:layout_width="220dp"
-                android:layout_height="220dp"
-                android:layout_gravity="end"
-                android:scaleType="fitXY"
-                android:src="@drawable/top_right" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/btnGrossMotor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="#55B670"
+                    android:padding="10dp"
+                    android:text="Крупная моторика"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/btnFineMotor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@color/B5B8D7Light"
+                    android:padding="10dp"
+                    android:text="Мелкая моторика"
+                    android:textColor="@color/black" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/textView20"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvTrainingSubTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-20dp"
-                android:text="План тренировок\n на неделю"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="Название тренировок"
                 android:textAlignment="center"
-                android:textColor="#8F1FA8"
-                android:textSize="29sp"
-                android:textStyle="bold" />
+                android:textColor="@color/black"
+                android:textSize="20sp" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ivPerson"
+                    android:layout_width="wrap_content"
+                    android:layout_height="500dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/boy_front"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <ImageButton
+                    android:id="@+id/btnBiceps"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="160dp"
+                    android:layout_marginTop="200dp"
+                    android:background="@drawable/circle_button"
+                    android:scaleType="centerInside"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.4" />
+
+                <ImageButton
+                    android:id="@+id/btnPectoralMuscles"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="204dp"
+                    android:layout_marginTop="200dp"
+                    android:background="@drawable/circle_button"
+                    android:scaleType="centerInside"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.4" />
+
+
+                <ImageButton
+                    android:id="@+id/btnTriceps"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/circle_button"
+                    android:scaleType="centerInside"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.358"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.458" />
+
+                <ImageButton
+                    android:id="@+id/btnDeltoidMuscles"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/circle_button"
+                    android:scaleType="centerInside"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.583"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.375" />
+
+                <ImageButton
+                    android:id="@+id/btnPress"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="208dp"
+                    android:layout_marginTop="256dp"
+                    android:background="@drawable/circle_button"
+                    android:scaleType="centerInside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/btnUpperBackMuscles"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="188dp"
+                    android:layout_marginTop="192dp"
+                    android:background="@drawable/circle_button"
+                    android:scaleType="centerInside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/btnQuadriceps"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="152dp"
+                    android:layout_marginTop="352dp"
+                    android:background="@drawable/circle_button"
+                    android:scaleType="centerInside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/btnLowerBackMuscles"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="188dp"
+                    android:layout_marginTop="268dp"
+                    android:background="@drawable/circle_button"
+                    android:scaleType="centerInside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/btnGoToTraining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="20dp">
-
-                    <LinearLayout
-                        android:id="@+id/mondayLayout"
-                        android:layout_width="160dp"
-                        android:layout_height="115dp"
-                        android:background="@drawable/back_week_training_card"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/imageView23"
-                            android:layout_width="65dp"
-                            android:layout_height="65dp"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/monday_icon" />
-
-                        <TextView
-                            android:id="@+id/textView12"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="5dp"
-                            android:gravity="center"
-                            android:text="Понедельник"
-                            android:textColor="#4444B8"
-                            android:textSize="20sp" />
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="20dp">
-
-                    <LinearLayout
-                        android:id="@+id/tuesdayLayout"
-                        android:layout_width="160dp"
-                        android:layout_height="115dp"
-                        android:background="@drawable/back_week_training_card"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-
-                        <ImageView
-                            android:id="@+id/imageView24"
-                            android:layout_width="65dp"
-                            android:layout_height="65dp"
-                            android:src="@drawable/tuesday_icon" />
-
-                        <TextView
-                            android:id="@+id/textView14"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="5dp"
-                            android:gravity="center"
-                            android:text="Вторник"
-                            android:textColor="#4444B8"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="20dp">
-
-                    <LinearLayout
-                        android:id="@+id/wednesdayLayout"
-                        android:layout_width="160dp"
-                        android:layout_height="115dp"
-                        android:background="@drawable/back_week_training_card"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-
-                        <ImageView
-                            android:id="@+id/imageView19"
-                            android:layout_width="65dp"
-                            android:layout_height="65dp"
-                            android:src="@drawable/wednesday_icon" />
-
-                        <TextView
-                            android:id="@+id/textView7"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="5dp"
-                            android:gravity="center"
-                            android:text="Среда"
-                            android:textColor="#4444B8"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="20dp">
-
-                    <LinearLayout
-                        android:id="@+id/thursdayLayout"
-                        android:layout_width="160dp"
-                        android:layout_height="115dp"
-                        android:background="@drawable/back_week_training_card"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-
-                        <ImageView
-                            android:id="@+id/imageView17"
-                            android:layout_width="65dp"
-                            android:layout_height="65dp"
-                            android:src="@drawable/thursday_icon" />
-
-                        <TextView
-                            android:id="@+id/textView5"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="5dp"
-                            android:gravity="center"
-                            android:text="Четверг"
-                            android:textColor="#4444B8"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="20dp">
-
-                    <LinearLayout
-                        android:id="@+id/fridayLayout"
-                        android:layout_width="160dp"
-                        android:layout_height="115dp"
-                        android:background="@drawable/back_week_training_card"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-
-                        <ImageView
-                            android:id="@+id/imageView18"
-                            android:layout_width="65dp"
-                            android:layout_height="65dp"
-                            android:src="@drawable/friday_icon" />
-
-                        <TextView
-                            android:id="@+id/textView6"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="5dp"
-                            android:gravity="center"
-                            android:text="Пятница"
-                            android:textColor="#4444B8"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="20dp">
-
-                    <LinearLayout
-                        android:id="@+id/saturdayLayout"
-                        android:layout_width="160dp"
-                        android:layout_height="115dp"
-                        android:background="@drawable/back_week_training_card"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-
-                        <ImageView
-                            android:id="@+id/imageView20"
-                            android:layout_width="65dp"
-                            android:layout_height="65dp"
-                            android:src="@drawable/saturday_icon" />
-
-                        <TextView
-                            android:id="@+id/textView8"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="5dp"
-                            android:gravity="center"
-                            android:text="Суббота"
-                            android:textColor="#4444B8"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-
-            </LinearLayout>
-
-
-            <ImageView
-                android:id="@+id/imageView16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/bottom_left"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:text="Перейти к тренировке"
+                android:background="#5B87BD"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                tools:layout_editor_absoluteX="7dp"
+                android:textColor="@color/white"
+                tools:layout_editor_absoluteY="614dp" />
 
         </LinearLayout>
-
-
     </ScrollView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -12,7 +12,6 @@ import com.example.trainaut01.profile.SupportFragment;
 import com.example.trainaut01.profile.UserUpdateFragment;
 import com.example.trainaut01.repository.AppInitializer;
 import com.example.trainaut01.training.ExerciseDetailFragment;
-import com.example.trainaut01.training.TrainingListFragment;
 
 import javax.inject.Singleton;
 
@@ -24,7 +23,6 @@ public interface AppComponent {
 
     void inject(BaseActivity activity);
     void inject(AppInitializer appInitializer);
-    void inject(TrainingListFragment trainingListFragment);
     void inject(LoginActivity loginActivity);
     void inject(RegisterActivity registerActivity);
     void inject(UserUpdateFragment userUpdateFragment);
