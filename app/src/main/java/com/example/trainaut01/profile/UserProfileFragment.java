@@ -58,10 +58,11 @@ public class UserProfileFragment extends Fragment {
         _btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.clear();
-                editor.apply();
+                SharedPreferences userData = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+                clearSharedPreference(userData);
+
+                SharedPreferences userProgress = getActivity().getSharedPreferences("user_progress", getActivity().MODE_PRIVATE);
+                clearSharedPreference(userProgress);
 
                 FirebaseAuth.getInstance().signOut();
 
@@ -108,6 +109,12 @@ public class UserProfileFragment extends Fragment {
         _btnUpdateProfile = view.findViewById(R.id.btnUpdateProfile);
         _btnSupport = view.findViewById(R.id.btnSupport);
 //        _btnWhatch = view.findViewById(R.id.btnWatch);
+    }
+
+    private void clearSharedPreference(SharedPreferences sharedPreferences){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
     private void showPasswordDialog() {

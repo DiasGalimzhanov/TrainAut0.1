@@ -106,22 +106,6 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/etEmailReg"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_grey_background"
-                android:ems="10"
-                android:hint="Адрес Эл. Почты(Email)"
-                android:inputType="textEmailAddress"
-                android:textAlignment="center"
-                android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
-                android:textSize="18sp" />
-
-            <EditText
                 android:id="@+id/etPhone"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -132,6 +116,49 @@
                 android:ems="10"
                 android:hint="Номер Телефона"
                 android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="#4d4d4d"
+                android:textColorHint="#4d4d4d"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etCity"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/edit_text_grey_background"
+                android:ems="10"
+                android:hint="Город"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="#4d4d4d"
+                android:textColorHint="#4d4d4d"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/spGender"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/edit_text_grey_background"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etEmailReg"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/edit_text_grey_background"
+                android:ems="10"
+                android:hint="Адрес Эл. Почты(Email)"
+                android:inputType="textEmailAddress"
                 android:textAlignment="center"
                 android:textColor="#4d4d4d"
                 android:textColorHint="#4d4d4d"
@@ -217,7 +244,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
                 android:background="@drawable/background_btn_login"
-                android:text="Зарегистрироваться"
+                android:text="Продолжить"
                 android:textColor="#ffffff"
                 android:textSize="23sp"
                 android:textStyle="bold" />

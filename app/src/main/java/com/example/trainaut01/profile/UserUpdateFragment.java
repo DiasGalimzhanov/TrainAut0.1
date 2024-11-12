@@ -40,12 +40,43 @@ public class UserUpdateFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_update, container, false);
 
+        init(view);
+
+
+        _btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, new UserProfileFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        _btnCange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                User updatedUser = createUpdatedUser();
+                db.updateUser(updatedUser, UserUpdateFragment.this.getContext());
+
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, new UserProfileFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        addData_inEditTexts();
+
+        return view;
+    }
+
+    private void init(View view){
         appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
-        // Initialize EditText fields
+
         _etFirstNameUpdate = view.findViewById(R.id.etFirstNameUpdate);
         _etLastNameUpdate = view.findViewById(R.id.etLastNameUpdate);
         _etEmailUpdate = view.findViewById(R.id.etEmailUpdate);
@@ -55,35 +86,8 @@ public class UserUpdateFragment extends Fragment {
         _tvPasswordMatch = view.findViewById(R.id.tvPasswordMatch);
         _etPas = view.findViewById(R.id.etPasReg);
         _etPasConf = view.findViewById(R.id.etPasConfirm);
-
-
-        _btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, new UserProfileFragment());
-                transaction.addToBackStack(null);  // Allows going back to the previous fragment
-                transaction.commit();
-            }
-        });
-
-//        _btnCange.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                User updatedUser = createUpdatedUser();
-//                db.updateUser(updatedUser, getActivity());
-//
-//                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-//                transaction.replace(R.id.fragment_container, new UserProfileFragment());
-//                transaction.addToBackStack(null);
-//                transaction.commit();
-//            }
-//        });
-
-        addData_inEditTexts();
-
-        return view;
     }
+
 
     private User createUpdatedUser() {
         String newFN = _etFirstNameUpdate.getText().toString();
@@ -92,8 +96,14 @@ public class UserUpdateFragment extends Fragment {
         String newPhone = _etPhoneUpdate.getText().toString();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        return new User(userId, newFN, newLN, newEmail, newPhone, 0, 0, 0);
+        SharedPreferences sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        int currentExp = sharedPref.getInt("exp", 0);
+        int currentLvl = sharedPref.getInt("lvl", 0);
+        int currentCountDays = sharedPref.getInt("countDays", 0);
+
+        return new User(userId, newFN, newLN, newPhone, newEmail, currentExp, currentLvl, currentCountDays);
     }
+
 
     private void addData_inEditTexts() {
         SharedPreferences sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
