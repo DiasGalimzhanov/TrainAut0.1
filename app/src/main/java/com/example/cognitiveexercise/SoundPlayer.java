@@ -4,14 +4,13 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.widget.Toast;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SoundPlayer {
-    private FirebaseStorage storage;
+    private final FirebaseStorage storage;
 
     public SoundPlayer() {
         storage = FirebaseStorage.getInstance();
@@ -22,15 +21,15 @@ public class SoundPlayer {
         StorageReference storageRef = storage.getReference().child("sounds/" + fileName);
 
         storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            // Запускаем воспроизведение
             MediaPlayer mediaPlayer = new MediaPlayer();
             try {
                 mediaPlayer.setDataSource(context, uri);
                 mediaPlayer.prepare();
                 mediaPlayer.start();
 
+                // Устанавливаем обработчик завершения воспроизведения
                 mediaPlayer.setOnCompletionListener(mp -> {
-                    // После завершения воспроизведения вызываем onComplete
+                    mp.release();  // Освобождаем ресурсы MediaPlayer после завершения
                     if (onComplete != null) {
                         onComplete.run();
                     }
@@ -38,9 +37,11 @@ public class SoundPlayer {
 
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(context, "Ошибка при воспроизведении звука", Toast.LENGTH_SHORT).show();
+                mediaPlayer.release();  // Освобождаем ресурсы MediaPlayer при ошибке
             }
         }).addOnFailureListener(exception -> {
-            // Обрабатываем ошибки
+            // Обрабатываем ошибки при загрузке
             Toast.makeText(context, "Не удалось загрузить звук", Toast.LENGTH_SHORT).show();
         });
     }

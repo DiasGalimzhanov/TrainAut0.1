@@ -2,51 +2,72 @@ package com.example.cognitiveexercise;
 
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.List;
+import com.google.firebase.FirebaseApp;
 
 public class CognitiveExerciseActivity extends AppCompatActivity {
     private SoundPlayer soundPlayer;
     private SelectedSoundsManager selectedSoundsManager;
+    private LinearLayout selectedSoundsLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Инициализация Firebase
+        FirebaseApp.initializeApp(this);
+
         setContentView(R.layout.activity_cognitive_exercise);
 
         soundPlayer = new SoundPlayer();
-        selectedSoundsManager = new SelectedSoundsManager( this);
+        selectedSoundsManager = new SelectedSoundsManager(this);
+
+        selectedSoundsLayout = findViewById(R.id.selectedSoundsContainer);
 
         setupSoundButtons();
+        setupSelectedSoundsContainer();
     }
 
     private void setupSoundButtons() {
-        // Ссылаемся на кнопки, которые уже определены в XML
+        // Привязываем кнопки, определенные в XML
         Button soundButton1 = findViewById(R.id.soundButton1);
         Button soundButton2 = findViewById(R.id.soundButton2);
-        // Прочие кнопки...
+        // Добавьте остальные кнопки по аналогии
 
-        // Загружаем звуки из Firebase
-        soundPlayer.getAvailableSounds(soundNames -> {
-            // Проверяем количество звуков и сопоставляем с кнопками
-            if (soundNames.size() > 0) {
-                soundButton1.setText(soundNames.get(0));
-                soundButton1.setOnClickListener(v -> {
-                    soundPlayer.playSound(soundNames.get(0), this); // Воспроизведение первого звука
-                });
-            }
-            if (soundNames.size() > 1) {
-                soundButton2.setText(soundNames.get(1));
-                soundButton2.setOnClickListener(v -> {
-                    soundPlayer.playSound(soundNames.get(1), this); // Воспроизведение второго звука
-                });
-            }
-            // Привязка других кнопок аналогично
+        // Настраиваем каждую кнопку для добавления в список выбранных и мгновенного воспроизведения
+        soundButton1.setOnClickListener(v -> addSoundToSelected("privet.mp3"));
+        soundButton2.setOnClickListener(v -> addSoundToSelected("sound2.mp3"));
+        // Аналогично для остальных кнопок
+    }
+
+    private void addSoundToSelected(String soundFileName) {
+        // Добавляем звук в список выбранных
+        selectedSoundsManager.addSound(soundFileName);
+
+        // Создаем кнопку для отображения выбранного звука
+        Button selectedButton = new Button(this);
+        selectedButton.setText(soundFileName);
+        selectedSoundsLayout.addView(selectedButton);
+
+        // Воспроизводим звук сразу после добавления
+        soundPlayer.playSound(soundFileName, this, () -> {
+            Toast.makeText(this, "Звук завершен: " + soundFileName, Toast.LENGTH_SHORT).show();
         });
     }
 
+    private void setupSelectedSoundsContainer() {
+        // Убедитесь, что контейнер поддерживает клики
+        selectedSoundsLayout.setClickable(true);
 
+        // Добавьте отладочный лог или сообщение
+        selectedSoundsLayout.setOnClickListener(v -> {
+            // Проверка нажатия
+            Toast.makeText(this, "Воспроизведение всех звуков...", Toast.LENGTH_SHORT).show();
+            // Воспроизведение всех звуков
+            selectedSoundsManager.playAllSounds(this);
+        });
+    }
 }

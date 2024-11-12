@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -42,5 +43,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.core)
 
 }
