@@ -14,9 +14,14 @@
 
         <!-- Контейнер для выбранных звуков -->
         <HorizontalScrollView
+            android:id="@+id/selectedSoundsScrollView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:descendantFocusability="blocksDescendants">
 
             <LinearLayout
                 android:id="@+id/selectedSoundsContainer"
@@ -34,6 +39,30 @@
 
     </LinearLayout>
 
+    <!-- Кнопка для озвучки выбранных звуков -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/playSelectedSoundsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Озвучить выбранные"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"/>
+
+        <!-- Кнопка для очистки всех выбранных звуков -->
+        <Button
+            android:id="@+id/clearAllButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Очистить все"
+            android:gravity="center" />
+    </LinearLayout>
+
     <!-- Таблица с кнопками звуков -->
     <GridLayout
         android:id="@+id/soundGrid"
@@ -44,7 +73,7 @@
         android:padding="8dp"
         android:rowCount="4">
 
-        <!-- Пример кнопок звуков -->
+        <!-- Пример кнопок звуков с уменьшенной высотой -->
         <Button
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -93,7 +122,7 @@
             android:id="@+id/soundButton4"
             android:text="Есть" />
 
-        <!-- Прочие кнопки для строк -->
+        <!-- Прочие кнопки для строк с уменьшенной высотой -->
         <Button
             android:layout_width="0dp"
             android:layout_height="0dp"

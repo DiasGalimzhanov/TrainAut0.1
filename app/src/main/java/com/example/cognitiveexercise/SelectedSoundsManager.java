@@ -29,4 +29,19 @@ public class SelectedSoundsManager {
             soundPlayer.playSound(soundFileName, context, () -> playNextSound(context));
         }
     }
+
+    public void removeLastSound() {
+        if (!selectedSounds.isEmpty()) {
+            selectedSounds.remove(selectedSounds.size() - 1);
+        }
+    }
+
+    // Новый метод для очистки всех выбранных звуков
+    public void clearAllSounds() {
+        selectedSounds.clear();
+    }
+
+    public List<String> getSelectedSounds() {
+        return selectedSounds;
+    }
 }
