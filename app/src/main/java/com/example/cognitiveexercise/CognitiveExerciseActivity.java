@@ -65,23 +65,25 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         Button soundButton5 = findViewById(R.id.soundButton5);
         Button soundButton6 = findViewById(R.id.soundButton6);
 
-        soundButton1.setOnClickListener(v -> addSoundToSelected("privet.mp3"));
-        soundButton2.setOnClickListener(v -> addSoundToSelected("ya.mp3"));
-        soundButton3.setOnClickListener(v -> addSoundToSelected("hochu.mp3"));
-        soundButton4.setOnClickListener(v -> addSoundToSelected("est.mp3"));
-        soundButton5.setOnClickListener(v -> addSoundToSelected("pit.mp3"));
-        soundButton6.setOnClickListener(v -> addSoundToSelected("spat.mp3"));
+        soundButton1.setOnClickListener(v -> addSoundToSelected("Привет", "privet.mp3"));
+        soundButton2.setOnClickListener(v -> addSoundToSelected("Я", "ya.mp3"));
+        soundButton3.setOnClickListener(v -> addSoundToSelected("Хочу", "hochu.mp3"));
+        soundButton4.setOnClickListener(v -> addSoundToSelected("Есть", "est.mp3"));
+        soundButton5.setOnClickListener(v -> addSoundToSelected("Пить", "pit.mp3"));
+        soundButton6.setOnClickListener(v -> addSoundToSelected("Спать", "spat.mp3"));
     }
 
-    private void addSoundToSelected(String soundFileName) {
+    // Измененный метод для добавления звука и кнопки с текстом
+    private void addSoundToSelected(String buttonText, String soundFileName) {
         selectedSoundsManager.addSound(soundFileName);
 
         Button selectedButton = new Button(this);
-        selectedButton.setText(soundFileName);
+        selectedButton.setText(buttonText);  // Используем текст кнопки, а не имя файла
         selectedSoundsLayout.addView(selectedButton);
 
         selectedButtons.add(selectedButton);
 
+        // Воспроизведение звука (по-прежнему на основе имени файла)
         soundPlayer.playSound(soundFileName, this, () -> {
 
         });
