@@ -83,7 +83,7 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         selectedButtons.add(selectedButton);
 
         soundPlayer.playSound(soundFileName, this, () -> {
-            Toast.makeText(this, "Звук завершен: " + soundFileName, Toast.LENGTH_SHORT).show();
+
         });
     }
 
