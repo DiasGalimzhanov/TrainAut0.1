@@ -35,11 +35,20 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         // Привязываем кнопки, определенные в XML
         Button soundButton1 = findViewById(R.id.soundButton1);
         Button soundButton2 = findViewById(R.id.soundButton2);
+        Button soundButton3 = findViewById(R.id.soundButton3);
+        Button soundButton4 = findViewById(R.id.soundButton4);
+        Button soundButton5 = findViewById(R.id.soundButton5);
+        Button soundButton6 = findViewById(R.id.soundButton6);
+
         // Добавьте остальные кнопки по аналогии
 
         // Настраиваем каждую кнопку для добавления в список выбранных и мгновенного воспроизведения
         soundButton1.setOnClickListener(v -> addSoundToSelected("privet.mp3"));
-        soundButton2.setOnClickListener(v -> addSoundToSelected("sound2.mp3"));
+        soundButton2.setOnClickListener(v -> addSoundToSelected("ya.mp3"));
+        soundButton3.setOnClickListener(v -> addSoundToSelected("hochu.mp3"));
+        soundButton4.setOnClickListener(v -> addSoundToSelected("est.mp3"));
+        soundButton5.setOnClickListener(v -> addSoundToSelected("pit.mp3"));
+        soundButton6.setOnClickListener(v -> addSoundToSelected("spat.mp3"));
         // Аналогично для остальных кнопок
     }
 

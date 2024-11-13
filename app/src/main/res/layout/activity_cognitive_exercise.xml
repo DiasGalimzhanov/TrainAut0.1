@@ -55,7 +55,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_border"
             android:id="@+id/soundButton1"
-            android:text="1" />
+            android:text="Привет" />
 
         <Button
             android:layout_width="0dp"
@@ -67,7 +67,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_border"
             android:id="@+id/soundButton2"
-            android:text="2" />
+            android:text="Я" />
 
         <Button
             android:layout_width="0dp"
@@ -79,7 +79,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_border"
             android:id="@+id/soundButton3"
-            android:text="3" />
+            android:text="Хочу" />
 
         <Button
             android:layout_width="0dp"
@@ -91,7 +91,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_border"
             android:id="@+id/soundButton4"
-            android:text="4" />
+            android:text="Есть" />
 
         <!-- Прочие кнопки для строк -->
         <Button
@@ -104,7 +104,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_border"
             android:id="@+id/soundButton5"
-            android:text="5" />
+            android:text="Пить" />
 
         <Button
             android:layout_width="0dp"
@@ -116,7 +116,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_border"
             android:id="@+id/soundButton6"
-            android:text="6" />
+            android:text="Спать" />
 
         <Button
             android:layout_width="0dp"
