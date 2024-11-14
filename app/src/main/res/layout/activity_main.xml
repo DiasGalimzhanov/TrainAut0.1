@@ -6,9 +6,18 @@
     android:gravity="center"
     android:orientation="vertical">
 
+    <!-- Кнопка для перехода на фрагмент CognitiveExerciseFragment -->
     <Button
         android:id="@+id/start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Начать" />
+
+    <!-- Контейнер для размещения фрагмента -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
+        android:name="com.example.cognitiveexercise.CognitiveExerciseFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </LinearLayout>

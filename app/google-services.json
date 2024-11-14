@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "714834459984",
+    "firebase_url": "https://trainaut-database-default-rtdb.firebaseio.com",
+    "project_id": "trainaut-database",
+    "storage_bucket": "trainaut-database.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714834459984:android:7b2dec299a4692fba50055",
+        "android_client_info": {
+          "package_name": "com.example.cognitiveexercise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714834459984-6k2es6r5i34l0ot5m2ur5gcepfagqtvp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFAkVRMR3sgQegKDRuPXbikzmHwFw0uXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714834459984-6k2es6r5i34l0ot5m2ur5gcepfagqtvp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714834459984:android:3da9464e9031e99aa50055",
+        "android_client_info": {
+          "package_name": "com.example.trainaut01"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714834459984-6k2es6r5i34l0ot5m2ur5gcepfagqtvp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFAkVRMR3sgQegKDRuPXbikzmHwFw0uXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714834459984-6k2es6r5i34l0ot5m2ur5gcepfagqtvp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
