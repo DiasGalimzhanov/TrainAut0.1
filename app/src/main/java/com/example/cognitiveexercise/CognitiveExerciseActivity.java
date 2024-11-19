@@ -45,7 +45,6 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         setupClearAllButton();
         setupPlaySelectedSoundsButton();
 
-        // Убедитесь, что HorizontalScrollView может быть нажат
         selectedSoundsScrollView.setClickable(true);
         selectedSoundsScrollView.setFocusable(true);
         selectedSoundsScrollView.setFocusableInTouchMode(true);
@@ -64,25 +63,22 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         Button soundButton5 = findViewById(R.id.soundButton5);
         Button soundButton6 = findViewById(R.id.soundButton6);
 
-        soundButton1.setOnClickListener(v -> addSoundToSelected("Привет", "privet.mp3"));
-        soundButton2.setOnClickListener(v -> addSoundToSelected("Я", "ya.mp3"));
-        soundButton3.setOnClickListener(v -> addSoundToSelected("Хочу", "hochu.mp3"));
-        soundButton4.setOnClickListener(v -> addSoundToSelected("Кушать", "kushat.mp3"));
-        soundButton5.setOnClickListener(v -> addSoundToSelected("Пить", "pit.mp3"));
-        soundButton6.setOnClickListener(v -> addSoundToSelected("Спать", "spat.mp3"));
+        soundButton1.setOnClickListener(v -> addSoundToSelected("privet"));
+        soundButton2.setOnClickListener(v -> addSoundToSelected("ya"));
+        soundButton3.setOnClickListener(v -> addSoundToSelected("hochu"));
+        soundButton4.setOnClickListener(v -> addSoundToSelected("kushat"));
+        soundButton5.setOnClickListener(v -> addSoundToSelected("pit"));
+        soundButton6.setOnClickListener(v -> addSoundToSelected("spat"));
     }
 
-    private void addSoundToSelected(String buttonText, String soundFileName) {
+    private void addSoundToSelected(String soundFileName) {
         selectedSoundsManager.addSound(soundFileName);
 
         Button selectedButton = new Button(this);
-        selectedButton.setText(buttonText);
+        selectedButton.setText(soundFileName);
         selectedSoundsLayout.addView(selectedButton);
 
         selectedButtons.add(selectedButton);
-
-        soundPlayer.playSound(soundFileName, this, () -> {
-        });
     }
 
     private void setupSelectedSoundsContainer() {

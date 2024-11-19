@@ -19,18 +19,18 @@ public class SelectedSoundsManager {
     }
 
     public void playAllSounds(Context context) {
-        currentIndex = 0;  // Сбрасываем индекс
-        playNextSound(context);  // Начинаем воспроизведение звуков поочередно
+        currentIndex = 0;
+        playNextSound(context);
     }
 
     private void playNextSound(Context context) {
         if (currentIndex < selectedSounds.size()) {
             String soundFileName = selectedSounds.get(currentIndex);
-            currentIndex++;  // Переходим к следующему звуку
+            currentIndex++;
 
-            // Воспроизведение синхронно
+            // Воспроизведение звука из ресурсов raw
             soundPlayer.playSound(soundFileName, context, () -> {
-                // После завершения воспроизведения текущего звука вызываем метод для воспроизведения следующего
+                // После завершения воспроизведения идем к следующему звуку
                 playNextSound(context);
             });
         }
