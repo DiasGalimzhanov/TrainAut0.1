@@ -120,7 +120,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_border"
             android:id="@+id/soundButton4"
-            android:text="Есть" />
+            android:text="Кушать" />
 
         <!-- Прочие кнопки для строк с уменьшенной высотой -->
         <Button

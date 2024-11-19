@@ -18,8 +18,8 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
     private SelectedSoundsManager selectedSoundsManager;
     private LinearLayout selectedSoundsLayout;
     private Button deleteButton;
-    private Button clearAllButton; // Новая кнопка для очистки
-    private Button playSelectedSoundsButton; // Новая кнопка для воспроизведения выбранных звуков
+    private Button clearAllButton;
+    private Button playSelectedSoundsButton;
     private List<Button> selectedButtons = new ArrayList<>();
     private HorizontalScrollView selectedSoundsScrollView;
 
@@ -36,21 +36,20 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         selectedSoundsLayout = findViewById(R.id.selectedSoundsContainer);
         selectedSoundsScrollView = findViewById(R.id.selectedSoundsScrollView);
         deleteButton = findViewById(R.id.deleteLastButton);
-        clearAllButton = findViewById(R.id.clearAllButton); // Инициализация кнопки "Очистить все"
-        playSelectedSoundsButton = findViewById(R.id.playSelectedSoundsButton); // Инициализация кнопки "Озвучить выбранные"
+        clearAllButton = findViewById(R.id.clearAllButton);
+        playSelectedSoundsButton = findViewById(R.id.playSelectedSoundsButton);
 
         setupSoundButtons();
         setupSelectedSoundsContainer();
         setupDeleteButton();
-        setupClearAllButton(); // Настройка кнопки "Очистить все"
-        setupPlaySelectedSoundsButton(); // Настройка кнопки "Озвучить выбранные"
+        setupClearAllButton();
+        setupPlaySelectedSoundsButton();
 
         // Убедитесь, что HorizontalScrollView может быть нажат
         selectedSoundsScrollView.setClickable(true);
         selectedSoundsScrollView.setFocusable(true);
         selectedSoundsScrollView.setFocusableInTouchMode(true);
 
-        // Обработчик касания для HorizontalScrollView
         selectedSoundsScrollView.setOnClickListener(v -> {
             Toast.makeText(this, "Воспроизведение всех звуков...", Toast.LENGTH_SHORT).show();
             selectedSoundsManager.playAllSounds(this);
@@ -68,24 +67,21 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         soundButton1.setOnClickListener(v -> addSoundToSelected("Привет", "privet.mp3"));
         soundButton2.setOnClickListener(v -> addSoundToSelected("Я", "ya.mp3"));
         soundButton3.setOnClickListener(v -> addSoundToSelected("Хочу", "hochu.mp3"));
-        soundButton4.setOnClickListener(v -> addSoundToSelected("Есть", "est.mp3"));
+        soundButton4.setOnClickListener(v -> addSoundToSelected("Кушать", "kushat.mp3"));
         soundButton5.setOnClickListener(v -> addSoundToSelected("Пить", "pit.mp3"));
         soundButton6.setOnClickListener(v -> addSoundToSelected("Спать", "spat.mp3"));
     }
 
-    // Измененный метод для добавления звука и кнопки с текстом
     private void addSoundToSelected(String buttonText, String soundFileName) {
         selectedSoundsManager.addSound(soundFileName);
 
         Button selectedButton = new Button(this);
-        selectedButton.setText(buttonText);  // Используем текст кнопки, а не имя файла
+        selectedButton.setText(buttonText);
         selectedSoundsLayout.addView(selectedButton);
 
         selectedButtons.add(selectedButton);
 
-        // Воспроизведение звука (по-прежнему на основе имени файла)
         soundPlayer.playSound(soundFileName, this, () -> {
-
         });
     }
 
@@ -114,13 +110,12 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         });
     }
 
-    // Настройка кнопки "Очистить все"
     private void setupClearAllButton() {
         clearAllButton.setOnClickListener(v -> {
             if (!selectedButtons.isEmpty()) {
-                selectedButtons.clear(); // Очистить список кнопок
-                selectedSoundsLayout.removeAllViews(); // Удалить все кнопки из контейнера
-                selectedSoundsManager.clearAllSounds(); // Очистить список выбранных звуков
+                selectedButtons.clear();
+                selectedSoundsLayout.removeAllViews();
+                selectedSoundsManager.clearAllSounds();
                 Toast.makeText(this, "Все звуки удалены", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Нет звуков для удаления", Toast.LENGTH_SHORT).show();
@@ -128,12 +123,11 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         });
     }
 
-    // Настройка кнопки "Озвучить выбранные"
     private void setupPlaySelectedSoundsButton() {
         playSelectedSoundsButton.setOnClickListener(v -> {
             if (!selectedSoundsManager.getSelectedSounds().isEmpty()) {
                 Toast.makeText(this, "Воспроизведение выбранных звуков...", Toast.LENGTH_SHORT).show();
-                selectedSoundsManager.playAllSounds(this); // Воспроизведение всех выбранных звуков
+                selectedSoundsManager.playAllSounds(this);
             } else {
                 Toast.makeText(this, "Нет выбранных звуков для воспроизведения", Toast.LENGTH_SHORT).show();
             }
