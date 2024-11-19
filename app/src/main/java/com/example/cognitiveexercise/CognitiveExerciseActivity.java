@@ -86,7 +86,21 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
 
         // Сохраняем добавленную кнопку
         selectedButtons.add(selectedButton);
+
+        // Прокручиваем контейнер до конца после добавления нового элемента
+        scrollToEnd();
     }
+
+    // Метод для прокрутки контейнера до конца
+    private void scrollToEnd() {
+        // Используем post() для выполнения действия после добавления элемента
+        selectedSoundsLayout.post(() -> {
+            // Получаем высоту всего содержимого в контейнере
+            int scrollWidth = selectedSoundsLayout.getWidth();
+            selectedSoundsScrollView.smoothScrollTo(scrollWidth, 0); // Прокручиваем по оси X
+        });
+    }
+
 
     private void setupSelectedSoundsContainer() {
         selectedSoundsLayout.setClickable(true);
