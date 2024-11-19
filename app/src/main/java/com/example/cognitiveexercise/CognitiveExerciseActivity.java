@@ -8,8 +8,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.FirebaseApp;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +24,6 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseApp.initializeApp(this);
 
         setContentView(R.layout.activity_cognitive_exercise);
 
@@ -63,21 +60,31 @@ public class CognitiveExerciseActivity extends AppCompatActivity {
         Button soundButton5 = findViewById(R.id.soundButton5);
         Button soundButton6 = findViewById(R.id.soundButton6);
 
-        soundButton1.setOnClickListener(v -> addSoundToSelected("privet"));
-        soundButton2.setOnClickListener(v -> addSoundToSelected("ya"));
-        soundButton3.setOnClickListener(v -> addSoundToSelected("hochu"));
-        soundButton4.setOnClickListener(v -> addSoundToSelected("kushat"));
-        soundButton5.setOnClickListener(v -> addSoundToSelected("pit"));
-        soundButton6.setOnClickListener(v -> addSoundToSelected("spat"));
+        // Настройка кнопок, чтобы они добавляли звуки и отображали текст
+        soundButton1.setOnClickListener(v -> playSoundAndAddText("privet", "Привет"));
+        soundButton2.setOnClickListener(v -> playSoundAndAddText("ya", "Я"));
+        soundButton3.setOnClickListener(v -> playSoundAndAddText("hochu", "Хочу"));
+        soundButton4.setOnClickListener(v -> playSoundAndAddText("kushat", "Кушать"));
+        soundButton5.setOnClickListener(v -> playSoundAndAddText("pit", "Пить"));
+        soundButton6.setOnClickListener(v -> playSoundAndAddText("spat", "Спать"));
     }
 
-    private void addSoundToSelected(String soundFileName) {
+    // Метод для воспроизведения звука и добавления текста в контейнер
+    private void playSoundAndAddText(String soundFileName, String buttonText) {
+        // Добавляем звук в список
         selectedSoundsManager.addSound(soundFileName);
 
+        // Воспроизводим звук
+        soundPlayer.playSound(soundFileName, this, () -> {
+            // Можно выполнить дополнительные действия после воспроизведения
+        });
+
+        // Добавляем текст в контейнер
         Button selectedButton = new Button(this);
-        selectedButton.setText(soundFileName);
+        selectedButton.setText(buttonText); // Добавляем текст на русском
         selectedSoundsLayout.addView(selectedButton);
 
+        // Сохраняем добавленную кнопку
         selectedButtons.add(selectedButton);
     }
 
