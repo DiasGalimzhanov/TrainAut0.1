@@ -7,7 +7,7 @@ import android.widget.Toast;
 public class SoundPlayer {
 
     public SoundPlayer() {
-        // Инициализация, если нужна
+        // Инициализация
     }
 
     // Воспроизведение звука из ресурсов raw
