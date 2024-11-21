@@ -156,7 +156,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_border"
             android:id="@+id/soundButton7"
-            android:text="7" />
+            android:text="Да" />
 
         <Button
             android:layout_width="0dp"
@@ -168,7 +168,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/button_border"
             android:id="@+id/soundButton8"
-            android:text="8" />
+            android:text="Нет" />
 
         <Button
             android:layout_width="0dp"
@@ -253,7 +253,7 @@
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search" />
+            android:text="Поиск" />
     </LinearLayout>
 
 </LinearLayout>

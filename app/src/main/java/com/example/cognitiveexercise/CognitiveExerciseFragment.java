@@ -64,6 +64,8 @@ public class CognitiveExerciseFragment extends Fragment {
         Button soundButton4 = getView().findViewById(R.id.soundButton4);
         Button soundButton5 = getView().findViewById(R.id.soundButton5);
         Button soundButton6 = getView().findViewById(R.id.soundButton6);
+        Button soundButton7 = getView().findViewById(R.id.soundButton7);
+        Button soundButton8 = getView().findViewById(R.id.soundButton8);
 
         // Настройка кнопок, чтобы они добавляли звуки и отображали текст
         soundButton1.setOnClickListener(v -> playSoundAndAddText("privet", "Привет"));
@@ -72,6 +74,8 @@ public class CognitiveExerciseFragment extends Fragment {
         soundButton4.setOnClickListener(v -> playSoundAndAddText("kushat", "Кушать"));
         soundButton5.setOnClickListener(v -> playSoundAndAddText("pit", "Пить"));
         soundButton6.setOnClickListener(v -> playSoundAndAddText("spat", "Спать"));
+        soundButton7.setOnClickListener(v -> playSoundAndAddText("da", "Да"));
+        soundButton8.setOnClickListener(v -> playSoundAndAddText("net", "Нет"));
     }
 
     private void playSoundAndAddText(String soundFileName, String buttonText) {
