@@ -2,8 +2,6 @@ package com.example.trainaut01.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,8 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.R;
-import com.example.trainaut01.component.AppComponent;
-import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.profile.UserProfileFragment;
@@ -20,9 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -34,9 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 public class UserRepository {
     private FirebaseFirestore db;
@@ -57,7 +49,6 @@ public class UserRepository {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Сохранение данных пользователя
                             getUserDataById(user.getUid(), new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -78,13 +69,12 @@ public class UserRepository {
 
     private User createUserFromDocument(DocumentSnapshot document) {
         String userId = document.getString("userId");
-        String firstName = document.getString("firstName");
-        String lastName = document.getString("lastName");
-        String email = document.getString("email");
+        String fullName = document.getString("fullName");
         String phone = document.getString("phone");
-        int lvl = document.getLong("lvl").intValue();
-        int exp = document.getLong("exp").intValue();
-        int countDays = document.getLong("countDays").intValue();
+        String birthDate = document.getString("birthDate");
+        String city = document.getString("city");
+        Gender gender = Gender.fromString(document.getString("gender"));;
+        String email = document.getString("email");
 
         List<Map<String, Object>> dayPlansData = (List<Map<String, Object>>) document.get("dayPlans");
         List<DayPlan> dayPlans = new ArrayList<>();
@@ -95,20 +85,19 @@ public class UserRepository {
             }
         }
 
-        return new User(userId, firstName, lastName, phone, email, lvl, countDays, exp);
+        return new User(userId, fullName, phone, birthDate, city, gender, email);
     }
 
     // Метод для сохранения данных пользователя
-    public void saveUserData(String userId, String firstName, String lastName, String phone, String email, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener) {
+    public void saveUserData(String userId, String fullName, String phone, String birthDate, String city, Gender gender, String email, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener) {
 
-        User user = new User(userId, firstName, lastName, phone, email, 0, 0, 0);
+        User user = new User(userId, fullName, phone, birthDate, city, gender, email);
 
         db.collection("users").document(userId)
                 .set(user)
                 .addOnCompleteListener(onCompleteListener)
                 .addOnFailureListener(onFailureListener);
     }
-
 
     // Метод для получения данных пользователя по ID
     public void getUserDataById(String userId, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
@@ -123,7 +112,6 @@ public class UserRepository {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Сохранение данных пользователя
                             getUserDataById(user.getUid(), new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -147,23 +135,19 @@ public class UserRepository {
         SharedPreferences.Editor editor = sharedPref.edit();
 
         editor.putString("userId", user.getUserId());
-        editor.putString("email", user.getEmail());
-        editor.putString("firstName", user.getFirstName());
-        editor.putString("lastName", user.getLastName());
+        editor.putString("fullName", user.getFullName());
         editor.putString("phone", user.getPhone());
-        editor.putInt("lvl", user.getLvl());
-        editor.putInt("exp", user.getExp());
-        editor.putInt("countDays", user.getCountDays());
+        editor.putString("birthDate", user.getBirthDate());
+        editor.putString("city", user.getCity());
+        editor.putString("gender", user.getGender().toString());
+        editor.putString("email", user.getEmail());
+        editor.putString("role", user.getRole().toString());
+
         editor.apply();
 
         Toast.makeText(context, "Данные пользователя сохранены", Toast.LENGTH_SHORT).show();
     }
 
-
-//     Метод для получения текущего пользователя
-//    public FirebaseUser getCurrentUser() {
-//        return mAuth.getCurrentUser();
-//    }
 
     public void updateUser(User updatedUser, Context context) {
         String userId = updatedUser.getUserId();
@@ -172,8 +156,7 @@ public class UserRepository {
 
         if (currentUser != null) {
             Map<String, Object> userMap = new HashMap<>();
-            userMap.put("firstName", updatedUser.getFirstName());
-            userMap.put("lastName", updatedUser.getLastName());
+            userMap.put("firstName", updatedUser.getFullName());
             userMap.put("phone", updatedUser.getPhone());
 
             db.collection("users").document(userId)

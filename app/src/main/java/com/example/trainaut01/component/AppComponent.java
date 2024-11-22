@@ -2,7 +2,8 @@ package com.example.trainaut01.component;
 
 import com.example.trainaut01.BaseActivity;
 import com.example.trainaut01.LoginActivity;
-import com.example.trainaut01.RegisterActivity;
+import com.example.trainaut01.SignUpActivity;
+import com.example.trainaut01.TrainingDashboardFragment;
 import com.example.trainaut01.dagger.module.RepositoryModule;
 import com.example.trainaut01.home.AchievementsFragment;
 import com.example.trainaut01.home.DetailedNewsFragment;
@@ -24,7 +25,7 @@ public interface AppComponent {
     void inject(BaseActivity activity);
     void inject(AppInitializer appInitializer);
     void inject(LoginActivity loginActivity);
-    void inject(RegisterActivity registerActivity);
+    void inject(SignUpActivity SignUpActivity);
     void inject(UserUpdateFragment userUpdateFragment);
     void inject(DetailedNewsFragment detailedNewsFragment);
     void inject(HomeFragment homeFragment);
@@ -32,5 +33,6 @@ public interface AppComponent {
     void inject(AchievementsFragment achievementsFragment);
     void inject(NewsFragment newsFragment);
     void inject(ExerciseDetailFragment exerciseDetailFragment);
+    void inject(TrainingDashboardFragment trainingDashboardFragment);
 }
 

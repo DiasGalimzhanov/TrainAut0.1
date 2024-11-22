@@ -131,10 +131,9 @@ public class DayPlanRepository implements Repository<DayPlan> {
                         List<Map<String, Object>> exercisesMapList = (List<Map<String, Object>>) dayPlan.get("exercises");
                         List<Exercise> exercises = new ArrayList<>();
 
-                        // Конвертируем Map в объекты Exercise
                         if (exercisesMapList != null) {
                             for (Map<String, Object> exerciseMap : exercisesMapList) {
-                                Exercise exercise = Exercise.fromMap(exerciseMap);
+                                Exercise exercise = Exercise.initializeFromMap(exerciseMap);
                                 exercises.add(exercise);
                             }
                         }

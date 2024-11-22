@@ -74,7 +74,7 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
                     selectedFragment = new HomeFragment();
                     newPosition = 0;
                 } else if (item.getItemId() == R.id.nav_training) {
-                    selectedFragment = new TodayMusclePlanFragment();
+                    selectedFragment = new TrainingDashboardFragment();
                     newPosition = 1;
                 } else if (item.getItemId() == R.id.nav_profile) {
                     selectedFragment = new UserProfileFragment();

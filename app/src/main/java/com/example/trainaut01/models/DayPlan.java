@@ -24,6 +24,8 @@ public class DayPlan {
     private List<Exercise> exercisesGrossMotor;
     private List<Exercise> exercisesFineMotor;
     private boolean isCompleted;
+    private int rewardPointsDay;
+
 
     public DayPlan(Map<String, Object> map) {
         this.id = (String) map.get("id");
@@ -36,43 +38,6 @@ public class DayPlan {
         this.exercisesFineMotor = parseExercises(exercisesData, FineMotorMuscleGroup.class);
 
         this.isCompleted = map.get("isCompleted") != null && (boolean) map.get("isCompleted");
-    }
-
-    public static DayPlan fromMap(Map<String, Object> map) {
-        Log.d("DayPlan", "Данные для создания DayPlan: " + map);
-        if (map == null) return null;
-
-        DayPlan dayPlan = new DayPlan();
-        dayPlan.setId((String) map.get("id"));
-
-        String weekDayStr = (String) map.get("weekDay");
-        if (weekDayStr != null) {
-            dayPlan.setWeekDay(WeekDay.valueOf(weekDayStr.toUpperCase()));
-        } else {
-            dayPlan.setWeekDay(null);
-        }
-
-        Boolean isCompletedValue = (Boolean) map.get("isCompleted");
-        dayPlan.setCompleted(isCompletedValue != null ? isCompletedValue : false);
-
-        List<Map<String, Object>> exercisesMap = (List<Map<String, Object>>) map.get("exercises");
-        List<Exercise> exercisesGrossMotor = new ArrayList<>();
-        List<Exercise> exercisesFineMotor = new ArrayList<>();
-        if (exercisesMap != null) {
-            for (Map<String, Object> exerciseMap : exercisesMap) {
-                Exercise exercise = Exercise.fromMap(exerciseMap);
-
-                if (exercise.getMuscleGroup() instanceof GrossMotorMuscleGroup) {
-                    exercisesGrossMotor.add(exercise);
-                } else if (exercise.getMuscleGroup() instanceof FineMotorMuscleGroup) {
-                    exercisesFineMotor.add(exercise);
-                }
-            }
-        }
-        dayPlan.setExercisesGrossMotor(exercisesGrossMotor);
-        dayPlan.setExercisesFineMotor(exercisesFineMotor);
-
-        return dayPlan;
     }
 
     private List<Exercise> parseExercises(List<Map<String, Object>> exercisesData, Class<?> muscleGroupEnum) {

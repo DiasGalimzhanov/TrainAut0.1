@@ -20,18 +20,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
                 <ImageView
                     android:id="@+id/imageView15"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="350dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/arc_2"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/tvAllPointsForDay"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="За выполнение всех упражнений вы получите +NNN Tricoins"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.491"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="36dp"
@@ -47,8 +63,8 @@
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="32dp"
-                        android:max="100"
-                        android:progress="50"
+                        android:max="8"
+                        android:progress="0"
                         android:progressDrawable="@drawable/custom_progress_bar" />
 
                     <TextView
@@ -57,9 +73,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="0/8"
-                        android:textStyle="bold"
                         android:textColor="#423F3F"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
 
@@ -67,7 +83,7 @@
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="144dp"
+                    android:layout_marginTop="184dp"
                     android:fontFamily="@font/lobster_regular"
                     android:text="Заголовок"
                     android:textAlignment="center"
@@ -156,7 +172,7 @@
                         android:drawablePadding="10dp"
                         android:fontFamily="@font/federo_regular"
                         android:paddingStart="10dp"
-                        android:text="За выполнение этого упражнения вы полусите +N FitCoins"
+                        android:text="За выполнение этого упражнения вы полусите +N Tricoins"
                         android:textColor="#F4EBEB"
                         android:textSize="20sp" />
                 </LinearLayout>

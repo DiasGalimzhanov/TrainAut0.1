@@ -96,7 +96,7 @@
                         android:layout_marginBottom="10dp"
                         android:textColor="#4d4d4d"
                         android:textColorHint="#A0A0A0"
-                        android:background="@drawable/edit_text_grey_background"
+                        android:background="@drawable/edit_text_signup"
                         android:hint="Напишите тему"/>
                 </LinearLayout>
 
@@ -142,7 +142,7 @@
                         android:textColor="#4d4d4d"
                         android:textColorHint="#A0A0A0"
                         android:layout_marginBottom="10dp"
-                        android:background="@drawable/edit_text_grey_background"
+                        android:background="@drawable/edit_text_signup"
                         android:hint="Напишите сообщение"/>
                 </LinearLayout>
 
