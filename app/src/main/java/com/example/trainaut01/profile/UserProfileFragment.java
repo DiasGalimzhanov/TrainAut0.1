@@ -90,7 +90,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, new WhatchFragment());
+                transaction.replace(R.id.fragment_container, new WatchFragment());
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
