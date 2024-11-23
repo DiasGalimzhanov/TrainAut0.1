@@ -1,5 +1,8 @@
 package com.example.trainaut01.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum GrossMotorMuscleGroup {
     BICEPS("Бицепс"),
     PECTORAL_MUSCLES("Грудные мышцы"),
@@ -17,8 +20,5 @@ public enum GrossMotorMuscleGroup {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
 }
 

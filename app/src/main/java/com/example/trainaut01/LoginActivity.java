@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         tvReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
@@ -103,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
                 String email = etLog.getText().toString().trim();
 
                 if (!email.isEmpty()) {
-                    // Отправляем email для сброса пароля
                     mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

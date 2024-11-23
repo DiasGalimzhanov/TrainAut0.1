@@ -1,218 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C6DDE7">
+    android:background="@color/white">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="35dp"
+                android:text="Регистрация"
+                android:textAlignment="center"
+                android:textColor="@color/dark_indigo"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/top_intro_background" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:scaleType="fitXY"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/icon_start" />
-
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Train"
-                        android:textColor="#00D4A3"
-                        android:textSize="40dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textView8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Aut"
-                        android:textColor="#009D6B"
-                        android:textSize="40dp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="20dp"
+                android:text="ФИО родителя"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp"/>
 
             <EditText
-                android:id="@+id/etFirstName"
+                android:id="@+id/etFullName"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_grey_background"
-                android:ems="10"
-                android:hint="Имя"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:hint="Введите ваше ФИО"
                 android:inputType="text"
                 android:textAlignment="center"
-                android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
+                android:textColor="@color/dark_indigo"
+                android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/etLastName"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_grey_background"
-                android:ems="10"
-                android:hint="Фамилия"
-                android:inputType="text"
-                android:textAlignment="center"
-                android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
-                android:textSize="18sp" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="Номер Телефона"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etPhone"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_grey_background"
-                android:ems="10"
-                android:hint="Номер Телефона"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:hint="+7 708 123 45 67"
                 android:inputType="number"
                 android:textAlignment="center"
-                android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
+                android:textColor="@color/dark_indigo"
+                android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="Дата Рождения"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etBirthDate"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:hint="ДД.ММ.ГГГГ"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="#4d4d4d"
+                android:textColorHint="@color/violet_blossom"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="Город"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etCity"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_grey_background"
-                android:ems="10"
-                android:hint="Город"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:hint="Введите город"
                 android:inputType="text"
                 android:textAlignment="center"
                 android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
+                android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="Пол"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
 
             <Spinner
                 android:id="@+id/spGender"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_grey_background"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:textAlignment="center"
                 android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="E-mail"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etEmailReg"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_grey_background"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
                 android:ems="10"
-                android:hint="Адрес Эл. Почты(Email)"
+                android:hint="example@gmail.com"
                 android:inputType="textEmailAddress"
                 android:textAlignment="center"
-                android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
+                android:textColor="@color/dark_indigo"
+                android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="Пароль"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etPasReg"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_grey_background"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
                 android:ems="10"
-                android:hint="Пароль"
+                android:hint="Example1256"
                 android:inputType="textPassword"
                 android:textAlignment="center"
-                android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
+                android:textColor="@color/dark_indigo"
+                android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="Повторите пароль"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etPasConfirm"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_grey_background"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
                 android:ems="10"
                 android:hint="Повторите пароль"
                 android:inputType="textPassword"
                 android:textAlignment="center"
-                android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
+                android:textColor="@color/dark_indigo"
+                android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tvPasswordMatch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="35dp"
+                android:layout_marginEnd="25dp"
                 android:text=""
-                android:textColor="@color/primary"
+                android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
                 android:orientation="horizontal">
 
                 <CheckBox
@@ -220,7 +242,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_gravity="center_vertical"
-                    android:buttonTint="@color/checkbox_color_selector" />
+                    android:buttonTint="@color/indigo" />
 
                 <TextView
                     android:id="@+id/tvUserAgreement"
@@ -229,25 +251,40 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:text="Я принимаю условия пользовательского соглашения"
-                    android:textColor="#4d4d4d"
+                    android:textColor="@color/dark_indigo"
                     android:textSize="13sp"
                     android:textStyle="bold" />
-
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnRegisterReg"
-                style="@android:style/Widget.Button"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/background_btn_login"
-                android:text="Продолжить"
-                android:textColor="#ffffff"
-                android:textSize="23sp"
-                android:textStyle="bold" />
+                android:layout_marginEnd="70dp"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/progressStepText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="8dp"
+                    android:text="Шаг 1"
+                    android:textColor="@color/indigo"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/progressSeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="3"
+                    android:progress="1"
+                    android:progressTint="@color/indigo"
+                    android:splitTrack="false"
+                    android:thumb="@android:color/transparent" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvLogin"
@@ -259,16 +296,50 @@
                 android:textColor="@color/primary"
                 android:textSize="16sp" />
 
-
-            <ImageView
-                android:id="@+id/imageView4"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:scaleType="fitXY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/bottombackground" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:layout_gravity="center">
+
+                <Button
+                    android:id="@+id/btnBack"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:enabled="false"
+                    android:background="@drawable/btn2inactive_login_back"
+                    android:text="Назад"
+                    android:textColor="@color/B5B8D7Light"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnContinue"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/btn1_login_back"
+                    android:text="Далее"
+                    android:textColor="#ffffff"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:background="@color/violet_blossom"/>
+
         </LinearLayout>
     </ScrollView>
 

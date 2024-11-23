@@ -56,6 +56,8 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:23.1.2")
     implementation("com.google.firebase:firebase-core:21.1.1")
     implementation ("com.google.android.gms:play-services-base:17.6.0")
+    implementation ("com.google.firebase:firebase-storage:20.2.0")
+
 
 
 //    Dagger
@@ -72,6 +74,10 @@ dependencies {
 //    Lombok
     compileOnly("org.projectlombok:lombok:1.18.34")
     annotationProcessor ("org.projectlombok:lombok:1.18.34")
+
+//   Lottie
+    implementation ("com.airbnb.android:lottie:5.2.0")
+
 
     implementation(libs.appcompat)
     implementation(libs.material)

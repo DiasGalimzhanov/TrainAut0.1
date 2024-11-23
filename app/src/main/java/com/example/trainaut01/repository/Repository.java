@@ -5,7 +5,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 
-// Интерфейс для общего репозитория с базовыми CRUD операциями
 public interface Repository<T> {
     void add(T item, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure);
     void update(String id, T item, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure);

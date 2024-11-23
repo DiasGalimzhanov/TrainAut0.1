@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.component.DaggerAppComponent;
@@ -58,8 +59,8 @@ public class UserUpdateFragment extends Fragment {
         _btnCange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User updatedUser = createUpdatedUser();
-                db.updateUser(updatedUser, UserUpdateFragment.this.getContext());
+//                User updatedUser = createUpdatedUser();
+//                db.updateUser(updatedUser, UserUpdateFragment.this.getContext());
 
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, new UserProfileFragment());
@@ -89,20 +90,17 @@ public class UserUpdateFragment extends Fragment {
     }
 
 
-    private User createUpdatedUser() {
-        String newFN = _etFirstNameUpdate.getText().toString();
-        String newLN = _etLastNameUpdate.getText().toString();
-        String newEmail = _etEmailUpdate.getText().toString();
-        String newPhone = _etPhoneUpdate.getText().toString();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        SharedPreferences sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
-        int currentExp = sharedPref.getInt("exp", 0);
-        int currentLvl = sharedPref.getInt("lvl", 0);
-        int currentCountDays = sharedPref.getInt("countDays", 0);
-
-        return new User(userId, newFN, newLN, newPhone, newEmail, currentExp, currentLvl, currentCountDays);
-    }
+//    private User createUpdatedUser() {
+//        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        String newFullName = _etFullNameUpdate.getText().toString();
+//        String newPhone = _etPhoneUpdate.getText().toString();
+//        String newBirthDate = _etBirthDate.getText().toString();
+//        String newCity = _etCity.getText().toString();
+//        Gender newGender = Gender.fromString(_etGender.getText().toString());
+//        String newEmail = _etEmailUpdate.getText().toString();
+//
+//        return new User(userId, newFullName, newPhone, newBirthDate, newCity, newGender, newEmail);
+//    }
 
 
     private void addData_inEditTexts() {

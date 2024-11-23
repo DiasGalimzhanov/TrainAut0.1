@@ -8,6 +8,12 @@
     <color name="primary_variant">#3700B3</color>
     <color name="B5B8D7Light">#B5B8D7</color>
     <color name="A06EB6Light">#A06EB6</color>
+    <color name="enabledColorButton">#5B87BD</color>
+    <color name="disabledColorButton">#556B85</color>
+    <color name="indigo">#5542C9</color>
+    <color name="dark_indigo">#1D0C66</color>
+    <color name="violet_blossom">#9D8CFF</color>
+    <color name="light_amethyst">#EBE8FF</color>
 
 
     <!-- Темная тема -->

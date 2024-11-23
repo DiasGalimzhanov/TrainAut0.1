@@ -2,6 +2,6 @@
     android:id="@+id/textView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textColor="#4d4d4d"
+    android:textColor="@color/violet_blossom"
     android:textAlignment="center"
     android:textSize="18sp" />
