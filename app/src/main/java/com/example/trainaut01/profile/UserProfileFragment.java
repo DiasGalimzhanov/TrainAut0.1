@@ -29,9 +29,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 
 public class UserProfileFragment extends Fragment {
-    private TextView _parentName, _tvEmail, _tvPhone;
+    private TextView _parentName, _tvEmail, _tvPhone, _tvBd;
     private ImageView _userProfileImage, _btnExit;
-    private CardView _btnUpdateProfile, _btnSupport, _btnWatchConnect;
+    private Button _btnUpdateProfile, _btnSupport, _btnWatchConnect;
 
     @Nullable
     @Override
@@ -100,15 +100,16 @@ public class UserProfileFragment extends Fragment {
     }
 
     public void init(View view) {
-        _userProfileImage = view.findViewById(R.id.userProfileImage);
-        _parentName = view.findViewById(R.id.parentName);
-        _tvEmail = view.findViewById(R.id.tvEmail);
-        _tvPhone = view.findViewById(R.id.tvPhone);
-        _btnWatchConnect = view.findViewById(R.id.btnWatchConnect);
+        _userProfileImage = view.findViewById(R.id.profile_image);
+        _parentName = view.findViewById(R.id.parent_name);
+        _tvEmail = view.findViewById(R.id.parent_email);
+        _tvPhone = view.findViewById(R.id.parent_phone);
+        _btnWatchConnect = view.findViewById(R.id.watch_button);
         _btnExit = view.findViewById(R.id.btnExit);
-        _btnUpdateProfile = view.findViewById(R.id.btnUpdateProfile);
-        _btnSupport = view.findViewById(R.id.btnSupport);
-//        _btnWhatch = view.findViewById(R.id.btnWatch);
+        _btnUpdateProfile = view.findViewById(R.id.edit_profile_button);
+        _btnSupport = view.findViewById(R.id.support_button);
+        _tvBd = view.findViewById(R.id.parent_bd);
+
     }
 
     private void clearSharedPreference(SharedPreferences sharedPreferences){
@@ -185,7 +186,7 @@ public class UserProfileFragment extends Fragment {
             _parentName.setText(firstName + " " + lastName);
             _tvEmail.setText(email);
             _tvPhone.setText(phone);
-//            _tvBirthDate.setText(birthDate);
+            _tvBd.setText(birthDate);
         }
     }
 

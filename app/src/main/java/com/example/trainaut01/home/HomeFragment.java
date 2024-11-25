@@ -29,6 +29,7 @@ import com.example.trainaut01.models.Avatar;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.AvatarRepository;
 import com.example.trainaut01.repository.NewsRepository;
+import com.example.trainaut01.training.ProgressFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -39,11 +40,9 @@ public class HomeFragment extends Fragment {
 
     private TextView tvHello, _tvMoreNews;
     private ImageView _imgAvatar, _imgMsg;
-    private Button _button_today_exercise;
 
     private NewsAdapter adapterNews;
     private RecyclerView recyclerViewNews;
-    private CardView _cardAchiv, _cardProgress, _cardDoc;
     private AvatarRepository avatarRepository;
 
     private SharedPreferences sharedPref;
@@ -84,46 +83,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        _cardAchiv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, new AchievementsFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
 
-        _cardProgress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container,new ProgressFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
 
-        _cardDoc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                emailIntent.setType("message/rfc822");
 
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"doc@gamil.com"});
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Тема письма");
-                emailIntent.putExtra(Intent.EXTRA_TEXT, "Текст сообщения");
 
-                try {
-                    // Открываем почтовое приложение
-                    startActivity(Intent.createChooser(emailIntent, "Выберите почтовое приложение"));
-                } catch (android.content.ActivityNotFoundException ex) {
-                    // Если нет почтового приложения, выводим сообщение об ошибке
-                    Toast.makeText(view.getContext(), "Почтовое приложение не найдено.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         _tvMoreNews.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,15 +99,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        _imgMsg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container,new MessageFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
+//        _imgMsg.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+//                transaction.replace(R.id.fragment_container,new MessageFragment());
+//                transaction.addToBackStack(null);
+//                transaction.commit();
+//            }
+//        });
 
         return view;
     }
@@ -156,24 +120,22 @@ public class HomeFragment extends Fragment {
         appComponent.inject(this);
 
         tvHello = view.findViewById(R.id.tvHello);
-        _cardAchiv = view.findViewById(R.id.cardAchiv);
-        _cardDoc = view.findViewById(R.id.cardDoc);
         _imgAvatar = view.findViewById(R.id.imgAvatar);
-        _cardProgress = view.findViewById(R.id.cardProgress);
         _tvMoreNews = view.findViewById(R.id.tvMoreNews);
-        _imgMsg = view.findViewById(R.id.imgMessage);
-        _button_today_exercise = view.findViewById(R.id.button_today_exercise);
-
+        // _imgMsg = view.findViewById(R.id.imgMessage); // Комментируем, если не используется
 
         String firstName = sharedPref.getString("firstName", "Гость");
         tvHello.setText("Привет, " + firstName);
 
         avatarRepository = new AvatarRepository();
-        recyclerViewNews = view.findViewById(R.id.RecyclerView1);
+
+        // Исправленный идентификатор для RecyclerView
+        recyclerViewNews = view.findViewById(R.id.recyclerViewNews);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerViewNews.setLayoutManager(layoutManager);
         recyclerViewNews.setAdapter(adapterNews);
     }
+
 
 
     private void fetchNews() {

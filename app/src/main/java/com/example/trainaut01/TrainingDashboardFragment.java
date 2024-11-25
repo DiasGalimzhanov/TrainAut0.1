@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +21,10 @@ import com.example.trainaut01.adapter.CalendarAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.models.CalendarDay;
+import com.example.trainaut01.profile.SupportFragment;
 import com.example.trainaut01.repository.UserProgressRepository;
+import com.example.trainaut01.training.AAC.CognitiveExerciseFragment;
+import com.example.trainaut01.training.ProgressFragment;
 import com.example.trainaut01.training.TodayMusclePlanFragment;
 import com.example.trainaut01.utils.ProgressResetListener;
 import com.example.trainaut01.utils.ProgressUtils;
@@ -42,6 +47,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     private RecyclerView _calendarRecyclerView;
     private CalendarAdapter _calendarAdapter;
     private List<CalendarDay> _calendarDays;
+    private LinearLayout _loyoutProgress;
     private int _currentDay;
 
     private AppComponent _appComponent;
@@ -58,7 +64,26 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
 
         ProgressUtils.resetDailyProgress(requireContext(), this);
         setButtonListenerToOpenFragment(_btnExercisesMotor, new TodayMusclePlanFragment());
+        _btnAAC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, new CognitiveExerciseFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
         loadUserProgress();
+
+        _loyoutProgress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, new ProgressFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         return view;
     }
@@ -69,6 +94,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
 
         _btnExercisesMotor = view.findViewById(R.id.btnExercisesMotor);
         _btnAAC = view.findViewById(R.id.btnAAC);
+        _loyoutProgress = view.findViewById(R.id.layoutProgress);
         _calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         _currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         Log.d("TrainingDashboardFragment", "Initialized components");

@@ -92,5 +92,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.core)
+
     apply(plugin = "com.google.gms.google-services")
 }

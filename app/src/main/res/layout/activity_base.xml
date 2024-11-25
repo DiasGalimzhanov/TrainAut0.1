@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C6DDE7"
+    android:background="#ffffff"
     tools:context=".BaseActivity">
 
     <FrameLayout
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@drawable/bottom_navbar_background"
+        android:background="@color/indigo"
         app:menu="@menu/bottom_nav"
         android:clipToOutline="true"
         app:layout_constraintBottom_toBottomOf="parent"

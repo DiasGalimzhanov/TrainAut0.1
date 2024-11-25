@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Верхняя строка для отображения выбранной последовательности звуков -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
+
+        <!-- Контейнер для выбранных звуков -->
+        <HorizontalScrollView
+            android:id="@+id/selectedSoundsScrollView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:descendantFocusability="blocksDescendants">
+
+            <LinearLayout
+                android:id="@+id/selectedSoundsContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+
+        <!-- Кнопка удаления последнего выбора -->
+        <Button
+            android:id="@+id/deleteLastButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:background="@drawable/delete_button" />
+    </LinearLayout>
+
+    <!-- Кнопка для озвучки выбранных звуков -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/playSelectedSoundsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Озвучить выбранные"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"/>
+
+        <!-- Кнопка для очистки всех выбранных звуков -->
+        <Button
+            android:id="@+id/clearAllButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Очистить все"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Таблица с кнопками звуков -->
+    <GridLayout
+        android:id="@+id/soundGrid"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:columnCount="4"
+        android:padding="8dp"
+        android:rowCount="4">
+
+        <!-- Пример кнопок звуков с уменьшенной высотой -->
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="0"
+            android:layout_rowWeight="1"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton1"
+            android:text="Привет" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="0"
+            android:layout_rowWeight="1"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton2"
+            android:text="Я" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="0"
+            android:layout_rowWeight="1"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton3"
+            android:text="Хочу" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="0"
+            android:layout_rowWeight="1"
+            android:layout_column="3"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton4"
+            android:text="Кушать" />
+
+        <!-- Прочие кнопки для строк с уменьшенной высотой -->
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="1"
+            android:layout_rowWeight="1"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton5"
+            android:text="Пить" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="1"
+            android:layout_rowWeight="1"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton6"
+            android:text="Спать" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="1"
+            android:layout_rowWeight="1"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton7"
+            android:text="Да" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="1"
+            android:layout_rowWeight="1"
+            android:layout_column="3"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton8"
+            android:text="Нет" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="2"
+            android:layout_rowWeight="1"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton9"
+            android:text="9" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="2"
+            android:layout_rowWeight="1"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton10"
+            android:text="10" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="2"
+            android:layout_rowWeight="1"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:id="@+id/soundButton11"
+            android:text="11" />
+
+        <!-- Кнопка перехода на следующую страницу звуков -->
+        <Button
+            android:id="@+id/nextPageButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="2"
+            android:layout_rowWeight="1"
+            android:layout_column="3"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/button_border"
+            android:text="→" />
+    </GridLayout>
+
+    <!-- Панель навигации для фильтров и кнопки поиска -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="8dp">
+
+        <Button
+            android:id="@+id/filterButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Filter 1" />
+
+        <Button
+            android:id="@+id/filterButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Filter 2" />
+
+        <Button
+            android:id="@+id/filterButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Filter 3" />
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Поиск" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -34,93 +34,117 @@
                     app:srcCompat="@drawable/top_background_blue" />
 
                 <TextView
+                    android:id="@+id/textView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Прогресс"
                     android:textSize="60sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/imageView5" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#5B87BD"
+                    android:padding="16dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    tools:layout_editor_absoluteX="10dp">
+
+                    <!-- Прогресс бар для уровня -->
+                    <TextView
+                        android:id="@+id/tvLevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="8dp"
+                        android:text="Уровень 5 / 10"
+                        android:textColor="#333333"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="MissingConstraints" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBarLevel"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="16dp"
+
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/progress_bar_background"
+                        android:elevation="4dp"
+                        android:progress="60"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHeight_default="wrap"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvLevel" />
+
+                    <TextView
+                        android:id="@+id/levelProgressText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 / 5000 опыта"
+                        android:textColor="#333333"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="16dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="50dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="80dp"
-                android:background="#5B87BD"
-                android:padding="16dp">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                tools:layout_editor_absoluteX="10dp">
 
-                <!-- Прогресс бар для уровня -->
-                <TextView
-                    android:id="@+id/tvLevel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:text="Уровень 5 / 10"
-                    android:textColor="#333333"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                <ImageView
+                    android:id="@+id/imgAvatar"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:background="@drawable/rounded_image"
+                    android:clipToOutline="true"
+                    app:layout_constraintBottom_toTopOf="@+id/tvLvl"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="MissingConstraints" />
-
-                <ProgressBar
-                    android:id="@+id/progressBarLevel"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="16dp"
-
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/progress_bar_background"
-                    android:elevation="4dp"
-                    android:progress="60"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_default="wrap"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvLevel" />
+                    app:srcCompat="@drawable/default_image_news" />
 
                 <TextView
-                    android:id="@+id/levelProgressText"
+                    android:id="@+id/tvLvl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0 / 5000 опыта"
-                    android:textColor="#333333"
-                    android:textSize="18sp"
+                    android:text="Level"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
                     android:textStyle="bold"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <!--                <ProgressBar-->
-                <!--                    android:id="@+id/progressBarLevel"-->
-                <!--                    android:layout_width="0dp"-->
-                <!--                    android:layout_height="20dp"-->
-                <!--                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"-->
-                <!--                    android:progress="60"-->
-                <!--                    android:progressTint="@drawable/level_progress_gradient"-->
-                <!--                    android:backgroundTint="#E0E0E0"-->
-                <!--                    android:layout_marginTop="4dp"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent"-->
-                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                    app:layout_constraintTop_toBottomOf="@id/tvLevel"-->
-                <!--                    app:layout_constraintHeight_default="wrap"/>-->
-
+                    app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 android:background="#6F91BC"
                 android:padding="16dp">
 
@@ -132,44 +156,31 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="1dp"
                     android:paddingBottom="8dp"
-                    android:text="Серия: 15 дней"
+                    android:text="15 дней"
+                    android:textAlignment="center"
                     android:textColor="#333333"
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="MissingConstraints" />
-
-                <ProgressBar
-                    android:id="@+id/progressDays"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/progress_bar_background"
-                    android:elevation="4dp"
-                    android:progress="60"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_default="wrap"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvDays" />
-
-                <TextView
-                    android:id="@+id/streakProgressText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0 / 30 дней"
-                    android:textColor="#333333"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <GridView
+                android:id="@+id/grdAchiv"
+                android:layout_width="match_parent"
+                android:layout_height="542dp"
+                android:gravity="center"
+                android:horizontalSpacing="10dp"
+                android:numColumns="2"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
         </LinearLayout>
+
     </ScrollView>
 
 
