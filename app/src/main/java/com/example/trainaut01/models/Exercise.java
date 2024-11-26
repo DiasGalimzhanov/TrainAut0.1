@@ -6,6 +6,7 @@ import com.example.trainaut01.enums.MotorSkillGroup;
 import com.google.firebase.database.PropertyName;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -26,7 +27,6 @@ public class Exercise implements Serializable {
     private String description;
     private String imageUrl;
     private String duration;
-    private boolean isCompleted;
     private int sets;
     private int reps;
     private int rewardPoints;
@@ -64,7 +64,6 @@ public class Exercise implements Serializable {
         exercise.description = (String) map.get("description");
         exercise.imageUrl = (String) map.get("imageUrl");
         exercise.duration = (String) map.get("duration");
-        exercise.isCompleted = map.get("isCompleted") != null && (boolean) map.get("isCompleted");
 
         exercise.sets = map.get("sets") != null ? ((Long) map.get("sets")).intValue() : 0;
         exercise.reps = map.get("reps") != null ? ((Long) map.get("reps")).intValue() : 0;
@@ -76,23 +75,23 @@ public class Exercise implements Serializable {
         return exercise;
     }
 
-
-    public void setSets(int sets) {
-        if (sets > 0) {
-            this.sets = sets;
-        }
+    public Map<String, Object> toMap() {
+        Map<String, Object> exerciseMap = new HashMap<>();
+        exerciseMap.put("id", id);
+        exerciseMap.put("motorSkillType", motorSkillType != null ? motorSkillType.toString() : null);
+        exerciseMap.put("muscleGroup", muscleGroup != null ? muscleGroup.toString() : null);
+        exerciseMap.put("name", name);
+        exerciseMap.put("exercisePurpose", exercisePurpose);
+        exerciseMap.put("description", description);
+        exerciseMap.put("imageUrl", imageUrl);
+        exerciseMap.put("duration", duration);
+        exerciseMap.put("sets", sets);
+        exerciseMap.put("reps", reps);
+        exerciseMap.put("rewardPoints", rewardPoints);
+        exerciseMap.put("completedTime", completedTime);
+        exerciseMap.put("restTime", restTime);
+        return exerciseMap;
     }
 
-    public void setReps(int reps) {
-        if (reps > 0) {
-            this.reps = reps;
-        }
-    }
-
-    public void setRestTime(float restTime) {
-        if (restTime >= 0) {
-            this.restTime = restTime;
-        }
-    }
 
 }

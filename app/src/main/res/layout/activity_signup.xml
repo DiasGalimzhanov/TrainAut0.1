@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/signUp_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/white">
 
     <ScrollView
@@ -34,7 +36,7 @@
                 android:layout_marginEnd="20dp"
                 android:text="ФИО родителя"
                 android:textColor="@color/dark_indigo"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etFullName"
@@ -46,7 +48,7 @@
                 android:hint="Введите ваше ФИО"
                 android:inputType="text"
                 android:textAlignment="center"
-                android:textColor="@color/dark_indigo"
+                android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
 
@@ -68,9 +70,9 @@
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
                 android:hint="+7 708 123 45 67"
-                android:inputType="number"
+                android:inputType="number|phone"
                 android:textAlignment="center"
-                android:textColor="@color/dark_indigo"
+                android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
 
@@ -91,12 +93,15 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
+                android:clickable="true"
+                android:focusable="false"
                 android:hint="ДД.ММ.ГГГГ"
-                android:inputType="text"
+                android:inputType="number|date"
                 android:textAlignment="center"
-                android:textColor="#4d4d4d"
+                android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -118,7 +123,7 @@
                 android:hint="Введите город"
                 android:inputType="text"
                 android:textAlignment="center"
-                android:textColor="#4d4d4d"
+                android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
 
@@ -134,13 +139,12 @@
 
             <Spinner
                 android:id="@+id/spGender"
+                style="@style/CustomSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
@@ -165,7 +169,7 @@
                 android:hint="example@gmail.com"
                 android:inputType="textEmailAddress"
                 android:textAlignment="center"
-                android:textColor="@color/dark_indigo"
+                android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
 
@@ -190,7 +194,7 @@
                 android:hint="Example1256"
                 android:inputType="textPassword"
                 android:textAlignment="center"
-                android:textColor="@color/dark_indigo"
+                android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
 
@@ -215,7 +219,7 @@
                 android:hint="Повторите пароль"
                 android:inputType="textPassword"
                 android:textAlignment="center"
-                android:textColor="@color/dark_indigo"
+                android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
 
@@ -299,10 +303,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:padding="5dp"
-                android:layout_gravity="center">
+                android:orientation="horizontal"
+                android:padding="5dp">
 
                 <Button
                     android:id="@+id/btnBack"
@@ -311,8 +315,8 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:enabled="false"
                     android:background="@drawable/btn2inactive_login_back"
+                    android:enabled="false"
                     android:text="Назад"
                     android:textColor="@color/B5B8D7Light"
                     android:textSize="18sp"
@@ -338,7 +342,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginBottom="25dp"
-                android:background="@color/violet_blossom"/>
+                android:background="@color/violet_blossom" />
 
         </LinearLayout>
     </ScrollView>

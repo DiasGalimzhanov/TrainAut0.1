@@ -24,8 +24,7 @@ import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 
-// Репозиторий для работы с планами дня в Firebase Firestore
-public class DayPlanRepository implements Repository<DayPlan> {
+public class DayPlanRepository{
     private final FirebaseFirestore _db;
     private final CollectionReference _collection;
 
@@ -35,45 +34,78 @@ public class DayPlanRepository implements Repository<DayPlan> {
         this._collection = db.collection("dayPlans");
     }
 
-    // Метод для получения коллекции
-    public CollectionReference getWeekPlansCollection() {
-        return _db.collection("dayPlans");
-    }
-
-    // Метод для добавления нового плана дня
-    @Override
     public void add(DayPlan dayPlan, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        _collection.add(dayPlan)
-                .addOnSuccessListener(docRef -> onSuccess.onSuccess(null))
-                .addOnFailureListener(onFailure);
-    }
-
-    // Метод для обновления существующего плана дня по ID
-    @Override
-    public void update(String id, DayPlan dayPlan, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        _collection.document(id).set(dayPlan)
+        _collection.document(dayPlan.getDayPlanId())
+                .set(dayPlan)
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }
 
-    // Метод для удаления плана дня по ID
-    @Override
-    public void delete(String id, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        _collection.document(id).delete()
+    public void addForUser(String userId, DayPlan dayPlan, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        Map<String, Object> dayPlanData = dayPlan.toMap();
+
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(userId)
+                .collection("dayPlans")
+                .document(dayPlan.getDayPlanId())
+                .set(dayPlanData)
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }
 
-    // Метод для получения одного плана дня по ID
-    @Override
-    public void get(String id, OnSuccessListener<DayPlan> onSuccess, OnFailureListener onFailure) {
-        _collection.document(id).get()
-                .addOnSuccessListener(doc -> {
-                    DayPlan dayPlan = doc.toObject(DayPlan.class);
-                    onSuccess.onSuccess(dayPlan);
+    public void update(String userId, String dayPlanId, Map<String, Object> updatedFields,
+                       OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .document(userId)
+                .collection("dayPlans")
+                .document(dayPlanId)
+                .update(updatedFields)
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+
+    public void delete(String userId, String dayPlanId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .document(userId)
+                .collection("dayPlans")
+                .document(dayPlanId)
+                .delete()
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+
+    public void get(String userId, String dayPlanId, OnSuccessListener<DayPlan> onSuccess, OnFailureListener onFailure) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .document(userId)
+                .collection("dayPlans")
+                .document(dayPlanId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        DayPlan dayPlan = documentSnapshot.toObject(DayPlan.class);
+                        if (dayPlan != null) {
+                            dayPlan.setDayPlanId(dayPlanId);
+                            onSuccess.onSuccess(dayPlan);
+                        } else {
+                            onFailure.onFailure(new Exception("Документ не удалось преобразовать в DayPlan."));
+                        }
+                    } else {
+                        onFailure.onFailure(new Exception("Документ не найден."));
+                    }
                 })
                 .addOnFailureListener(onFailure);
     }
+
+
 
     //
 //    // Метод для получения одного плана дня по дню недели и ID пользователя
@@ -103,7 +135,6 @@ public class DayPlanRepository implements Repository<DayPlan> {
 //    }
 //
     // Метод для получения всех планов дня из коллекции
-    @Override
     public void getAll(OnSuccessListener<List<DayPlan>> onSuccess, OnFailureListener onFailure) {
         _collection.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {

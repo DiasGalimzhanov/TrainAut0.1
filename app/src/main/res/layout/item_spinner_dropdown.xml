@@ -3,6 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:textSize="18sp"
-    android:textColor="@color/white"
+    android:textColor="@color/violet_blossom"
     android:background="@drawable/spinner_dropdown_back"
     android:gravity="center" />
