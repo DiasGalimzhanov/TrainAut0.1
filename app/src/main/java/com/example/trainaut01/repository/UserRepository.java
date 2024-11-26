@@ -41,8 +41,8 @@ public class UserRepository {
     }
 
     public void addUser(User user, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
-        String rawPassword = user.getPass(); // Сохраняем сырой пароль
-        user.setPass(rawPassword); // Хешируем перед сохранением в Firestore
+        String rawPassword = user.getPass();
+        user.setPass(rawPassword);
 
         mAuth.createUserWithEmailAndPassword(user.getEmail(), rawPassword)
                 .addOnCompleteListener(task -> {
@@ -69,33 +69,6 @@ public class UserRepository {
                 });
     }
 
-
-
-//    // Метод для регистрации пользователя
-//    public void registerUser(String email, String password, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        FirebaseUser user = mAuth.getCurrentUser();
-//                        if (user != null) {
-//                            getUserDataById(user.getUid(), new OnCompleteListener<DocumentSnapshot>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                                    if (task.isSuccessful()) {
-//                                        DocumentSnapshot document = task.getResult();
-//                                        if (document.exists()) {
-//                                            User user = createUserFromDocument(document);
-//                                            saveUserDataToPreferences(user, context);
-//                                        }
-//                                    }
-//                                }
-//                            });
-//                        }
-//                    }
-//                    onCompleteListener.onComplete(task);
-//                });
-//    }
-
     private User createUserFromDocument(DocumentSnapshot document) {
         String userId = document.getString("userId");
         String fullName = document.getString("fullName");
@@ -118,18 +91,6 @@ public class UserRepository {
         return new User(userId, fullName, phone, birthDate, city, gender, email, pass);
     }
 
-    // Метод для сохранения данных пользователя
-    public void saveUserData(String userId, String fullName, String phone, String birthDate, String city, Gender gender, String email, String  pass, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener) {
-
-        User user = new User(userId, fullName, phone, birthDate, city, gender, email, pass);
-
-        db.collection("users").document(userId)
-                .set(user)
-                .addOnCompleteListener(onCompleteListener)
-                .addOnFailureListener(onFailureListener);
-    }
-
-    // Метод для получения данных пользователя по ID
     public void getUserDataById(String userId, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
         DocumentReference docRef = db.collection("users").document(userId);
         docRef.get().addOnCompleteListener(onCompleteListener);
@@ -207,17 +168,14 @@ public class UserRepository {
     public void updateUserItem(String fieldName, Object fieldValue, Context context) {
         String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
-        // Обновление одного поля в Firestore
         db.collection("users").document(userId)
                 .update(fieldName, fieldValue)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        // Сохранение данных в SharedPreferences после успешного обновления
                         SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
 
-                        // Определение типа значения и сохранение в SharedPreferences
                         if (fieldValue instanceof String) {
                             editor.putString(fieldName, (String) fieldValue);
                         } else if (fieldValue instanceof Integer) {
@@ -247,25 +205,21 @@ public class UserRepository {
 
 
     public void saveMessageToFirestore(String theme, String messege, Context context) {
-        // Получаем ID пользователя
         String userId = mAuth.getCurrentUser().getUid();
 
-        // Создаем объект для сохранения
         Map<String, Object> messageData = new HashMap<>();
         messageData.put("userId", userId);
         messageData.put("theme", theme);
         messageData.put("message", messege);
 
-        // Сохраняем в коллекцию "messege_users"
         db.collection("messege_users")
                 .add(messageData)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(context, "Сообщение отправленно", Toast.LENGTH_SHORT).show();
 
-                    // Заменяем текущий фрагмент на новый после успешной отправки
                     FragmentTransaction ft = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.fragment_container, new UserProfileFragment());
-                    ft.addToBackStack(null); // Добавляем в стек, если нужно вернуться назад
+                    ft.addToBackStack(null);
                     ft.commit();
                 })
                 .addOnFailureListener(e -> {

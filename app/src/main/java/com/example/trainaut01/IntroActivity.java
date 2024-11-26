@@ -17,16 +17,13 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        // Получение данных из SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", null);
 
-        // Проверка, есть ли пользователь в SharedPreferences
         if (userId != null) {
-            // Если пользователь найден, перейти на BaseActivity
             Intent intent = new Intent(IntroActivity.this, BaseActivity.class);
             startActivity(intent);
-            finish(); // Завершаем текущую активность, чтобы не вернуться назад на IntroActivity
+            finish();
             return;
         }
 
