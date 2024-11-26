@@ -28,6 +28,7 @@ import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.utils.DatePickerUtils;
 import com.example.trainaut01.utils.SpinnerUtils;
 import com.example.trainaut01.utils.ToastUtils;
+import com.example.trainaut01.utils.ValidationUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,6 +67,7 @@ public class ChildSignUpFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,7 @@ public class ChildSignUpFragment extends Fragment {
         SpinnerUtils.setupGenderAdapter(ChildSignUpFragment.this.getContext(), _spGenderChild, Gender.getGenderValues());
     }
 
-    private void handleContinue(){
+    private void handleContinue() {
         String fullName = _etFullNameChild.getText().toString().trim();
         String birthDate = _etBirthDateChild.getText().toString().trim();
         String diagnosis = _etDiagnosisChild.getText().toString().trim();
@@ -121,7 +123,7 @@ public class ChildSignUpFragment extends Fragment {
         String weightStr = _etWeightChild.getText().toString().trim();
         Gender gender = Gender.fromString(_spGenderChild.getSelectedItem().toString().trim());
 
-        if (fullName.isEmpty() || birthDate.isEmpty() || diagnosis.isEmpty() || heightStr.isEmpty() || weightStr.isEmpty() || gender == null) {
+        if (!ValidationUtils.areFieldsFilled(fullName, birthDate, diagnosis, heightStr, weightStr) || gender == null) {
             ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Пожалуйста, заполните все поля.");
             return;
         }
@@ -140,27 +142,48 @@ public class ChildSignUpFragment extends Fragment {
             return;
         }
 
+        registerUser(fullName, birthDate, diagnosis, height, weight, gender);
+    }
+
+    private void registerUser(String fullName, String birthDate, String diagnosis, float height, float weight, Gender gender) {
         _userRepository.addUser(_user, ChildSignUpFragment.this.getContext(), task -> {
             if (task.isSuccessful()) {
                 String newUserId = task.getResult().getUser().getUid();
 
-                Child child = new Child(fullName, birthDate, gender, diagnosis, height, weight);
-                _childRepository.addChild(newUserId, child, ChildSignUpFragment.this.getContext(),  aVoid -> {
-
-                    _dayPlanRepository.addAllToUser(newUserId, unused -> {
-                        Intent intent = new Intent(ChildSignUpFragment.this.getContext(), BaseActivity.class);
-                        startActivity(intent);
-                    }, error -> {
-                        ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления DayPlans: " + error.getMessage());
-                    });
-
-                }, error -> {
-                    ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления ребенка: " + error.getMessage());
-                });
+                addChild(newUserId, fullName, birthDate, diagnosis, height, weight, gender);
             } else {
                 ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка регистрации пользователя: " + task.getException().getMessage());
             }
         });
+    }
+
+    private void addChild(String userId, String fullName, String birthDate, String diagnosis, float height, float weight, Gender gender) {
+        Child child = new Child(fullName, birthDate, gender, diagnosis, height, weight);
+
+        _childRepository.addChild(userId, child, ChildSignUpFragment.this.getContext(), aVoid -> {
+
+            addDayPlans(userId);
+
+        }, error -> {
+            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления ребенка: " + error.getMessage());
+        });
+    }
+
+
+    private void addDayPlans(String userId) {
+        _dayPlanRepository.addAllToUser(userId, unused -> {
+
+            navigateToBaseActivity();
+
+        }, error -> {
+            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления DayPlans: " + error.getMessage());
+        });
+    }
+
+
+    private void navigateToBaseActivity() {
+        Intent intent = new Intent(ChildSignUpFragment.this.getContext(), BaseActivity.class);
+        startActivity(intent);
     }
 
     private void setupUI() {

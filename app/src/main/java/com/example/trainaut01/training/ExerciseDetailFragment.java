@@ -238,7 +238,7 @@ public class ExerciseDetailFragment extends Fragment {
 
     private void nextExercise() {
         currentExerciseIndex++;
-        saveInSharedPreference("currentExerciseIndex", currentExerciseIndex); // Сохраняем индекс текущего упражнения после его изменения
+        saveInSharedPreference("currentExerciseIndex", currentExerciseIndex);
         if (currentExerciseIndex < exercises.size()) {
             resetTimer();
             displayExerciseDetails(exercises.get(currentExerciseIndex));
