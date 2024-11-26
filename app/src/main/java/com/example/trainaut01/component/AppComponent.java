@@ -9,6 +9,7 @@ import com.example.trainaut01.home.DetailedNewsFragment;
 import com.example.trainaut01.home.HomeFragment;
 import com.example.trainaut01.home.NewsFragment;
 import com.example.trainaut01.profile.SupportFragment;
+import com.example.trainaut01.profile.UserProfileFragment;
 import com.example.trainaut01.profile.UserUpdateFragment;
 import com.example.trainaut01.repository.AppInitializer;
 import com.example.trainaut01.training.ExerciseDetailFragment;
@@ -34,5 +35,6 @@ public interface AppComponent {
     void inject(NewsFragment newsFragment);
     void inject(ExerciseDetailFragment exerciseDetailFragment);
     void inject(TrainingDashboardFragment trainingDashboardFragment);
+    void inject(UserProfileFragment userProfileFragment);
 }
 

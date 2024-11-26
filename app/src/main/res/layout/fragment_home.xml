@@ -18,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="36dp">
+            android:layout_marginBottom="6dp">
 
             <ImageView
                 android:id="@+id/imgAvatar"
@@ -54,7 +54,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Список упражнений -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="#DDDDDD" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,16 +80,17 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
-            <TextView
-                android:id="@+id/tvExerciseList"
+            <!-- RecyclerView для списка упражнений -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewExercises"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="• Упражнение 1\n• Упражнение 2\n• Упражнение 3"
-                android:textSize="16sp"
-                android:textColor="#666666" />
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                tools:listitem="@layout/item_exercise" />
         </LinearLayout>
-
-        <!-- Новости -->
 
 
         <LinearLayout

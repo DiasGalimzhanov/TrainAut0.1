@@ -25,13 +25,28 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.trainaut01.BottomNavigationUpdater;
 import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.R;
+import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.models.Avatar;
+import com.example.trainaut01.repository.AvatarRepository;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 
 public class UserProfileFragment extends Fragment {
     private TextView _parentName, _tvEmail, _tvPhone, _tvBd;
     private ImageView _userProfileImage, _btnExit;
     private Button _btnUpdateProfile, _btnSupport, _btnWatchConnect;
+    private AppComponent appComponent;
+//    private AvatarRepository avatarRepository;
+    private SharedPreferences sharedPref;
+
+    @Inject
+    AvatarRepository avatarRepository;
 
     @Nullable
     @Override
@@ -40,13 +55,7 @@ public class UserProfileFragment extends Fragment {
 
         init(view);
         printData();
-
-        _userProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPasswordDialog();
-            }
-        });
+        loadAvatar();
 
         _btnUpdateProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +109,8 @@ public class UserProfileFragment extends Fragment {
     }
 
     public void init(View view) {
+        appComponent = DaggerAppComponent.create();
+        appComponent.inject(this);
         _userProfileImage = view.findViewById(R.id.profile_image);
         _parentName = view.findViewById(R.id.parent_name);
         _tvEmail = view.findViewById(R.id.parent_email);
@@ -110,6 +121,29 @@ public class UserProfileFragment extends Fragment {
         _btnSupport = view.findViewById(R.id.support_button);
         _tvBd = view.findViewById(R.id.parent_bd);
 
+    }
+
+    private void loadAvatar(){
+        SharedPreferences userData = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        int exp = userData.getInt("exp", 0);
+//        Log.d("EXP", exp);
+        int lvl = exp / 5000;
+        Log.d("HOME", "User experience: " + exp);
+
+        avatarRepository.getAvatarByLevel(lvl, new AvatarRepository.AvatarCallback() {
+            @Override
+            public void onSuccess(List<Avatar> avatars) {
+                if (!avatars.isEmpty()) {
+                    Avatar avatar = avatars.get(0);
+                    Picasso.get().load(avatar.getUrlAvatar()).into(_userProfileImage);
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("HOME", "Failed to load avatar", e);
+            }
+        });
     }
 
     private void clearSharedPreference(SharedPreferences sharedPreferences){

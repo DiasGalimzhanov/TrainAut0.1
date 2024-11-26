@@ -118,7 +118,7 @@ public class DayPlanRepository implements Repository<DayPlan> {
     }
 
     public void getExercisesForUserAndDay(String userId, String dayOfWeek, OnSuccessListener<List<Exercise>> onSuccess, OnFailureListener onFailure) {
-        Log.d("DayPlanRepository", "Запрос плана дня для пользователя: " + userId + ", день недели: " + dayOfWeek);
+
         _db.collection("users").document(userId)
                 .collection("dayPlans")  // Используем подколлекцию dayPlans
                 .whereEqualTo("id", dayOfWeek)  // Фильтруем по полю id

@@ -10,7 +10,6 @@
     android:background="#FFFFFF">
 
 
-    <!-- Верхняя панель с кнопкой выхода -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -34,7 +33,6 @@
             android:src="@drawable/ic_exit"  />
     </RelativeLayout>
 
-    <!-- Фото ребенка -->
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="120dp"
@@ -42,10 +40,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_trophy"
-    android:scaleType="centerCrop"
-    android:background="@drawable/circle_background" />
+        android:scaleType="centerCrop"
+        android:background="@drawable/circle_background" />
 
-    <!-- Информация о ребенке -->
     <TextView
         android:id="@+id/child_name"
         android:layout_width="wrap_content"
@@ -77,19 +74,21 @@
         android:textSize="14sp"
         android:textColor="#666666" />
 
-    <!-- Разделитель -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:background="#DDDDDD" />
 
-    <!-- Информация о родителях -->
+    <!--   Recycle -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/card_background"
+        android:padding="16dp"
+        android:elevation="4dp">
 
         <TextView
             android:id="@+id/parent_info_title"

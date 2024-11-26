@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C6DDE7">
+    android:background="#FFFFFF">
 
     <ScrollView
         android:id="@+id/scrollView3"
@@ -23,15 +23,6 @@
                 android:layout_height="match_parent"
                 android:animateLayoutChanges="true">
 
-                <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="0dp"
-                    android:layout_height="250dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/top_background_blue" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -39,14 +30,15 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Прогресс"
+                    android:textColor="@color/indigo"
                     android:textSize="60sp"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="@+id/imageView5" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#5B87BD"
+                    android:background="@color/indigo"
                     android:padding="16dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
@@ -112,8 +104,8 @@
 
                 <ImageView
                     android:id="@+id/imgAvatar"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
                     android:background="@drawable/rounded_image"
                     android:clipToOutline="true"
                     app:layout_constraintBottom_toTopOf="@+id/tvLvl"
@@ -128,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Level"
-                    android:textColor="@color/white"
+                    android:textColor="@color/indigo"
                     android:textSize="24sp"
                     android:textStyle="bold"
 
@@ -145,7 +137,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:background="#6F91BC"
+                android:background="@color/indigo"
                 android:padding="16dp">
 
 
