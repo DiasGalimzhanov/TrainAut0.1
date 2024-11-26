@@ -61,7 +61,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             CalendarDay day = calendarDays.get(position - 7);
             CalendarViewHolder dayHolder = (CalendarViewHolder) holder;
 
-//            Log.d("CalendarAdapter", "day.getDay()" + day.getDay());
 
             if (day.getDay() == 0) {
                 dayHolder._dayTextView.setText("");

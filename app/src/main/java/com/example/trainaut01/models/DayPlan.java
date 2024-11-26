@@ -7,6 +7,7 @@ import com.example.trainaut01.enums.GrossMotorMuscleGroup;
 import com.example.trainaut01.enums.WeekDay;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,16 +20,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DayPlan {
 
-    private String id;
+    private String dayPlanId;
     private WeekDay weekDay;
     private List<Exercise> exercisesGrossMotor;
     private List<Exercise> exercisesFineMotor;
-    private boolean isCompleted;
     private int rewardPointsDay;
 
 
     public DayPlan(Map<String, Object> map) {
-        this.id = (String) map.get("id");
+        this.dayPlanId = (String) map.get("id");
 
         String weekDayStr = (String) map.get("weekDay");
         this.weekDay = weekDayStr != null ? WeekDay.valueOf(weekDayStr.toUpperCase()) : null;
@@ -37,7 +37,6 @@ public class DayPlan {
         this.exercisesGrossMotor = parseExercises(exercisesData, GrossMotorMuscleGroup.class);
         this.exercisesFineMotor = parseExercises(exercisesData, FineMotorMuscleGroup.class);
 
-        this.isCompleted = map.get("isCompleted") != null && (boolean) map.get("isCompleted");
     }
 
     private List<Exercise> parseExercises(List<Map<String, Object>> exercisesData, Class<?> muscleGroupEnum) {
@@ -53,4 +52,27 @@ public class DayPlan {
         }
         return exercises;
     }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> dayPlanMap = new HashMap<>();
+
+        dayPlanMap.put("dayPlanId", dayPlanId);
+        dayPlanMap.put("weekDay", weekDay != null ? weekDay.toString() : null);
+        dayPlanMap.put("exercisesGrossMotor", exercisesToMap(exercisesGrossMotor));
+        dayPlanMap.put("exercisesFineMotor", exercisesToMap(exercisesFineMotor));
+        dayPlanMap.put("rewardPointsDay", rewardPointsDay);
+
+        return dayPlanMap;
+    }
+
+    private List<Map<String, Object>> exercisesToMap(List<Exercise> exercises) {
+        List<Map<String, Object>> exercisesMap = new ArrayList<>();
+        if (exercises != null) {
+            for (Exercise exercise : exercises) {
+                exercisesMap.add(exercise.toMap());
+            }
+        }
+        return exercisesMap;
+    }
+
 }
