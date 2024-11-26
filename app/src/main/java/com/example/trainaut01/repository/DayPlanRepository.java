@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,20 +42,36 @@ public class DayPlanRepository{
                 .addOnFailureListener(onFailure);
     }
 
-    public void addForUser(String userId, DayPlan dayPlan, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        Map<String, Object> dayPlanData = dayPlan.toMap();
+    public void addAllToUser(String userId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(userId)
-                .collection("dayPlans")
-                .document(dayPlan.getDayPlanId())
-                .set(dayPlanData)
-                .addOnSuccessListener(onSuccess)
+        db.collection("dayPlans")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    WriteBatch batch = db.batch();
+
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        DayPlan dayPlan = document.toObject(DayPlan.class);
+                        if (dayPlan != null) {
+                            dayPlan.setDayPlanId(document.getId());
+
+                            DocumentReference userDayPlanRef = db.collection("users")
+                                    .document(userId)
+                                    .collection("dayPlans")
+                                    .document(dayPlan.getDayPlanId());
+                            batch.set(userDayPlanRef, dayPlan.toMap());
+                        }
+                    }
+
+                    batch.commit()
+                            .addOnSuccessListener(onSuccess)
+                            .addOnFailureListener(onFailure);
+                })
                 .addOnFailureListener(onFailure);
     }
 
-    public void update(String userId, String dayPlanId, Map<String, Object> updatedFields,
+
+    public void updateForUser(String userId, String dayPlanId, Map<String, Object> updatedFields,
                        OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -68,7 +85,7 @@ public class DayPlanRepository{
     }
 
 
-    public void delete(String userId, String dayPlanId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    public void deleteForUser(String userId, String dayPlanId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("users")
@@ -105,41 +122,10 @@ public class DayPlanRepository{
                 .addOnFailureListener(onFailure);
     }
 
-
-
-    //
-//    // Метод для получения одного плана дня по дню недели и ID пользователя
-//    public void getDayPlanByWeekDay(String userId, WeekDay weekDay, OnSuccessListener<DayPlan> onSuccessListener, OnFailureListener onFailureListener) {
-//        Log.d("DayPlanRepository", "Запрос плана дня для пользователя: " + userId + ", день недели: " + weekDay);
-//        CollectionReference userDayPlansCollection = _db.collection("users").document(userId).collection("dayPlans");
-//
-//        userDayPlansCollection.whereEqualTo("weekDay", weekDay.toString())
-//                .limit(1)
-//                .get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    Log.d("DayPlanRepository", "Запрос успешно выполнен. Найдено документов: " + queryDocumentSnapshots.size());
-//                    if (!queryDocumentSnapshots.isEmpty()) {
-//                        DayPlan dayPlan = queryDocumentSnapshots.getDocuments().get(0).toObject(DayPlan.class);
-//                        dayPlan.setId(queryDocumentSnapshots.getDocuments().get(0).getId());
-//                        Log.d("DayPlanRepository", "План дня загружен: " + dayPlan);
-//                        onSuccessListener.onSuccess(dayPlan);
-//                    } else {
-//                        Log.d("DayPlanRepository", "План дня не найден для дня недели: " + weekDay);
-//                        onSuccessListener.onSuccess(null);
-//                    }
-//                })
-//                .addOnFailureListener(e -> {
-//                    Log.e("DayPlanRepository", "Ошибка при получении плана дня: " + e.getMessage());
-//                    onFailureListener.onFailure(e);
-//                });
-//    }
-//
-    // Метод для получения всех планов дня из коллекции
     public void getAll(OnSuccessListener<List<DayPlan>> onSuccess, OnFailureListener onFailure) {
         _collection.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<DayPlan> dayPlans = new ArrayList<>();
-                    // Итерация по всем документам в коллекции
                     for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                         dayPlans.add(document.toObject(DayPlan.class));
                     }
@@ -147,6 +133,43 @@ public class DayPlanRepository{
                 })
                 .addOnFailureListener(onFailure);
     }
+
+    public void getAllForUser(String userId, OnSuccessListener<List<DayPlan>> onSuccess, OnFailureListener onFailure) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .document(userId)
+                .collection("dayPlans")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<DayPlan> dayPlans = new ArrayList<>();
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        DayPlan dayPlan = document.toObject(DayPlan.class);
+                        if (dayPlan != null) {
+                            dayPlan.setDayPlanId(document.getId());
+                            dayPlans.add(dayPlan);
+                        }
+                    }
+                    onSuccess.onSuccess(dayPlans);
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+
+    public void updateExerciseCompletedTime(
+            String userId,
+            String dayPlanId,
+            String exercisePath, // Путь до конкретного упражнения в DayPlan
+            float completedTime,
+            OnSuccessListener<Void> onSuccess,
+            OnFailureListener onFailure) {
+
+        Map<String, Object> updatedFields = new HashMap<>();
+        updatedFields.put(exercisePath + ".completedTime", completedTime); // Путь до поля completedTime
+
+        updateForUser(userId, dayPlanId, updatedFields, onSuccess, onFailure);
+    }
+
 
     public void getExercisesForUserAndDay(String userId, String dayOfWeek, OnSuccessListener<List<Exercise>> onSuccess, OnFailureListener onFailure) {
 
@@ -206,105 +229,43 @@ public class DayPlanRepository{
         }).start();
     }
 
-    public void saveCurrentExerciseProgress(String userId, String day, int currentExerciseIndex, float timeElapsed,
-                                            OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
-        Map<String, Object> progressData = new HashMap<>();
-        progressData.put("currentExerciseIndex", currentExerciseIndex);
-        progressData.put("timeElapsed", timeElapsed);
 
-        _db.collection("users")
-                .document(userId)
-                .collection("dayPlans")
-                .document(day)
-                .update(progressData)
-                .addOnSuccessListener(onSuccessListener)
-                .addOnFailureListener(onFailureListener);
-    }
-
-
-    //
-//    // Метод для получения планов дня пользователя по дню недели
-//    public void getUserDayPlans(String userId, WeekDay weekDay, OnSuccessListener<List<DayPlan>> onSuccessListener, OnFailureListener onFailureListener) {
-//        CollectionReference userDayPlansCollection = _db.collection("users").document(userId).collection("dayPlans");
+//    public void markExerciseAsCompleted(String userId, String weekDay, String exerciseId,
+//                                        float timeElapsed, OnSuccessListener<Void> onSuccessListener,
+//                                        OnFailureListener onFailureListener) {
+//        CollectionReference userDayPlansCollection = _db.collection("users").document(userId)
+//                .collection("dayPlans");
+//        Log.d("markExercise", "weekDay: " + weekDay);
 //
-//        userDayPlansCollection.whereEqualTo("weekDay", weekDay.toString())
+//
+//        userDayPlansCollection.whereEqualTo("weekDay", weekDay)
+//                .limit(1)
 //                .get()
 //                .addOnSuccessListener(queryDocumentSnapshots -> {
 //                    if (!queryDocumentSnapshots.isEmpty()) {
-//                        List<DayPlan> dayPlans = queryDocumentSnapshots.toObjects(DayPlan.class);
-//                        onSuccessListener.onSuccess(dayPlans);
+//                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+//
+//                        List<Map<String, Object>> exercises = (List<Map<String, Object>>) document.get("exercises");
+//                        if (exercises != null) {
+//                            for (Map<String, Object> exercise : exercises) {
+//                                if (exercise.get("id").equals(exerciseId)) {
+//                                    exercise.put("completed", true);
+//                                    exercise.put("completedTime", timeElapsed);
+//                                    break;
+//                                }
+//                            }
+//
+//                            document.getReference().set(Collections.singletonMap("exercises", exercises), SetOptions.merge())
+//                                    .addOnSuccessListener(onSuccessListener)
+//                                    .addOnFailureListener(onFailureListener);
+//                        } else {
+//                            onFailureListener.onFailure(new Exception("Упражнения не найдены"));
+//                        }
 //                    } else {
-//                        onSuccessListener.onSuccess(Collections.emptyList());
+//                        onFailureListener.onFailure(new Exception("План на день не найден для указанного дня недели"));
 //                    }
 //                })
 //                .addOnFailureListener(onFailureListener);
 //    }
-//
-//
-//
-//
-//
-//    // Метод для обновления статуса завершенности плана дня
-//    public void updateDayPlanCompletion(String userId, WeekDay weekDay, boolean completed, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
-//        getDayPlanByWeekDay(userId, weekDay, new OnSuccessListener<DayPlan>() {
-//            @Override
-//            public void onSuccess(DayPlan dayPlan) {
-//                if (dayPlan != null) {
-//                    _db.collection("users")
-//                            .document(userId)
-//                            .collection("dayPlans")
-//                            .document(dayPlan.getId())
-//                            .update("completed", completed)
-//                            .addOnSuccessListener(successListener)
-//                            .addOnFailureListener(e -> {
-//                                Log.e("FirestoreUpdate", "Ошибка при обновлении статуса completed: " + e.getMessage());
-//                                failureListener.onFailure(e);
-//                            });
-//                } else {
-//                    Log.e("FirestoreUpdate", "План дня не найден для указанного дня недели");
-//                    failureListener.onFailure(new Exception("No day plan found for the specified week day"));
-//                }
-//            }
-//        }, failureListener);
-//    }
-//
-//
-    public void markExerciseAsCompleted(String userId, String weekDay, String exerciseId,
-                                        float timeElapsed, OnSuccessListener<Void> onSuccessListener,
-                                        OnFailureListener onFailureListener) {
-        CollectionReference userDayPlansCollection = _db.collection("users").document(userId)
-                .collection("dayPlans");
-        Log.d("markExercise", "weekDay: " + weekDay);
-
-
-        userDayPlansCollection.whereEqualTo("weekDay", weekDay)
-                .limit(1)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-
-                        List<Map<String, Object>> exercises = (List<Map<String, Object>>) document.get("exercises");
-                        if (exercises != null) {
-                            for (Map<String, Object> exercise : exercises) {
-                                if (exercise.get("id").equals(exerciseId)) {
-                                    exercise.put("completed", true);
-                                    exercise.put("completedTime", timeElapsed);
-                                    break;
-                                }
-                            }
-
-                            document.getReference().set(Collections.singletonMap("exercises", exercises), SetOptions.merge())
-                                    .addOnSuccessListener(onSuccessListener)
-                                    .addOnFailureListener(onFailureListener);
-                        } else {
-                            onFailureListener.onFailure(new Exception("Упражнения не найдены"));
-                        }
-                    } else {
-                        onFailureListener.onFailure(new Exception("План на день не найден для указанного дня недели"));
-                    }
-                })
-                .addOnFailureListener(onFailureListener);
-    }
 
 }

@@ -37,7 +37,7 @@ public class User {
         this.city = city;
         this.gender = gender;
         this.email = email;
-        this.pass = hashPassword(pass);
+        this.pass = pass;
     }
 
     public User(String fullName, String phone, String birthDate, String city, Gender gender, String email, String pass) {
@@ -47,6 +47,10 @@ public class User {
         this.city = city;
         this.gender = gender;
         this.email = email;
+        this.pass = pass;
+    }
+
+    public void setPass(String pass){
         this.pass = hashPassword(pass);
     }
 

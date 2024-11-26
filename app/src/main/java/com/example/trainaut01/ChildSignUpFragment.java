@@ -1,10 +1,12 @@
 package com.example.trainaut01;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.Spinner;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.enums.Gender;
+import com.example.trainaut01.home.HomeFragment;
 import com.example.trainaut01.models.Child;
 import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.User;
@@ -142,10 +145,18 @@ public class ChildSignUpFragment extends Fragment {
                 String newUserId = task.getResult().getUser().getUid();
 
                 Child child = new Child(fullName, birthDate, gender, diagnosis, height, weight);
-                _childRepository.addChild(newUserId, child, aVoid -> {
-//                    createDayPlans(newUserId, child.getChildId());
-                    ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Данные успешно сохранены.");
-                }, error -> ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления ребенка: " + error.getMessage()));
+                _childRepository.addChild(newUserId, child, ChildSignUpFragment.this.getContext(),  aVoid -> {
+
+                    _dayPlanRepository.addAllToUser(newUserId, unused -> {
+                        Intent intent = new Intent(ChildSignUpFragment.this.getContext(), BaseActivity.class);
+                        startActivity(intent);
+                    }, error -> {
+                        ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления DayPlans: " + error.getMessage());
+                    });
+
+                }, error -> {
+                    ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления ребенка: " + error.getMessage());
+                });
             } else {
                 ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка регистрации пользователя: " + task.getException().getMessage());
             }
@@ -160,27 +171,4 @@ public class ChildSignUpFragment extends Fragment {
         _etBirthDateChild.setOnClickListener(v -> DatePickerUtils.showDatePickerDialog(ChildSignUpFragment.this.getContext(), _etBirthDateChild));
     }
 
-    private void createUserInAuth(User user, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.createUserWithEmailAndPassword(user.getEmail(), user.getPass())
-                .addOnSuccessListener(authResult -> {
-                    String userId = authResult.getUser().getUid();
-                    onSuccess.onSuccess(userId);
-                })
-                .addOnFailureListener(onFailure);
-    }
-
-//    private void createDayPlans(String userId, String childId) {
-//        List<DayPlan> dayPlans = new ArrayList<>();
-//        dayPlans.add(new DayPlan("Day 1 Plan", "Описание плана 1", childId));
-//        dayPlans.add(new DayPlan("Day 2 Plan", "Описание плана 2", childId));
-//
-//        for (DayPlan plan : dayPlans) {
-//            _dayPlanRepository.addDayPlan(userId, plan, () -> {
-//                // Успешное добавление плана
-//            }, error -> {
-//                ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления плана: " + error.getMessage());
-//            });
-//        }
-//    }
 }

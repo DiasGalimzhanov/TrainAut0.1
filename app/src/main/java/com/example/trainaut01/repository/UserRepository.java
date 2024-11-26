@@ -33,21 +33,20 @@ import java.util.Objects;
 public class UserRepository {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
 
 
     public UserRepository() {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public void addUser(User user, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
-        // Регистрируем пользователя в Firebase Authentication
-        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPass())
+        String rawPassword = user.getPass(); // Сохраняем сырой пароль
+        user.setPass(rawPassword); // Хешируем перед сохранением в Firestore
+
+        mAuth.createUserWithEmailAndPassword(user.getEmail(), rawPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Получаем текущего пользователя
                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                         if (firebaseUser != null) {
                             String userId = firebaseUser.getUid();
@@ -56,7 +55,7 @@ public class UserRepository {
                             db.collection("users").document(userId)
                                     .set(user.toMap())
                                     .addOnSuccessListener(aVoid -> {
-                                        saveUserDataToPreferences(user, context); // Сохраняем в SharedPreferences
+                                        saveUserDataToPreferences(user, context);
                                         Toast.makeText(context, "Пользователь успешно добавлен", Toast.LENGTH_SHORT).show();
                                         onCompleteListener.onComplete(task);
                                     })
@@ -69,6 +68,7 @@ public class UserRepository {
                     }
                 });
     }
+
 
 
 //    // Метод для регистрации пользователя
@@ -135,7 +135,6 @@ public class UserRepository {
         docRef.get().addOnCompleteListener(onCompleteListener);
     }
 
-    // Метод для авторизации пользователя
     public void loginUser(String email, String password, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -160,6 +159,7 @@ public class UserRepository {
                 });
     }
 
+
     private void saveUserDataToPreferences(User user, Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -171,6 +171,7 @@ public class UserRepository {
         editor.putString("city", user.getCity());
         editor.putString("gender", user.getGender().toString());
         editor.putString("email", user.getEmail());
+        editor.putString("pass", user.getPass());
         editor.putString("role", user.getRole().toString());
 
         editor.apply();

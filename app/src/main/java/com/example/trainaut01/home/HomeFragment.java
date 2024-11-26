@@ -68,6 +68,15 @@ public class HomeFragment extends Fragment {
     @Inject
     AvatarRepository avatarRepository;
 
+    public static HomeFragment newInstance(String userId) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString(USER_ID, userId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
