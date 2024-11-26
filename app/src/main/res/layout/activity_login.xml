@@ -4,171 +4,153 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C6DDE7">
+    android:background="#ffffff">
 
-    <ScrollView
+    <TextView
+        android:id="@+id/textView3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Авторизация"
+        android:textColor="@color/indigo"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
 
-        <LinearLayout
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <EditText
+            android:id="@+id/etLogin"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/edit_text_signup"
+            android:drawableStart="@drawable/email"
+            android:ems="10"
+            android:hint="Адрес Эл. Почты(Email)"
+            android:inputType="text"
+            android:paddingStart="10dp"
+            android:textAlignment="center"
+            android:textColor="#4d4d4d"
+            android:textColorHint="#4d4d4d"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/edit_text_signup"
+            android:drawableStart="@drawable/password"
+            android:ems="10"
+            android:hint="Пароль"
+            android:inputType="textPassword"
+            android:paddingStart="8dp"
+            android:textAlignment="center"
+            android:textColor="#4d4d4d"
+            android:textColorHint="#4d4d4d"
+            android:textSize="18sp" />
+
+<!--        <Button-->
+<!--            android:id="@+id/btnLogin"-->
+<!--            style="@android:style/Widget.Button"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="55dp"-->
+<!--            android:layout_marginStart="32dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginEnd="32dp"-->
+<!--            android:background="@drawable/btn1_login_back"-->
+<!--            android:text="Войти"-->
+<!--            android:textColor="#ffffff"-->
+<!--            android:textSize="23sp"-->
+<!--            android:textStyle="bold" />-->
+
+        <TextView
+            android:id="@+id/tvForgotPas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="16dp"
+            android:text="Забыли свой пароль?(в разработке)"
+            android:textAlignment="center"
+            android:textColor="@color/primary"
+            android:textSize="16sp" />
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:scaleType="fitXY"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/top_intro_background" />
-
-            <EditText
-                android:id="@+id/etLogin"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:drawableStart="@drawable/email"
-                android:paddingStart="10dp"
-                android:background="@drawable/edit_text_signup"
-                android:ems="10"
-                android:hint="Адрес Эл. Почты(Email)"
-                android:inputType="text"
-                android:textAlignment="center"
-                android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edit_text_signup"
-                android:drawableStart="@drawable/password"
-                android:paddingStart="8dp"
-                android:ems="10"
-                android:hint="Пароль"
-                android:inputType="textPassword"
-                android:textAlignment="center"
-                android:textColor="#4d4d4d"
-                android:textColorHint="#4d4d4d"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/btnLogin"
-                style="@android:style/Widget.Button"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/btn1_login_back"
-                android:text="Войти"
-                android:textColor="#ffffff"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvForgotPas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Забыли свой пароль?(в разработке)"
-                android:textAlignment="center"
-                android:textColor="@color/primary"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/btnGoogleReg"
-                style="@android:style/Widget.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/edit_text_signup"
-                android:drawableStart="@drawable/googleg_standard_color_18"
-                android:drawablePadding="10dp"
-                android:padding="18dp"
-                android:text="Войти через google" />
-
-            <TextView
-                android:id="@+id/tvRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Нету аккаунта? Зарегистрироваться"
-                android:textAlignment="center"
-                android:textColor="@color/primary"
-                android:textSize="16sp" />
+<!--        <Button-->
+<!--            android:id="@+id/btnGoogleReg"-->
+<!--            style="@android:style/Widget.Button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:background="@drawable/edit_text_signup"-->
+<!--            android:drawableStart="@drawable/googleg_standard_color_18"-->
+<!--            android:drawablePadding="10dp"-->
+<!--            android:padding="18dp"-->
+<!--            android:text="Войти через google" />-->
 
 
-        </LinearLayout>
-    </ScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnLogin"
+        style="@android:style/Widget.Button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="55dp"
+        android:layout_margin="30dp"
+        android:background="@drawable/btn1_login_back"
+        android:text="Войти"
+        android:textColor="#ffffff"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.089"
+        tools:layout_editor_absoluteX="36dp" />
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/bottombackground" />
+    <Button
+        android:id="@+id/btnGoogleReg"
+        style="@android:style/Widget.Button"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        android:background="@drawable/edit_text_signup"
+        android:drawableStart="@drawable/googleg_standard_color_18"
+        android:drawablePadding="10dp"
+        android:padding="8dp"
+        android:text="Войти через google"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
+        app:layout_constraintVertical_bias="0.0" />
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="fitXY"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icon_start" />
-
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Train"
-                android:textColor="#00D4A3"
-                android:textSize="40dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Aut"
-                android:textColor="#009D6B"
-                android:textSize="40dp"
-                android:textStyle="bold" />
-        </LinearLayout>
+    <TextView
+        android:id="@+id/tvRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Нету аккаунта? Зарегистрироваться"
+        android:textAlignment="center"
+        android:textColor="@color/primary"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnGoogleReg" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
