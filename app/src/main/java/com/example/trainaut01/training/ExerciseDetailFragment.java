@@ -258,33 +258,33 @@ public class ExerciseDetailFragment extends Fragment {
         String exerciseId = exercise.getId();
         saveInSharedPreference("currentExerciseIndex", currentExerciseIndex);
 
-        dayPlanRepository.markExerciseAsCompleted(getArguments().getString(USER_ID), getArguments().getString(ARG_DAY).toUpperCase(), exerciseId, _timeElapsed,
-                new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        updateProgress(currentExerciseIndex + 1);
-                        if (currentExerciseIndex + 1 < exercises.size()) {
-                            updateButtonState("Далее", R.color.black, R.drawable.back_start_exercise);
-                        } else {
-                            updateUserExperience();
-                            updateUserCountDays();
-                            updateButtonState("Завершить", R.color.white, R.drawable.background_finish_exercise);
-                            Bundle result = new Bundle();
-                            saveInSharedPreference("currentExerciseIndex", 0);
-                            saveInSharedPreference("isCompletedTodayTraining", true);
-                            result.putBoolean("isCompletedTodayTraining", true);
-                            getParentFragmentManager().setFragmentResult("trainingResult", result);
-                            goToRewardFragment();
-                        }
-                    }
-                },
-                new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
+//        dayPlanRepository.markExerciseAsCompleted(getArguments().getString(USER_ID), getArguments().getString(ARG_DAY).toUpperCase(), exerciseId, _timeElapsed,
+//                new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        updateProgress(currentExerciseIndex + 1);
+//                        if (currentExerciseIndex + 1 < exercises.size()) {
+//                            updateButtonState("Далее", R.color.black, R.drawable.back_start_exercise);
+//                        } else {
+//                            updateUserExperience();
+//                            updateUserCountDays();
+//                            updateButtonState("Завершить", R.color.white, R.drawable.background_finish_exercise);
+//                            Bundle result = new Bundle();
+//                            saveInSharedPreference("currentExerciseIndex", 0);
+//                            saveInSharedPreference("isCompletedTodayTraining", true);
+//                            result.putBoolean("isCompletedTodayTraining", true);
+//                            getParentFragmentManager().setFragmentResult("trainingResult", result);
+//                            goToRewardFragment();
+//                        }
+//                    }
+//                },
+//                new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//        );
     }
 
     private void updateUserExperience() {

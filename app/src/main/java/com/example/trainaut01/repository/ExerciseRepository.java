@@ -17,7 +17,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class ExerciseRepository implements Repository<Exercise> {
+public class ExerciseRepository {
     private final FirebaseFirestore _db;
     private final CollectionReference _collection;
 
@@ -28,7 +28,6 @@ public class ExerciseRepository implements Repository<Exercise> {
     }
 
     // Метод для добавления нового упражнения
-    @Override
     public void add(Exercise exercise, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         _collection.add(exercise)
                 .addOnSuccessListener(docRef -> onSuccess.onSuccess(null))
@@ -36,7 +35,6 @@ public class ExerciseRepository implements Repository<Exercise> {
     }
 
     // Метод для обновления существующего упражнения по ID
-    @Override
     public void update(String id, Exercise exercise, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         _collection.document(id).set(exercise)
                 .addOnSuccessListener(onSuccess)
@@ -44,7 +42,6 @@ public class ExerciseRepository implements Repository<Exercise> {
     }
 
     // Метод для удаления упражнения по ID
-    @Override
     public void delete(String id, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         _collection.document(id).delete()
                 .addOnSuccessListener(onSuccess)
@@ -52,7 +49,6 @@ public class ExerciseRepository implements Repository<Exercise> {
     }
 
     // Метод для получения одного упражнения по ID
-    @Override
     public void get(String id, OnSuccessListener<Exercise> onSuccess, OnFailureListener onFailure) {
         _collection.document(id).get()
                 .addOnSuccessListener(doc -> {
@@ -63,7 +59,6 @@ public class ExerciseRepository implements Repository<Exercise> {
     }
 
     // Метод для получения всех упражнений из коллекции
-    @Override
     public void getAll(OnSuccessListener<List<Exercise>> onSuccess, OnFailureListener onFailure) {
         _collection.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {

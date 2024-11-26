@@ -1,6 +1,11 @@
 package com.example.trainaut01.repository;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.widget.Toast;
+
 import com.example.trainaut01.models.Child;
+import com.example.trainaut01.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,15 +26,19 @@ public class ChildRepository{
     /**
      * Добавить ребенка в коллекцию `child` для конкретного пользователя.
      */
-    public void addChild(String userId, Child child, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    public void addChild(String userId, Child child, Context context, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         Map<String, Object> childData = child.toMap();
 
         getChildCollection(userId)
                 .document(child.getChildId())
                 .set(childData)
-                .addOnSuccessListener(onSuccess)
+                .addOnSuccessListener(aVoid -> {
+                    saveChildDataToPreferences(child, context);
+                    onSuccess.onSuccess(aVoid);
+                })
                 .addOnFailureListener(onFailure);
     }
+
 
 
     /**
@@ -74,5 +83,26 @@ public class ChildRepository{
      */
     private CollectionReference getChildCollection(String userId) {
         return firestore.collection("users").document(userId).collection("child");
+    }
+
+
+    private void saveChildDataToPreferences(Child child, Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString("childId", child.getChildId());
+        editor.putString("fullName", child.getFullName());
+        editor.putString("birthDate", child.getBirthDate());
+        editor.putString("gender", child.getGender().toString());
+        editor.putString("diagnosis", child.getDiagnosis());
+        editor.putFloat("height", child.getHeight());
+        editor.putFloat("weight", child.getWeight());
+        editor.putInt("exp", child.getExp());
+        editor.putInt("lvl", child.getExp());
+        editor.putInt("countDays", child.getExp());
+
+        editor.apply();
+
+        Toast.makeText(context, "Данные ребенка сохранены", Toast.LENGTH_SHORT).show();
     }
 }

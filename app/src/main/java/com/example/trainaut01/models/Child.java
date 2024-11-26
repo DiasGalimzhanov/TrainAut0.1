@@ -21,6 +21,9 @@ public class Child {
     private String diagnosis;
     private float height;
     private float weight;
+    private int exp = 0;
+    private int lvl = 0;
+    private int countDays = 0;
 
     public Child(String fullName, String birthDate, Gender gender, String diagnosis, float height, float weight) {
         this.fullName = fullName;
@@ -44,6 +47,9 @@ public class Child {
         childMap.put("diagnosis", diagnosis);
         childMap.put("height", height);
         childMap.put("weight", weight);
+        childMap.put("exp", exp);
+        childMap.put("lvl", lvl);
+        childMap.put("countDays", countDays);
         return childMap;
     }
 }
