@@ -1,13 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChildSignUpFragment">
+    android:background="@color/white">
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="35dp"
+                android:text="Регистрация"
+                android:textAlignment="center"
+                android:textColor="@color/dark_indigo"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="20dp"
+                android:text="ФИО ребенка"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etFullNameChild"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:hint="Введите ФИО ребенка"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="@color/indigo"
+                android:textColorHint="@color/violet_blossom"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="Дата Рождения"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etBirthDateChild"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="ДД.ММ.ГГГГ"
+                android:inputType="number|date"
+                android:textAlignment="center"
+                android:textColor="@color/indigo"
+                android:textColorHint="@color/violet_blossom"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="Пол"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spGenderChild"
+                style="@style/CustomSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="Диагноз"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
+
+
+            <EditText
+                android:id="@+id/etDiagnosisChild"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:hint="Введите диагноз ребенка"
+                android:textAlignment="center"
+                android:textColor="@color/indigo"
+                android:textColorHint="@color/violet_blossom"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="Рост(см)"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
+
+
+            <EditText
+                android:id="@+id/etHeightChild"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:hint="Введите рост ребенка"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/indigo"
+                android:textColorHint="@color/violet_blossom"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="Вес(кг)"
+                android:textColor="@color/dark_indigo"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etWeightChild"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_signup"
+                android:hint="Введите вес ребенка"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/indigo"
+                android:textColorHint="@color/violet_blossom"
+                android:textSize="18sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="70dp"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/progressStepText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="8dp"
+                    android:text="Шаг 2"
+                    android:textColor="@color/indigo"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/progressSeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="3"
+                    android:progress="2"
+                    android:progressTint="@color/indigo"
+                    android:splitTrack="false"
+                    android:thumb="@android:color/transparent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnBack"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/btn2active_login_back"
+                    android:enabled="true"
+                    android:text="Назад"
+                    android:textColor="@color/indigo"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnContinue"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/btn1_login_back"
+                    android:text="Далее"
+                    android:textColor="#ffffff"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:background="@color/violet_blossom" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

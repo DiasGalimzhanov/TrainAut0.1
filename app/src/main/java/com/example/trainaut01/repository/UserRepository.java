@@ -42,30 +42,59 @@ public class UserRepository {
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    // Метод для регистрации пользователя
-    public void registerUser(String email, String password, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
-        mAuth.createUserWithEmailAndPassword(email, password)
+    public void addUser(User user, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
+        // Регистрируем пользователя в Firebase Authentication
+        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPass())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            getUserDataById(user.getUid(), new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()) {
-                                            User user = createUserFromDocument(document);
-                                            saveUserDataToPreferences(user, context);
-                                        }
-                                    }
-                                }
-                            });
+                        // Получаем текущего пользователя
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            String userId = firebaseUser.getUid();
+                            user.setUserId(userId);
+
+                            db.collection("users").document(userId)
+                                    .set(user.toMap())
+                                    .addOnSuccessListener(aVoid -> {
+                                        saveUserDataToPreferences(user, context); // Сохраняем в SharedPreferences
+                                        Toast.makeText(context, "Пользователь успешно добавлен", Toast.LENGTH_SHORT).show();
+                                        onCompleteListener.onComplete(task);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(context, "Ошибка сохранения данных в Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    });
                         }
+                    } else {
+                        Toast.makeText(context, "Ошибка регистрации: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                    onCompleteListener.onComplete(task);
                 });
     }
+
+
+//    // Метод для регистрации пользователя
+//    public void registerUser(String email, String password, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
+//        mAuth.createUserWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        FirebaseUser user = mAuth.getCurrentUser();
+//                        if (user != null) {
+//                            getUserDataById(user.getUid(), new OnCompleteListener<DocumentSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                    if (task.isSuccessful()) {
+//                                        DocumentSnapshot document = task.getResult();
+//                                        if (document.exists()) {
+//                                            User user = createUserFromDocument(document);
+//                                            saveUserDataToPreferences(user, context);
+//                                        }
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }
+//                    onCompleteListener.onComplete(task);
+//                });
+//    }
 
     private User createUserFromDocument(DocumentSnapshot document) {
         String userId = document.getString("userId");
@@ -75,6 +104,7 @@ public class UserRepository {
         String city = document.getString("city");
         Gender gender = Gender.fromString(document.getString("gender"));;
         String email = document.getString("email");
+        String pass = document.getString("pass");
 
         List<Map<String, Object>> dayPlansData = (List<Map<String, Object>>) document.get("dayPlans");
         List<DayPlan> dayPlans = new ArrayList<>();
@@ -85,13 +115,13 @@ public class UserRepository {
             }
         }
 
-        return new User(userId, fullName, phone, birthDate, city, gender, email);
+        return new User(userId, fullName, phone, birthDate, city, gender, email, pass);
     }
 
     // Метод для сохранения данных пользователя
-    public void saveUserData(String userId, String fullName, String phone, String birthDate, String city, Gender gender, String email, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener) {
+    public void saveUserData(String userId, String fullName, String phone, String birthDate, String city, Gender gender, String email, String  pass, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener) {
 
-        User user = new User(userId, fullName, phone, birthDate, city, gender, email);
+        User user = new User(userId, fullName, phone, birthDate, city, gender, email, pass);
 
         db.collection("users").document(userId)
                 .set(user)

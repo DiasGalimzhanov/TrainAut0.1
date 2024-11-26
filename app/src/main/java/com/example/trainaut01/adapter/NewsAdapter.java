@@ -1,21 +1,16 @@
 package com.example.trainaut01.adapter;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.trainaut01.R;
 import com.example.trainaut01.home.DetailedNewsFragment;
 import com.example.trainaut01.models.News;
@@ -42,7 +37,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @Override
     public NewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
         return new NewsViewHolder(view);
     }
 

@@ -28,7 +28,6 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
     private AppComponent _appComponent;
     private int _previousPosition = 0;
 
-    // Внедренные репозитории для управления упражнениями и планами на день
     @Inject
     ExerciseRepository exerciseRepository;
 

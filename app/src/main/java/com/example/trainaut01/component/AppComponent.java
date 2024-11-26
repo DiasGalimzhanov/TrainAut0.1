@@ -1,6 +1,7 @@
 package com.example.trainaut01.component;
 
 import com.example.trainaut01.BaseActivity;
+import com.example.trainaut01.ChildSignUpFragment;
 import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.SignUpActivity;
 import com.example.trainaut01.TrainingDashboardFragment;
@@ -36,5 +37,6 @@ public interface AppComponent {
     void inject(ExerciseDetailFragment exerciseDetailFragment);
     void inject(TrainingDashboardFragment trainingDashboardFragment);
     void inject(UserProfileFragment userProfileFragment);
+    void inject(ChildSignUpFragment childSignUpFragment);
 }
 

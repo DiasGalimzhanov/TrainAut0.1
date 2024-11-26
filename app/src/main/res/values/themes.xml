@@ -5,5 +5,10 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <style name="CustomSpinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:popupBackground">@android:color/transparent</item>
+        <item name="android:background">@drawable/edit_text_signup</item>
+    </style>
+
     <style name="Theme.TrainAut01" parent="Base.Theme.TrainAut01" />
 </resources>
