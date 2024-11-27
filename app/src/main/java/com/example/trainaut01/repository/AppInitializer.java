@@ -18,7 +18,6 @@ import javax.inject.Inject;
 public class AppInitializer {
     private final ExerciseRepository exerciseRepository;
     private final DayPlanRepository dayPlanRepository;
-//    private final TrainingPlanRepository trainingPlanRepository;
 
     private List<Exercise> exercisesGrossMotor;
     private List<Exercise> exercisesFineMotor;
@@ -27,7 +26,6 @@ public class AppInitializer {
     public AppInitializer(ExerciseRepository exerciseRepository, DayPlanRepository dayPlanRepository) {
         this.exerciseRepository = exerciseRepository;
         this.dayPlanRepository = dayPlanRepository;
-//        this.trainingPlanRepository = trainingPlanRepository;
         this.exercisesGrossMotor = new ArrayList<>();
         this.exercisesFineMotor = new ArrayList<>();
     }
@@ -399,16 +397,12 @@ public class AppInitializer {
 //                "https://cdn.culture.ru/images/593bd4d7-de4f-509d-9895-d506ad59ddb8", false, 3, 25, "секунд", 70, 0, 2));
 
 
-        // Проверяем, существуют ли упражнения
         getAllExercises(existingExercises -> {
-            // Создаем список существующих названий упражнений
             List<String> existingNames = existingExercises.stream()
                     .map(Exercise::getName)
                     .collect(Collectors.toList());
 
-            // Перебираем каждое упражнение из списка
             for (Exercise exercise : exercisesGrossMotor) {
-                // Если названия нет в списке существующих, добавляем его
                 if (!existingNames.contains(exercise.getName())) {
                     exerciseRepository.add(exercise, onSuccess, onFailure);
                 } else {
@@ -419,13 +413,11 @@ public class AppInitializer {
     }
 
     public void initializeDayPlans(OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        // Создаем список упражнений для дня
         List<Exercise> mondayExercisesGrossMotor = new ArrayList<>();
         List<Exercise> tuesdayExercisesGrossMotor = new ArrayList<>();
         List<Exercise> wednesdayExercisesGrossMotor = new ArrayList<>();
         List<Exercise> thursdayExercisesGrossMotor = new ArrayList<>();
         List<Exercise> fridayExercisesGrossMotor = new ArrayList<>();
-//        List<Exercise> saturdayExercises = new ArrayList<>();
 
         List<Exercise> mondayExercisesFineMotor = new ArrayList<>();
         List<Exercise> tuesdayExercisesFineMotor = new ArrayList<>();
@@ -433,7 +425,6 @@ public class AppInitializer {
         List<Exercise> thursdayExercisesFineMotor = new ArrayList<>();
         List<Exercise> fridayExercisesFineMotor = new ArrayList<>();
 
-        // Добавляем необходимые упражнения из уже созданного списка
         for (Exercise exercise : exercisesGrossMotor) {
             if (exercise.getMuscleGroup() == GrossMotorMuscleGroup.BICEPS || exercise.getMuscleGroup() == GrossMotorMuscleGroup.PECTORAL_MUSCLES) {
                 mondayExercisesGrossMotor.add(exercise);
@@ -465,11 +456,9 @@ public class AppInitializer {
                     .map(dayPlan -> dayPlan.getWeekDay().name())
                     .collect(Collectors.toList());
 
-            // Перебор каждого плана дня из списка
             for (DayPlan dayPlan : dayPlans) {
-                // Если дня недели нет в списке существующих, он добавится
                 if (!existingDays.contains(dayPlan.getWeekDay().name())) {
-                    dayPlanRepository.add(dayPlan, onSuccess, onFailure);
+                    dayPlanRepository.addDayPlan(dayPlan, onSuccess, onFailure);
                 } else {
                     System.out.println("Дневной план на \"" + dayPlan.getWeekDay().name() + "\" уже существует. Пропускаем.");
                 }
@@ -478,48 +467,10 @@ public class AppInitializer {
 
     }
 
-    // Метод для получения всех дневных планов из Firestore
     public void getAllDayPlans(OnSuccessListener<List<DayPlan>> onSuccess, OnFailureListener onFailure) {
-        dayPlanRepository.getAll(onSuccess, onFailure);
+        dayPlanRepository.getAllDayPlans(onSuccess, onFailure);
     }
 
-//    public void initializeTrainingPlans(OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-//        // Создаем список тренировочных планов
-//        List<TrainingPlan> trainingPlans = new ArrayList<>();
-//
-//        // Пример создания тренировочного плана с уникальным id и присоединенными дневными планами
-//        List<DayPlan> days = new ArrayList<>();
-//        days.add(new DayPlan(UUID.randomUUID().toString(), DayPlan.WeekDay.MONDAY, new ArrayList<>()));
-//        days.add(new DayPlan(UUID.randomUUID().toString(), DayPlan.WeekDay.TUESDAY, new ArrayList<>()));
-//
-//        TrainingPlan trainingPlan = new TrainingPlan(UUID.randomUUID().toString(), "My First Training Plan", days);
-//        trainingPlans.add(trainingPlan);
-//
-//        // Проверяем, существуют ли тренировочные планы
-//        getAllTrainingPlans(existingTrainingPlans -> {
-//            // Создаем список существующих названий тренировочных планов
-//            List<String> existingNames = existingTrainingPlans.stream()
-//                    .map(TrainingPlan::getTitle)  // Проверяем по имени тренировочного плана
-//                    .collect(Collectors.toList());
-//
-//            // Перебираем каждый тренировочный план из списка
-//            for (TrainingPlan plan : trainingPlans) {
-//                // Если имени нет в списке существующих, добавляем его
-//                if (!existingNames.contains(plan.getTitle())) {
-//                    trainingPlanRepository.add(plan, onSuccess, onFailure);
-//                } else {
-//                    System.out.println("Тренировочный план \"" + plan.getTitle() + "\" уже существует. Пропускаем.");
-//                }
-//            }
-//        }, onFailure);
-//    }
-
-//    // Метод для получения всех тренировочных планов из Firestore
-//    private void getAllTrainingPlans(OnSuccessListener<List<TrainingPlan>> onSuccess, OnFailureListener onFailure) {
-//        trainingPlanRepository.getAll(onSuccess, onFailure);
-//    }
-
-    // Метод для получения всех упражнений из Firestore
     private void getAllExercises(OnSuccessListener<List<Exercise>> onSuccess, OnFailureListener onFailure) {
         exerciseRepository.getAll(onSuccess, onFailure);
     }

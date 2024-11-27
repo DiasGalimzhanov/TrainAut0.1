@@ -4,7 +4,7 @@
     android:id="@+id/mainTraining"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="#F3F4F6"
     tools:context=".TrainingDashboardFragment">
 
 
@@ -25,7 +25,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:background="@drawable/btn_exit_back_profile"
+                android:background="@drawable/btn1_login_back"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -49,6 +49,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/card_background"
+                android:elevation="4dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -119,7 +123,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_gravity="center"
                 android:padding="8dp"
-                android:background="@drawable/btn_exit_back_profile"
+                android:background="@drawable/btn1_login_back"
                 android:numColumns="7"/>
 
         </LinearLayout>

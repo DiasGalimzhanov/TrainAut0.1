@@ -3,6 +3,7 @@
     import android.content.Context;
     import android.content.SharedPreferences;
     import android.os.Bundle;
+    import android.util.Log;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
@@ -38,6 +39,9 @@
         private ImageButton _btnBiceps, _btnPectoralMuscles, _btnTriceps, _btnDeltoidMuscles;
         private ImageButton _btnPress, _btnUpperBackMuscles, _btnQuadriceps, _btnLowerBackMuscles;
 
+        private Button _btnGrossMotor, _btnFineMotor;
+        private boolean isGrossMotorSelected = true;
+
         private Button _btnGoToTraining;
 
         private ImageView _ivPerson;
@@ -53,7 +57,7 @@
             resetDailyProgressIfNeeded();
             toggleButtonState();
 
-            updateTrainingDay();
+            updateGrossMotorTrainingDay();
 
             getParentFragmentManager().setFragmentResultListener("trainingResult", this, this::handleTrainingResult);
 
@@ -95,9 +99,45 @@
 
             _ivPerson = view.findViewById(R.id.ivPerson);
 
+            _btnGrossMotor = view.findViewById(R.id.btn_gross_motor);
+            _btnFineMotor = view.findViewById(R.id.btn_fine_motor);
+
+            _btnGrossMotor.setOnClickListener(v -> switchToGrossMotor());
+            _btnFineMotor.setOnClickListener(v -> switchToFineMotor());
+
+
         }
 
-        private void updateTrainingDay() {
+        private void switchToGrossMotor() {
+            isGrossMotorSelected = true;
+            updateButtonStyles();
+            updateGrossMotorTrainingDay();
+        }
+
+        private void switchToFineMotor() {
+            isGrossMotorSelected = false;
+            updateButtonStyles();
+            updateFineMotorTrainingDay();
+        }
+
+        private void updateButtonStyles() {
+            if (isGrossMotorSelected) {
+                _btnGrossMotor.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.btn_active_today_muscle_plan));
+                _btnGrossMotor.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
+
+                _btnFineMotor.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_signup));
+                _btnFineMotor.setTextColor(ContextCompat.getColor(requireContext(), R.color.indigo));
+            } else {
+                _btnFineMotor.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.btn_active_today_muscle_plan));
+                _btnFineMotor.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
+
+                _btnGrossMotor.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_signup));
+                _btnGrossMotor.setTextColor(ContextCompat.getColor(requireContext(), R.color.indigo));
+            }
+        }
+
+
+        private void updateGrossMotorTrainingDay() {
             List<GrossMotorMuscleGroup> todayGrossMotorMuscleGroups = getMuscleGroupsForToday();
 
             updateTrainingSubTitle(todayGrossMotorMuscleGroups);
@@ -112,8 +152,32 @@
             setMuscleGroupButtonAndImage(todayGrossMotorMuscleGroups, _btnLowerBackMuscles, GrossMotorMuscleGroup.LOWER_BACK_MUSCLES);
             setMuscleGroupButtonAndImage(todayGrossMotorMuscleGroups, null, GrossMotorMuscleGroup.FULL_BODY);
 
-            _btnGoToTraining.setOnClickListener(v -> openExerciseDetailFragment(getDayOfWeekString(_dayOfWeek), userId));
+            _btnGoToTraining.setOnClickListener(v -> {
+                Log.d("TodayMusclePlanFragment", "Кнопка нажата, переход на ExerciseDetailFragment");
+                openExerciseDetailFragment(getDayOfWeekString(_dayOfWeek), userId);
+            });
+
         }
+
+        private void updateFineMotorTrainingDay() {
+            // Пример: данные для мелкой моторики (заполните своим списком групп или действиями)
+            List<String> fineMotorTasks = Arrays.asList("Задание 1", "Задание 2", "Задание 3");
+
+            StringBuilder title = new StringBuilder("Сегодня тренировка на мелкую моторику: ");
+            for (int i = 0; i < fineMotorTasks.size(); i++) {
+                title.append(fineMotorTasks.get(i));
+                if (i < fineMotorTasks.size() - 1) title.append(", ");
+            }
+            _tvTrainingSubTitle.setText(title.toString());
+
+            // Обновите UI или другие элементы для мелкой моторики
+            // Например, скрытие кнопок для крупной моторики:
+            _btnBiceps.setVisibility(View.GONE);
+            _btnPectoralMuscles.setVisibility(View.GONE);
+
+            // Добавьте видимость или обработку для мелкой моторики
+        }
+
 
         private void setMuscleGroupButtonAndImage(List<GrossMotorMuscleGroup> todayGrossMotorMuscleGroups, ImageButton btnMuscle, GrossMotorMuscleGroup grossMotorMuscleGroup) {
             int boy_front = R.drawable.boy_front;
@@ -167,14 +231,15 @@
 
         private void setButtonState(Button button, boolean isLocked) {
             button.setEnabled(!isLocked);
-            button.setBackgroundColor(ContextCompat.getColor(requireContext(), isLocked ? R.color.disabledColorButton : R.color.enabledColorButton));
+            button.setBackgroundResource(isLocked ? R.drawable.btn2inactive_login_back : R.drawable.btn_active_today_muscle_plan );
+
         }
 
         private void openExerciseDetailFragment(String day, String userId) {
             ExerciseDetailFragment detailFragment = ExerciseDetailFragment.newInstance(day, userId);
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fragment_enter, R.anim.fragment_exit, R.anim.fragment_enter, R.anim.fragment_exit)
-                    .add(R.id.trainingMotors, detailFragment)
+                    .add(R.id.mainTraining, detailFragment)
                     .addToBackStack(null)
                     .commit();
         }

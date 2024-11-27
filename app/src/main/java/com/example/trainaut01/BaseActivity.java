@@ -53,14 +53,12 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
         initializeData();
     }
 
-    // Метод для загрузки указанного фрагмента в контейнер
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 
-    // Метод для настройки BottomNavigationView с слушателями
     private void setupBottomNavigationView() {
         _bottomNavigationView = findViewById(R.id.bottom_navigation);
         _bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -90,7 +88,6 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
 
     }
 
-    // Метод для анимации перехода между фрагментами
     private void animateFragmentTransition(Fragment fragment, int newPosition) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -112,7 +109,6 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
         _bottomNavigationView.post(() -> updateBottomNavigationSelection(fragment));
     }
 
-    // Обновление выделенного элемента в BottomNavigationView в зависимости от текущего фрагмента
     @Override
     public void updateBottomNavigationSelection(Fragment fragment) {
         int itemId;
@@ -132,7 +128,6 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
         _bottomNavigationView.setSelectedItemId(itemId);
     }
 
-    // Инициализация данных (упражнений и планов на день)
     private void initializeData() {
         appInitializer.initializeExercises(
                 unused -> Log.d("BaseActivity", "Упражнения инициализированы успешно"),
@@ -145,7 +140,6 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
         );
     }
 
-    // Обработка нажатия кнопки "Назад"
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {

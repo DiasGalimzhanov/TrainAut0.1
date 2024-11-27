@@ -18,6 +18,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/back_violet_encircle"
+            android:elevation="8dp"
+            android:padding="8dp"
             android:layout_marginBottom="6dp">
 
             <ImageView
@@ -35,9 +38,9 @@
                 android:id="@+id/tvHello"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Привет, Иван!"
+                android:text="Привет, Гость!"
                 android:textSize="22sp"
-                android:textColor="#333333"
+                android:textColor="@color/dark_indigo"
                 android:textStyle="bold"
                 android:layout_marginStart="16dp"
                 app:layout_constraintStart_toEndOf="@id/imgAvatar"
@@ -84,7 +87,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewExercises"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 android:clipToPadding="false"
                 android:paddingTop="8dp"

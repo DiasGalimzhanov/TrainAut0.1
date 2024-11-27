@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="#F3F4F6"
     android:orientation="vertical">
 
     <ScrollView
@@ -25,7 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="48dp"
-                    android:background="@drawable/btn_exit_back_profile"
+                    android:background="@drawable/btn1_login_back"
                     app:layout_constraintBottom_toTopOf="@+id/tvName"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layout_editor_absoluteX="0dp">
@@ -102,7 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:background="@drawable/btn1_intro_back"
+                    android:background="@drawable/back_violet_encircle"
                     android:orientation="vertical"
                     android:padding="10dp"
                     app:layout_constraintEnd_toEndOf="parent"

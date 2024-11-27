@@ -4,23 +4,25 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.example.trainaut01.models.Child;
-import com.example.trainaut01.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class ChildRepository{
 
-    private final FirebaseFirestore firestore;
+    private final FirebaseFirestore _db;
 
     public ChildRepository() {
-        this.firestore = FirebaseFirestore.getInstance();
+        this._db = FirebaseFirestore.getInstance();
     }
 
     /**
@@ -82,7 +84,7 @@ public class ChildRepository{
      * Получить ссылку на коллекцию `child` для конкретного пользователя.
      */
     private CollectionReference getChildCollection(String userId) {
-        return firestore.collection("users").document(userId).collection("child");
+        return _db.collection("users").document(userId).collection("child");
     }
 
 
@@ -104,5 +106,44 @@ public class ChildRepository{
         editor.apply();
 
         Toast.makeText(context, "Данные ребенка сохранены", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Обновляет определенное поле ребенка в коллекции `child` и SharedPreferences.
+     *
+     * @param userId     идентификатор пользователя.
+     * @param childId    идентификатор ребенка.
+     * @param fieldName  имя поля для обновления.
+     * @param fieldValue новое значение поля.
+     * @param context    контекст для доступа к SharedPreferences и Toast.
+     */
+    public void updateChildItem(String userId, String childId, String fieldName, Object fieldValue, Context context) {
+        _db.collection("users").document(userId).collection("child").document(childId)
+                .update(fieldName, fieldValue)
+                .addOnSuccessListener(aVoid -> {
+                    SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+
+                    if (fieldValue instanceof String) {
+                        editor.putString(fieldName, (String) fieldValue);
+                    } else if (fieldValue instanceof Integer) {
+                        editor.putInt(fieldName, (Integer) fieldValue);
+                    } else if (fieldValue instanceof Boolean) {
+                        editor.putBoolean(fieldName, (Boolean) fieldValue);
+                    } else if (fieldValue instanceof Float) {
+                        editor.putFloat(fieldName, (Float) fieldValue);
+                    } else if (fieldValue instanceof Long) {
+                        editor.putLong(fieldName, (Long) fieldValue);
+                    } else {
+                        Toast.makeText(context, "Неподдерживаемый тип данных", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    editor.apply();
+                    Toast.makeText(context, "Поле успешно обновлено", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Ошибка при обновлении поля: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }
