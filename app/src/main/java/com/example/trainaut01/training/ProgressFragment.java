@@ -42,6 +42,7 @@ public class ProgressFragment extends Fragment {
     private ProgressBar levelProgressBar;
     private ImageView imgAvatar;
     private TextView tvLvl;
+    private GridView gridView;
     private AchievementAdapter achievementAdapter;
 
     @Override
@@ -73,7 +74,7 @@ public class ProgressFragment extends Fragment {
         levelProgressBar = view.findViewById(R.id.progressBarLevel);
         streakTitle = view.findViewById(R.id.tvDays);
 
-        GridView gridView = view.findViewById(R.id.grdAchiv);
+        gridView = view.findViewById(R.id.grdAchiv);
         achievementAdapter = new AchievementAdapter(getActivity(), new ArrayList<>());
         gridView.setAdapter(achievementAdapter);
     }

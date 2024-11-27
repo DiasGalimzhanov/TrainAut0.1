@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment {
         int exp = sharedPref.getInt("exp", 0);
         int lvl = exp / 5000;
 
-        loadAvatar(8);
+        loadAvatar(lvl);
     }
 
     /**

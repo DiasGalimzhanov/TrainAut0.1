@@ -38,7 +38,7 @@ import javax.inject.Inject;
 
 
 public class UserProfileFragment extends Fragment {
-    private TextView _parentName, _tvEmail, _tvPhone, _tvBd;
+    private TextView _parentName, _tvEmail, _tvPhone, _tvBd, _child_name, _child_gender_diagnosis;
     private ImageView _userProfileImage, _btnExit;
     private Button _btnUpdateProfile, _btnSupport, _btnWatchConnect;
     private AppComponent appComponent;
