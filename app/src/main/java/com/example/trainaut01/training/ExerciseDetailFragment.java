@@ -167,7 +167,7 @@ public class ExerciseDetailFragment extends Fragment {
 
 
     private void loadExerciseProgress() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_progress", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("child_progress", Context.MODE_PRIVATE);
         _currentExerciseIndex = sharedPreferences.getInt("currentExerciseIndex", 0);
         _timeElapsed = sharedPreferences.getFloat("timeElapsed", 0);
     }
