@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.UserRepository;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -41,7 +42,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private AppComponent appComponent;
     @Inject
-    UserRepository db;
+    UserRepository _userRepository;
+
+    @Inject
+    ChildRepository _childRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,11 +165,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser(String email, String password) {
-        db.loginUser(email, password, this, new OnCompleteListener<AuthResult>() {
+        _userRepository.loginUser(email, password, this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Вход успешен", Toast.LENGTH_SHORT).show();
+
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    if (firebaseUser != null) {
+                        String userId = firebaseUser.getUid();
+                        ChildRepository childRepository = new ChildRepository();
+                        childRepository.saveChildData(userId, LoginActivity.this);
+                    }
+
                     Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
                     startActivity(intent);
                 } else {
@@ -174,4 +186,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
