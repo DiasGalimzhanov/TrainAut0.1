@@ -36,7 +36,7 @@
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_height="130dp"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_trophy"
@@ -162,7 +162,7 @@
             android:layout_marginBottom="8dp"
             android:text="Заметки о ребенке"
             android:textColor="#FFFFFF"
-            android:backgroundTint="#6200EE" />
+            android:background="@drawable/btn1_login_back" />
 
         <Button
             android:id="@+id/edit_profile_button"
@@ -171,7 +171,7 @@
             android:layout_marginBottom="8dp"
             android:text="Редактировать профиль"
             android:textColor="#FFFFFF"
-            android:backgroundTint="#6200EE" />
+            android:background="@drawable/btn1_login_back" />
 
         <Button
             android:id="@+id/support_button"
@@ -180,7 +180,7 @@
             android:text="Служба поддержки"
             android:layout_marginBottom="8dp"
             android:textColor="#FFFFFF"
-            android:backgroundTint="#6200EE" />
+            android:background="@drawable/btn1_login_back" />
 
         <Button
             android:id="@+id/watch_button"
@@ -188,7 +188,7 @@
             android:layout_height="wrap_content"
             android:text="Подключить часы"
             android:textColor="#FFFFFF"
-            android:backgroundTint="#6200EE" />
+            android:background="@drawable/btn1_login_back" />
     </LinearLayout>
 
 </LinearLayout>

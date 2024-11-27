@@ -189,36 +189,26 @@ public class HomeFragment extends Fragment {
 //    }
 
     public void printExercise() {
-        // Инициализация списка упражнений
-//        exerciseList = new ArrayList<>();
-//        DayPlanRepository dayPlanRepository = new DayPlanRepository();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date()).toLowerCase();
+//        String weekDay = getArguments().getString(ARG_DAY).toLowerCase();
+        Log.d("Day", dayOfWeek);
+//        Log.d("Day1", weekDay);
 
-        // Получение текущего пользователя (замените на вашу реализацию)
-//        String userId = getArguments().getString(USER_ID);
-//        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String userId = "vx6U63qDWCP4oKikCY6j9LFtXrz1";
-
-        // Определяем текущий день недели
-        String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date());
-
-        // Запрос к Firebase
         dayPlanRepository.getExercisesForUserAndDay(
                 userId,
                 dayOfWeek,
                 exercises -> {
-                    // Успешное получение упражнений
                     Log.d("EXERCiSE", exercises.toString());
                     for (Exercise exercise : exercises) {
-                        exerciseList.add(exercise.getName()); // Добавляем названия упражнений
+                        exerciseList.add(exercise.getName());
                     }
 
-                    // Настройка адаптера после загрузки данных
                     adapter = new ExerciseAdapter(exerciseList);
                     recyclerViewExercises.setLayoutManager(new LinearLayoutManager(getActivity()));
                     recyclerViewExercises.setAdapter(adapter);
                 },
                 e -> {
-                    // Ошибка загрузки
                     Log.e("printExercise", "Ошибка загрузки упражнений: ", e);
                     Toast.makeText(getActivity(), "Не удалось загрузить упражнения", Toast.LENGTH_SHORT).show();
                 }

@@ -25,7 +25,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:background="@color/enabledColorButton"
+                android:background="@drawable/btn_exit_back_profile"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -52,26 +52,63 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnExercisesMotor"
-                    android:layout_width="180dp"
-                    android:layout_height="150dp"
+                <!-- Первая кнопка с подписью -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/back_week_training_card"
-                    android:text="Упражнения\n на моторику"
-                    android:textColor="@color/disabledColorButton" />
+                    android:layout_marginEnd="10dp">
 
-                <Button
-                    android:id="@+id/btnAAC"
-                    android:layout_width="190dp"
-                    android:layout_height="150dp"
+                    <Button
+                        android:id="@+id/btnExercisesMotor"
+                        android:layout_width="190dp"
+                        android:layout_height="150dp"
+                        android:background="@drawable/ic_ex"
+                        android:textColor="@color/indigo"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Упражнения на моторику"
+                        android:textColor="@color/indigo"
+                        android:textSize="16sp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"/>
+                </LinearLayout>
+
+                <!-- Вторая кнопка с подписью -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/background_week_current_day"
-                    android:text="Альтернативная коммуникация\n (AAC)"
-                    android:textColor="@color/disabledColorButton" />
+                    android:layout_marginEnd="10dp">
+
+                    <Button
+                        android:id="@+id/btnAAC"
+                        android:layout_width="190dp"
+                        android:layout_height="150dp"
+                        android:background="@drawable/ic_brain"
+                        android:textColor="@color/disabledColorButton" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Альтернативная коммуникация (AAC)"
+                        android:textColor="@color/indigo"
+                        android:textSize="16sp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"/>
+                </LinearLayout>
+
             </LinearLayout>
+
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/calendarRecyclerView"
@@ -82,7 +119,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_gravity="center"
                 android:padding="8dp"
-                android:background="#C9D3DB"
+                android:background="@drawable/btn_exit_back_profile"
                 android:numColumns="7"/>
 
         </LinearLayout>

@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Готово, возвращаемся!"
-            android:backgroundTint="@color/enabledColorButton"
+            android:background="@drawable/btn1_login_back"
             android:textColor="@color/white"
             android:padding="12dp"/>
     </LinearLayout>

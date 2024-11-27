@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C6DDE7"
+    android:background="#fff"
     android:orientation="vertical">
 
     <ScrollView
@@ -21,69 +21,71 @@
                 android:layout_height="match_parent">
 
 
-                <ImageView
-                    android:id="@+id/imageView15"
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/arc_2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tvAllPointsForDay"
-                    android:layout_width="350dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="За выполнение всех упражнений вы получите +NNN Tricoins"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textAlignment="center"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.491"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayout"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="36dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ProgressBar
-                        android:id="@+id/pbTraining"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="32dp"
-                        android:max="8"
-                        android:progress="0"
-                        android:progressDrawable="@drawable/custom_progress_bar" />
+                    android:layout_marginBottom="48dp"
+                    android:background="@drawable/btn_exit_back_profile"
+                    app:layout_constraintBottom_toTopOf="@+id/tvName"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteX="0dp">
 
                     <TextView
-                        android:id="@+id/tvProgressTraining"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvAllPointsForDay"
+                        android:layout_width="350dp"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="0/8"
-                        android:textColor="#423F3F"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="За выполнение всех упражнений вы получите +NNN Tricoins"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.491"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
-                </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/relativeLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="36dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ProgressBar
+                            android:id="@+id/pbTraining"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:max="8"
+                            android:progress="0"
+                            android:progressDrawable="@drawable/custom_progress_bar" />
+
+                        <TextView
+                            android:id="@+id/tvProgressTraining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="0/8"
+                            android:textColor="#423F3F"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="184dp"
+                    android:layout_marginTop="160dp"
                     android:fontFamily="@font/lobster_regular"
                     android:text="Заголовок"
                     android:textAlignment="center"
@@ -91,7 +93,7 @@
                     android:textSize="40sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.537"
+                    app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -100,7 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:background="@drawable/background_training_list"
+                    android:background="@drawable/btn1_intro_back"
                     android:orientation="vertical"
                     android:padding="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -133,7 +135,7 @@
                             android:fontFamily="@font/federo_regular"
                             android:paddingStart="10dp"
                             android:text="N подходов"
-                            android:textColor="#F4EBEB"
+                            android:textColor="@color/indigo"
                             android:textSize="20sp" />
 
                         <TextView
@@ -144,7 +146,7 @@
                             android:layout_marginBottom="10dp"
                             android:fontFamily="@font/federo_regular"
                             android:text="по N раз"
-                            android:textColor="#F4EBEB"
+                            android:textColor="@color/indigo"
                             android:textSize="20sp" />
                     </LinearLayout>
 
@@ -159,7 +161,7 @@
                         android:fontFamily="@font/federo_regular"
                         android:paddingStart="10dp"
                         android:text="Время отдыха между подходами N минут"
-                        android:textColor="#F4EBEB"
+                        android:textColor="@color/indigo"
                         android:textSize="20sp" />
 
                     <TextView
@@ -173,7 +175,7 @@
                         android:fontFamily="@font/federo_regular"
                         android:paddingStart="10dp"
                         android:text="За выполнение этого упражнения вы полусите +N Tricoins"
-                        android:textColor="#F4EBEB"
+                        android:textColor="@color/indigo"
                         android:textSize="20sp" />
                 </LinearLayout>
 
@@ -198,17 +200,16 @@
 
                     <Button
                         android:id="@+id/btnStart"
-                        android:layout_width="300dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="30dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@drawable/back_start_exercise"
-                        android:fontFamily="@font/adventpro_semiexpanded_regular"
+                        android:background="@drawable/btn1_login_back"
                         android:text="Начать упражнение"
-                        android:textColor="#091D1A"
-                        android:textSize="20sp"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -232,7 +233,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="40dp"
                         android:layout_marginEnd="10dp"
-                        android:background="#4761C1"
+                        android:background="@drawable/btn1_login_back"
                         android:drawablePadding="20dp"
                         android:fontFamily="@font/federo_regular"
                         android:paddingStart="10dp"

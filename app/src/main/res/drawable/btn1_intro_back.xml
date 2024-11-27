@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-<item>
-    <shape android:shape="rectangle">
-        <corners android:radius="10dp"/>
-        <stroke android:color="#ffffff" android:width="1dp"/>
-    </shape>
-</item>
-</selector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Тень -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#44000000"/> <!-- Темно-серый цвет с прозрачностью для тени -->
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+
+    <!-- Основной фон -->
+    <item android:left="4dp" android:top="4dp"> <!-- Смещение основного фона, чтобы тень была видна -->
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF"/> <!-- Белый цвет для фона -->
+            <corners android:radius="10dp"/>
+            <stroke android:color="#ffffff" android:width="1dp"/>
+        </shape>
+    </item>
+
+</layer-list>

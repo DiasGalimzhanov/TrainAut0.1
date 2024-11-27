@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +85,7 @@ public class ExerciseDetailFragment extends Fragment {
 
         if (getArguments() != null) {
             String weekDay = getArguments().getString(ARG_DAY).toLowerCase();
+            Log.d("DAY E", weekDay);
             String userId = getArguments().getString(USER_ID);
 
             loadExerciseProgress();
@@ -92,6 +94,7 @@ public class ExerciseDetailFragment extends Fragment {
                 @Override
                 public void onSuccess(List<Exercise> exerciseList) {
                     exercises = exerciseList;
+
                     setupProgress(exercises.size());
                     if (!exercises.isEmpty()) {
                         if (currentExerciseIndex < exercises.size()) {
