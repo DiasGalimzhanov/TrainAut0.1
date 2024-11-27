@@ -29,8 +29,6 @@ import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.AvatarRepository;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.NewsRepository;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -43,21 +41,18 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 public class HomeFragment extends Fragment {
-    private static final String ARG_DAY = "day";
-    private static final String USER_ID = "userId";
 
-    private List<Exercise> exercises;
+    private static final String USER_ID = "userId";
+    private static final String SHARED_PREF_NAME = "child_data";
+
+    private List<String> exerciseList;
     private NewsAdapter adapterNews;
+    private ExerciseAdapter exerciseAdapter;
+    private SharedPreferences sharedPref;
+
     private TextView tvHello, tvMoreNews;
     private ImageView imgAvatar;
-    private RecyclerView recyclerViewNews;
-//    private AvatarRepository avatarRepository;
-    private SharedPreferences sharedPref;
-    private AppComponent appComponent;
-
-    private RecyclerView recyclerViewExercises;
-    private ExerciseAdapter adapter;
-    private List<String> exerciseList;
+    private RecyclerView recyclerViewNews, recyclerViewExercises;
 
     @Inject
     NewsRepository newsRepository;
@@ -68,6 +63,12 @@ public class HomeFragment extends Fragment {
     @Inject
     AvatarRepository avatarRepository;
 
+    /**
+     * Создает новый экземпляр фрагмента с передачей идентификатора пользователя.
+     *
+     * @param userId Идентификатор пользователя.
+     * @return Новый экземпляр HomeFragment.
+     */
     public static HomeFragment newInstance(String userId) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -75,7 +76,6 @@ public class HomeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Nullable
     @Override
@@ -86,40 +86,60 @@ public class HomeFragment extends Fragment {
         loadUserData();
         fetchNews();
         setupListeners();
-        printExercise();
+        loadExercises();
 
         return view;
     }
 
+    /**
+     * Инициализация компонентов пользовательского интерфейса и зависимостей.
+     *
+     * @param view Основной вид фрагмента.
+     */
     private void init(View view) {
-        sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        sharedPref = requireActivity().getSharedPreferences(SHARED_PREF_NAME, getActivity().MODE_PRIVATE);
 
-        appComponent = DaggerAppComponent.create();
+        AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
 
         tvHello = view.findViewById(R.id.tvHello);
         imgAvatar = view.findViewById(R.id.imgAvatar);
         tvMoreNews = view.findViewById(R.id.tvMoreNews);
         recyclerViewNews = view.findViewById(R.id.recyclerViewNews);
-
-        avatarRepository = new AvatarRepository();
         recyclerViewExercises = view.findViewById(R.id.recyclerViewExercises);
-        exerciseList = new ArrayList<>();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerViewNews.setLayoutManager(layoutManager);
-        recyclerViewNews.setAdapter(adapterNews);
+        exerciseList = new ArrayList<>();
+        setupRecyclerViews();
     }
 
+    /**
+     * Настраивает RecyclerView для отображения новостей и упражнений.
+     */
+    private void setupRecyclerViews() {
+        recyclerViewNews.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerViewExercises.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    /**
+     * Загружает данные пользователя (имя, уровень и аватар) из SharedPreferences и Firebase.
+     */
     private void loadUserData() {
-        String firstName = sharedPref.getString("firstName", "Гость");
-        tvHello.setText("Привет, " + firstName);
+        String fullName = sharedPref.getString("fullName", "Гость");
+        tvHello.setText(String.format("Привет, %s", fullName));
 
         int exp = sharedPref.getInt("exp", 0);
         int lvl = exp / 5000;
-        Log.d("HOME", "User experience: " + exp);
 
-        avatarRepository.getAvatarByLevel(lvl, new AvatarRepository.AvatarCallback() {
+        loadAvatar(lvl);
+    }
+
+    /**
+     * Загружает аватар пользователя в зависимости от его уровня.
+     *
+     * @param level Уровень пользователя.
+     */
+    private void loadAvatar(int level) {
+        avatarRepository.getAvatarByLevel(level, new AvatarRepository.AvatarCallback() {
             @Override
             public void onSuccess(List<Avatar> avatars) {
                 if (!avatars.isEmpty()) {
@@ -130,42 +150,100 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Exception e) {
-                Log.e("HOME", "Failed to load avatar", e);
+                Log.e("HOME", "Не удалось загрузить аватар", e);
             }
         });
     }
 
+    /**
+     * Загружает новости из репозитория и отображает их в RecyclerView.
+     */
     private void fetchNews() {
         newsRepository.fetchNews(new NewsRepository.NewsFetchCallback() {
             @Override
             public void onNewsFetched(List<News> newsList) {
-                adapterNews = new NewsAdapter(newsList, new NewsAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(News newsItem) {
-                        // Handle news item click
-                    }
+                adapterNews = new NewsAdapter(newsList, newsItem -> {
+                    // Обработка клика по новости
                 });
                 recyclerViewNews.setAdapter(adapterNews);
             }
 
             @Override
             public void onError(Exception e) {
-                Log.e("HOME", "Failed to fetch news", e);
+                Log.e("HOME", "Ошибка загрузки новостей", e);
             }
         });
     }
 
+    /**
+     * Устанавливает обработчики событий для элементов пользовательского интерфейса.
+     */
     private void setupListeners() {
-        tvMoreNews.setOnClickListener(view -> {
-            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new NewsFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
+        tvMoreNews.setOnClickListener(view -> openNewsFragment());
+    }
+
+    /**
+     * Открывает фрагмент новостей.
+     */
+    private void openNewsFragment() {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new NewsFragment());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    /**
+     * Загружает упражнения для текущего пользователя и отображает их в RecyclerView.
+     */
+    private void loadExercises() {
+        String userId = getUserId();
+        String dayOfWeek = getCurrentDayOfWeek();
+
+        dayPlanRepository.getDayPlanForUserAndDay(userId, dayOfWeek.toLowerCase(), dayPlan -> {
+            if (dayPlan != null && dayPlan.getExercisesGrossMotor() != null) {
+                updateExerciseList(dayPlan.getExercisesGrossMotor());
+            } else {
+                Toast.makeText(getActivity(), "План дня отсутствует или пуст", Toast.LENGTH_SHORT).show();
+            }
+        }, error -> {
+            Log.e("HOME", "Ошибка загрузки плана дня: ", error);
+            Toast.makeText(getActivity(), "Не удалось загрузить упражнения", Toast.LENGTH_SHORT).show();
         });
     }
 
-    public void updateBottomNavigation() {
-        ((BottomNavigationUpdater) getActivity()).updateBottomNavigationSelection(this);
+    /**
+     * Обновляет список упражнений и отображает его в RecyclerView.
+     *
+     * @param exercises Список упражнений из DayPlan.
+     */
+    private void updateExerciseList(List<Exercise> exercises) {
+        exerciseList.clear();
+        for (Exercise exercise : exercises) {
+            exerciseList.add(exercise.getName());
+        }
+
+        exerciseAdapter = new ExerciseAdapter(exerciseList);
+        recyclerViewExercises.setAdapter(exerciseAdapter);
+    }
+
+    /**
+     * Получает идентификатор текущего пользователя из FirebaseAuth.
+     *
+     * @return Идентификатор пользователя.
+     */
+    private String getUserId() {
+        return FirebaseAuth.getInstance().getCurrentUser() != null
+                ? FirebaseAuth.getInstance().getCurrentUser().getUid()
+                : "";
+    }
+
+    /**
+     * Получает текущий день недели.
+     *
+     * @return День недели в формате строки.
+     */
+    private String getCurrentDayOfWeek() {
+        return new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date());
     }
 
     @Override
@@ -174,55 +252,10 @@ public class HomeFragment extends Fragment {
         updateBottomNavigation();
     }
 
-//    public void printExercise(){
-//        exerciseList = new ArrayList<>();
-//        exerciseList.add("Упражнение 1");
-//        exerciseList.add("Упражнение 2");
-//        exerciseList.add("Упражнение 3");
-//        exerciseList.add("Упражнение 4");
-//
-//        adapter = new ExerciseAdapter(exerciseList);
-//        recyclerViewExercises.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        recyclerViewExercises.setAdapter(adapter);
-//
-//
-//    }
-
-    public void printExercise() {
-        // Инициализация списка упражнений
-//        exerciseList = new ArrayList<>();
-//        DayPlanRepository dayPlanRepository = new DayPlanRepository();
-
-        // Получение текущего пользователя (замените на вашу реализацию)
-//        String userId = getArguments().getString(USER_ID);
-//        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String userId = "vx6U63qDWCP4oKikCY6j9LFtXrz1";
-
-        // Определяем текущий день недели
-        String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date());
-
-        // Запрос к Firebase
-        dayPlanRepository.getExercisesForUserAndDay(
-                userId,
-                dayOfWeek,
-                exercises -> {
-                    // Успешное получение упражнений
-                    Log.d("EXERCiSE", exercises.toString());
-                    for (Exercise exercise : exercises) {
-                        exerciseList.add(exercise.getName()); // Добавляем названия упражнений
-                    }
-
-                    // Настройка адаптера после загрузки данных
-                    adapter = new ExerciseAdapter(exerciseList);
-                    recyclerViewExercises.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    recyclerViewExercises.setAdapter(adapter);
-                },
-                e -> {
-                    // Ошибка загрузки
-                    Log.e("printExercise", "Ошибка загрузки упражнений: ", e);
-                    Toast.makeText(getActivity(), "Не удалось загрузить упражнения", Toast.LENGTH_SHORT).show();
-                }
-        );
+    /**
+     * Обновляет выбранный элемент нижней навигации.
+     */
+    private void updateBottomNavigation() {
+        ((BottomNavigationUpdater) getActivity()).updateBottomNavigationSelection(this);
     }
-
 }

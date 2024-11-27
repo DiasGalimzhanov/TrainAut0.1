@@ -37,7 +37,7 @@
                     android:layout_width="350dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="За выполнение всех упражнений вы получите +NNN Tricoins"
+                    android:text="Выполните все упражнения чтобы получить +NNN EXP"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textAlignment="center"
@@ -172,7 +172,7 @@
                         android:drawablePadding="10dp"
                         android:fontFamily="@font/federo_regular"
                         android:paddingStart="10dp"
-                        android:text="За выполнение этого упражнения вы полусите +N Tricoins"
+                        android:text="За выполнение этого упражнения вы получите +N EXP"
                         android:textColor="#F4EBEB"
                         android:textSize="20sp" />
                 </LinearLayout>

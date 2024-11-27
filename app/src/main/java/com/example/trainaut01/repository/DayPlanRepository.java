@@ -1,10 +1,5 @@
 package com.example.trainaut01.repository;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-
-import com.example.trainaut01.enums.WeekDay;
 import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.Exercise;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -17,116 +12,89 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 
-public class DayPlanRepository{
+/**
+ * Репозиторий для работы с объектами DayPlan в Firestore.
+ * Этот класс предоставляет методы для выполнения CRUD операций с дневными планами,
+ * включая получение, добавление, обновление и удаление данных.
+ */
+public class DayPlanRepository {
+
+    private static final String TAG = "DayPlanRepository";
+
     private final FirebaseFirestore _db;
     private final CollectionReference _collection;
 
+    /**
+     * Конструктор класса DayPlanRepository.
+     *
+     * @param db экземпляр FirebaseFirestore для взаимодействия с базой данных Firestore.
+     */
     @Inject
     public DayPlanRepository(FirebaseFirestore db) {
         this._db = db;
         this._collection = db.collection("dayPlans");
     }
 
-    public void add(DayPlan dayPlan, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    /**
+     * Добавляет дневной план в Firestore.
+     *
+     * @param dayPlan   объект DayPlan, который необходимо добавить.
+     * @param onSuccess callback, вызываемый при успешной операции.
+     * @param onFailure callback, вызываемый при ошибке операции.
+     */
+    public void addDayPlan(DayPlan dayPlan, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         _collection.document(dayPlan.getDayPlanId())
                 .set(dayPlan)
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }
 
-    public void addAllToUser(String userId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("dayPlans")
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    WriteBatch batch = db.batch();
-
-                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                        DayPlan dayPlan = document.toObject(DayPlan.class);
-                        if (dayPlan != null) {
-                            dayPlan.setDayPlanId(document.getId());
-
-                            DocumentReference userDayPlanRef = db.collection("users")
-                                    .document(userId)
-                                    .collection("dayPlans")
-                                    .document(dayPlan.getDayPlanId());
-                            batch.set(userDayPlanRef, dayPlan.toMap());
-                        }
-                    }
-
-                    batch.commit()
-                            .addOnSuccessListener(onSuccess)
-                            .addOnFailureListener(onFailure);
-                })
-                .addOnFailureListener(onFailure);
-    }
-
-
-    public void updateForUser(String userId, String dayPlanId, Map<String, Object> updatedFields,
-                       OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("users")
-                .document(userId)
-                .collection("dayPlans")
-                .document(dayPlanId)
-                .update(updatedFields)
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
-    }
-
-
-    public void deleteForUser(String userId, String dayPlanId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("users")
-                .document(userId)
-                .collection("dayPlans")
-                .document(dayPlanId)
-                .delete()
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
-    }
-
-
-    public void get(String userId, String dayPlanId, OnSuccessListener<DayPlan> onSuccess, OnFailureListener onFailure) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("users")
-                .document(userId)
-                .collection("dayPlans")
-                .document(dayPlanId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        DayPlan dayPlan = documentSnapshot.toObject(DayPlan.class);
-                        if (dayPlan != null) {
-                            dayPlan.setDayPlanId(dayPlanId);
-                            onSuccess.onSuccess(dayPlan);
-                        } else {
-                            onFailure.onFailure(new Exception("Документ не удалось преобразовать в DayPlan."));
-                        }
-                    } else {
-                        onFailure.onFailure(new Exception("Документ не найден."));
-                    }
-                })
-                .addOnFailureListener(onFailure);
-    }
-
-    public void getAll(OnSuccessListener<List<DayPlan>> onSuccess, OnFailureListener onFailure) {
+    /**
+     * Копирует все доступные дневные планы в профиль пользователя.
+     *
+     * @param userId    идентификатор пользователя.
+     * @param onSuccess callback, вызываемый при успешной операции.
+     * @param onFailure callback, вызываемый при ошибке операции.
+     */
+    public void addAllDayPlansToUser(String userId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         _collection.get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addOnSuccessListener(querySnapshot -> copyDayPlansToUser(userId, querySnapshot.getDocuments(), onSuccess, onFailure))
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * Получает дневной план для указанного пользователя и идентификатора плана.
+     *
+     * @param userId    идентификатор пользователя.
+     * @param dayPlanId идентификатор дневного плана.
+     * @param onSuccess callback, вызываемый при успешной операции с полученным объектом DayPlan.
+     * @param onFailure callback, вызываемый при ошибке операции.
+     */
+    public void getDayPlan(String userId, String dayPlanId, OnSuccessListener<DayPlan> onSuccess, OnFailureListener onFailure) {
+        DocumentReference dayPlanRef = getUserDayPlanReference(userId, dayPlanId);
+
+        dayPlanRef.get()
+                .addOnSuccessListener(documentSnapshot -> handleDayPlanDocument(documentSnapshot, onSuccess, onFailure))
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * Получает список всех доступных дневных планов.
+     *
+     * @param onSuccess callback, вызываемый при успешной операции с полученным списком дневных планов.
+     * @param onFailure callback, вызываемый при ошибке операции.
+     */
+    public void getAllDayPlans(OnSuccessListener<List<DayPlan>> onSuccess, OnFailureListener onFailure) {
+        _collection.get()
+                .addOnSuccessListener(querySnapshot -> {
                     List<DayPlan> dayPlans = new ArrayList<>();
-                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                         dayPlans.add(document.toObject(DayPlan.class));
                     }
                     onSuccess.onSuccess(dayPlans);
@@ -134,138 +102,176 @@ public class DayPlanRepository{
                 .addOnFailureListener(onFailure);
     }
 
-    public void getAllForUser(String userId, OnSuccessListener<List<DayPlan>> onSuccess, OnFailureListener onFailure) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    /**
+     * Обновляет время завершения упражнения в дневном плане.
+     *
+     * @param userId       идентификатор пользователя.
+     * @param dayPlanId    идентификатор дневного плана.
+     * @param exerciseId   идентификатор упражнения.
+     * @param timeElapsed  время, затраченное на выполнение упражнения.
+     * @param onSuccess    callback, вызываемый при успешной операции.
+     * @param onFailure    callback, вызываемый при ошибке операции.
+     */
+    public void updateExerciseCompletedTime(String userId, String dayPlanId, String exerciseId, float timeElapsed,
+                                            OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        DocumentReference dayPlanRef = getUserDayPlanReference(userId, dayPlanId);
 
-        db.collection("users")
-                .document(userId)
-                .collection("dayPlans")
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    List<DayPlan> dayPlans = new ArrayList<>();
-                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                        DayPlan dayPlan = document.toObject(DayPlan.class);
-                        if (dayPlan != null) {
-                            dayPlan.setDayPlanId(document.getId());
-                            dayPlans.add(dayPlan);
-                        }
-                    }
-                    onSuccess.onSuccess(dayPlans);
-                })
-                .addOnFailureListener(onFailure);
-    }
-
-
-    public void updateExerciseCompletedTime(
-            String userId,
-            String dayPlanId,
-            String exercisePath, // Путь до конкретного упражнения в DayPlan
-            float completedTime,
-            OnSuccessListener<Void> onSuccess,
-            OnFailureListener onFailure) {
-
-        Map<String, Object> updatedFields = new HashMap<>();
-        updatedFields.put(exercisePath + ".completedTime", completedTime); // Путь до поля completedTime
-
-        updateForUser(userId, dayPlanId, updatedFields, onSuccess, onFailure);
-    }
-
-
-    public void getExercisesForUserAndDay(String userId, String dayOfWeek, OnSuccessListener<List<Exercise>> onSuccess, OnFailureListener onFailure) {
-
-        _db.collection("users").document(userId)
-                .collection("dayPlans")  // Используем подколлекцию dayPlans
-                .whereEqualTo("id", dayOfWeek)  // Фильтруем по полю id
-                .limit(1)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        Log.d("DayPlanRepository", "План дня найден");
-                        Map<String, Object> dayPlan = queryDocumentSnapshots.getDocuments().get(0).getData();
-                        List<Map<String, Object>> exercisesMapList = (List<Map<String, Object>>) dayPlan.get("exercises");
-                        List<Exercise> exercises = new ArrayList<>();
-
-                        if (exercisesMapList != null) {
-                            for (Map<String, Object> exerciseMap : exercisesMapList) {
-                                Exercise exercise = Exercise.initializeFromMap(exerciseMap);
-                                exercises.add(exercise);
-                            }
-                        }
-                        onSuccess.onSuccess(exercises);
+        dayPlanRef.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        handleExerciseTimeUpdate(documentSnapshot, exerciseId, timeElapsed, dayPlanRef, onSuccess, onFailure);
                     } else {
-                        Log.d("DayPlanRepository", "План дня не найден для дня недели: " + dayOfWeek);
-                        onSuccess.onSuccess(Collections.emptyList());
+                        onFailure.onFailure(new Exception("Документ плана дня не найден."));
                     }
                 })
                 .addOnFailureListener(onFailure);
     }
 
+    /**
+     * Получает дневной план для пользователя на определенный день недели.
+     *
+     * @param userId    идентификатор пользователя.
+     * @param dayOfWeek день недели, для которого требуется получить план.
+     * @param onSuccess callback, вызываемый при успешной операции с полученным объектом DayPlan.
+     * @param onFailure callback, вызываемый при ошибке операции.
+     */
+    public void getDayPlanForUserAndDay(String userId, String dayOfWeek, OnSuccessListener<DayPlan> onSuccess, OnFailureListener onFailure) {
+        DocumentReference dayPlanRef = getUserDayPlanReference(userId, dayOfWeek);
 
-    // Метод для сохранения планов дня пользователя
-    public void saveUserDayPlans(String userId, List<DayPlan> weekPlans, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
-        CollectionReference userDayPlansCollection = _db.collection("users").document(userId).collection("dayPlans");
-        CountDownLatch latch = new CountDownLatch(weekPlans.size());
-        Handler handler = new Handler(Looper.getMainLooper());
+        dayPlanRef.get()
+                .addOnSuccessListener(documentSnapshot -> handleDayPlanDocument(documentSnapshot, onSuccess, onFailure))
+                .addOnFailureListener(onFailure);
+    }
 
-        for (DayPlan dayPlan : weekPlans) {
-            userDayPlansCollection.add(dayPlan)
-                    .addOnSuccessListener(aVoid -> {
-                        latch.countDown();
-                    })
-                    .addOnFailureListener(e -> {
-                        latch.countDown();
-                        handler.post(() -> onFailureListener.onFailure(e));
-                    });
+
+    /**
+     * Копирует дневные планы в профиль пользователя.
+     *
+     * @param userId    идентификатор пользователя.
+     * @param documents список документов дневных планов.
+     * @param onSuccess callback, вызываемый при успешной операции.
+     * @param onFailure callback, вызываемый при ошибке операции.
+     */
+    private void copyDayPlansToUser(String userId, List<DocumentSnapshot> documents, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        WriteBatch batch = _db.batch();
+        for (DocumentSnapshot document : documents) {
+            DayPlan dayPlan = document.toObject(DayPlan.class);
+            if (dayPlan != null) {
+                dayPlan.setDayPlanId(document.getId());
+                DocumentReference userDayPlanRef = getUserDayPlanReference(userId, dayPlan.getDayPlanId());
+                batch.set(userDayPlanRef, dayPlan.toMap());
+            }
+        }
+        batch.commit().addOnSuccessListener(onSuccess).addOnFailureListener(onFailure);
+    }
+
+    /**
+     * Обрабатывает обновление времени выполнения упражнения в дневном плане.
+     *
+     * @param documentSnapshot документ дневного плана.
+     * @param exerciseId       идентификатор упражнения.
+     * @param timeElapsed      время, затраченное на выполнение упражнения.
+     * @param dayPlanRef       ссылка на документ дневного плана.
+     * @param onSuccess        callback, вызываемый при успешной операции.
+     * @param onFailure        callback, вызываемый при ошибке операции.
+     */
+    private void handleExerciseTimeUpdate(DocumentSnapshot documentSnapshot, String exerciseId, float timeElapsed,
+                                          DocumentReference dayPlanRef, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        DayPlan dayPlan = documentSnapshot.toObject(DayPlan.class);
+        if (dayPlan == null || dayPlan.getExercisesGrossMotor() == null) {
+            onFailure.onFailure(new Exception("Массив упражнений пуст или отсутствует."));
+            return;
         }
 
-        // Запуск потока для ожидания завершения добавления всех планов
-        new Thread(() -> {
-            try {
-                latch.await();
-                handler.post(() -> onSuccessListener.onSuccess(null));
-            } catch (InterruptedException e) {
-                handler.post(() -> onFailureListener.onFailure(e));
-            }
-        }).start();
+        if (updateExerciseTime(dayPlan.getExercisesGrossMotor(), exerciseId, timeElapsed)) {
+            saveUpdatedDayPlan(dayPlanRef, dayPlan.getExercisesGrossMotor(), onSuccess, onFailure);
+        } else {
+            onFailure.onFailure(new Exception("Упражнение с указанным ID не найдено."));
+        }
     }
 
+    /**
+     * Обновляет время выполнения для указанного упражнения.
+     *
+     * @param exercises   список упражнений.
+     * @param exerciseId  идентификатор упражнения.
+     * @param timeElapsed время, затраченное на выполнение упражнения.
+     * @return true, если упражнение найдено и обновлено; false, если упражнение не найдено.
+     */
+    private boolean updateExerciseTime(List<Exercise> exercises, String exerciseId, float timeElapsed) {
+        for (Exercise exercise : exercises) {
+            if (exercise.getId().equals(exerciseId)) {
+                exercise.setCompletedTime(timeElapsed);
+                return true;
+            }
+        }
+        return false;
+    }
 
-//    public void markExerciseAsCompleted(String userId, String weekDay, String exerciseId,
-//                                        float timeElapsed, OnSuccessListener<Void> onSuccessListener,
-//                                        OnFailureListener onFailureListener) {
-//        CollectionReference userDayPlansCollection = _db.collection("users").document(userId)
-//                .collection("dayPlans");
-//        Log.d("markExercise", "weekDay: " + weekDay);
-//
-//
-//        userDayPlansCollection.whereEqualTo("weekDay", weekDay)
-//                .limit(1)
-//                .get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    if (!queryDocumentSnapshots.isEmpty()) {
-//                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-//
-//                        List<Map<String, Object>> exercises = (List<Map<String, Object>>) document.get("exercises");
-//                        if (exercises != null) {
-//                            for (Map<String, Object> exercise : exercises) {
-//                                if (exercise.get("id").equals(exerciseId)) {
-//                                    exercise.put("completed", true);
-//                                    exercise.put("completedTime", timeElapsed);
-//                                    break;
-//                                }
-//                            }
-//
-//                            document.getReference().set(Collections.singletonMap("exercises", exercises), SetOptions.merge())
-//                                    .addOnSuccessListener(onSuccessListener)
-//                                    .addOnFailureListener(onFailureListener);
-//                        } else {
-//                            onFailureListener.onFailure(new Exception("Упражнения не найдены"));
-//                        }
-//                    } else {
-//                        onFailureListener.onFailure(new Exception("План на день не найден для указанного дня недели"));
-//                    }
-//                })
-//                .addOnFailureListener(onFailureListener);
-//    }
+    /**
+     * Сохраняет обновленный дневной план в Firestore.
+     *
+     * @param dayPlanRef       ссылка на документ дневного плана.
+     * @param updatedExercises обновленный список упражнений.
+     * @param onSuccess        callback, вызываемый при успешной операции.
+     * @param onFailure        callback, вызываемый при ошибке операции.
+     */
+    private void saveUpdatedDayPlan(DocumentReference dayPlanRef, List<Exercise> updatedExercises,
+                                    OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        Map<String, Object> updatedData = new HashMap<>();
+        updatedData.put("exercisesGrossMotor", updatedExercises);
+
+        dayPlanRef.set(updatedData, SetOptions.merge())
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * Обрабатывает получение документа дневного плана и преобразует его в объект DayPlan.
+     *
+     * @param documentSnapshot документ дневного плана.
+     * @param onSuccess        callback, вызываемый при успешной операции с объектом DayPlan.
+     * @param onFailure        callback, вызываемый при ошибке операции.
+     */
+    private void handleDayPlanDocument(DocumentSnapshot documentSnapshot, OnSuccessListener<DayPlan> onSuccess, OnFailureListener onFailure) {
+        if (documentSnapshot.exists()) {
+            DayPlan dayPlan = parseDayPlanDocument(documentSnapshot);
+            if (dayPlan != null) {
+                onSuccess.onSuccess(dayPlan);
+            } else {
+                onFailure.onFailure(new Exception("Не удалось преобразовать документ в объект DayPlan."));
+            }
+        } else {
+            onFailure.onFailure(new Exception("Документ плана дня не найден."));
+        }
+    }
+
+    /**
+     * Преобразует документ дневного плана в объект DayPlan.
+     *
+     * @param documentSnapshot документ дневного плана.
+     * @return объект DayPlan или null, если преобразование не удалось.
+     */
+    private DayPlan parseDayPlanDocument(DocumentSnapshot documentSnapshot) {
+        DayPlan dayPlan = documentSnapshot.toObject(DayPlan.class);
+        if (dayPlan != null) {
+            dayPlan.setDayPlanId(documentSnapshot.getId());
+        }
+        return dayPlan;
+    }
+
+    /**
+     * Получает ссылку на документ дневного плана для указанного пользователя и идентификатора плана.
+     *
+     * @param userId    идентификатор пользователя.
+     * @param dayPlanId идентификатор дневного плана.
+     * @return ссылка на документ дневного плана.
+     */
+    private DocumentReference getUserDayPlanReference(String userId, String dayPlanId) {
+        return _db.collection("users")
+                .document(userId)
+                .collection("dayPlans")
+                .document(dayPlanId);
+    }
 
 }

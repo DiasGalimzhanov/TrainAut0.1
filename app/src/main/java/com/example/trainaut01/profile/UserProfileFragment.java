@@ -42,7 +42,6 @@ public class UserProfileFragment extends Fragment {
     private ImageView _userProfileImage, _btnExit;
     private Button _btnUpdateProfile, _btnSupport, _btnWatchConnect;
     private AppComponent appComponent;
-//    private AvatarRepository avatarRepository;
     private SharedPreferences sharedPref;
 
     @Inject
@@ -70,7 +69,7 @@ public class UserProfileFragment extends Fragment {
                 SharedPreferences userData = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
                 clearSharedPreference(userData);
 
-                SharedPreferences userProgress = getActivity().getSharedPreferences("user_progress", getActivity().MODE_PRIVATE);
+                SharedPreferences userProgress = getActivity().getSharedPreferences("child_progress", getActivity().MODE_PRIVATE);
                 clearSharedPreference(userProgress);
 
                 FirebaseAuth.getInstance().signOut();

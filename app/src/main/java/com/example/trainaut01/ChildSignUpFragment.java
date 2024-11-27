@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +17,7 @@ import android.widget.Spinner;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.enums.Gender;
-import com.example.trainaut01.home.HomeFragment;
 import com.example.trainaut01.models.Child;
-import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.DayPlanRepository;
@@ -29,13 +26,7 @@ import com.example.trainaut01.utils.DatePickerUtils;
 import com.example.trainaut01.utils.SpinnerUtils;
 import com.example.trainaut01.utils.ToastUtils;
 import com.example.trainaut01.utils.ValidationUtils;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -171,7 +162,7 @@ public class ChildSignUpFragment extends Fragment {
 
 
     private void addDayPlans(String userId) {
-        _dayPlanRepository.addAllToUser(userId, unused -> {
+        _dayPlanRepository.addAllDayPlansToUser(userId, unused -> {
 
             navigateToBaseActivity();
 

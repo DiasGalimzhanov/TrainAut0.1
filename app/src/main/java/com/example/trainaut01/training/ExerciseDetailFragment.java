@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +22,16 @@ import androidx.fragment.app.FragmentManager;
 import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.Exercise;
+import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.ExerciseRepository;
-import com.example.trainaut01.repository.UserRepository;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -38,6 +39,8 @@ public class ExerciseDetailFragment extends Fragment {
 
     private static final String ARG_DAY = "day";
     private static final String USER_ID = "userId";
+
+    private DayPlan _currentDayPlan;
 
     private TextView _tvTimer;
     private CountDownTimer _timer;
@@ -52,12 +55,14 @@ public class ExerciseDetailFragment extends Fragment {
 
     private String _text;
     private List<Exercise> exercises;
-    private int currentExerciseIndex = 0;
+    private int _currentExerciseIndex = 0;
 
     private AppComponent _appComponent;
 
+
     @Inject
-    UserRepository userRepository;
+    ChildRepository _childRepository;
+
 
     @Inject
     DayPlanRepository dayPlanRepository;
@@ -74,7 +79,6 @@ public class ExerciseDetailFragment extends Fragment {
         return fragment;
     }
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -88,14 +92,14 @@ public class ExerciseDetailFragment extends Fragment {
 
             loadExerciseProgress();
 
-            dayPlanRepository.getExercisesForUserAndDay(userId, weekDay, new OnSuccessListener<List<Exercise>>() {
-                @Override
-                public void onSuccess(List<Exercise> exerciseList) {
-                    exercises = exerciseList;
-                    setupProgress(exercises.size());
-                    if (!exercises.isEmpty()) {
-                        if (currentExerciseIndex < exercises.size()) {
-                            displayExerciseDetails(exercises.get(currentExerciseIndex));
+            dayPlanRepository.getDayPlanForUserAndDay(userId, weekDay, dayPlan -> {
+                if (dayPlan != null) {
+                    _currentDayPlan = dayPlan;
+                    exercises = dayPlan.getExercisesGrossMotor();
+                    setupProgress(exercises != null ? exercises.size() : 0);
+                    if (exercises != null && !exercises.isEmpty()) {
+                        if (_currentExerciseIndex < exercises.size()) {
+                            displayExerciseDetails(exercises.get(_currentExerciseIndex));
                             setupStartButton();
                         } else {
                             Toast.makeText(getContext(), "Все упражнения завершены", Toast.LENGTH_SHORT).show();
@@ -103,17 +107,17 @@ public class ExerciseDetailFragment extends Fragment {
                     } else {
                         Toast.makeText(getContext(), "Нет упражнений для этого дня", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(getContext(), "План дня не найден или пустой", Toast.LENGTH_SHORT).show();
                 }
-            }, new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), "Ошибка загрузки упражнений", Toast.LENGTH_SHORT).show();
-                }
+            }, error -> {
+                Toast.makeText(getContext(), "Ошибка загрузки плана дня", Toast.LENGTH_SHORT).show();
             });
         }
 
         return view;
     }
+
 
     public void init(View view) {
         _appComponent = DaggerAppComponent.create();
@@ -145,7 +149,7 @@ public class ExerciseDetailFragment extends Fragment {
 
 
     private void saveInSharedPreference(String key, Object value) {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_progress", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("child_progress", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if (value instanceof Integer) {
@@ -166,11 +170,13 @@ public class ExerciseDetailFragment extends Fragment {
 
     private void loadExerciseProgress() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_progress", Context.MODE_PRIVATE);
-        currentExerciseIndex = sharedPreferences.getInt("currentExerciseIndex", 0);
+        _currentExerciseIndex = sharedPreferences.getInt("currentExerciseIndex", 0);
         _timeElapsed = sharedPreferences.getFloat("timeElapsed", 0);
     }
 
     private void displayExerciseDetails(Exercise exercise) {
+        Log.d("ExerciseDetailFragment", "Отображение упражнения: " + exercise.getName());
+
         _tvRecommendations.setText(_text);
         _tvName.setText(exercise.getName());
         _tvDescription.setText(exercise.getDescription());
@@ -186,7 +192,7 @@ public class ExerciseDetailFragment extends Fragment {
         int rewardPoints = exercise.getRewardPoints();
         _tvPoints.setText("За выполнение этого упражнения вы получите +" + rewardPoints + " EXP");
 
-        _tvAllPointsForDay.setText("За выполнение всех упражнений вы получите +800 EXP");
+        _tvAllPointsForDay.setText("За выполнение всех упражнений вы получите +" + _currentDayPlan.getRewardPointsDay() + "EXP");
 
         Picasso.get().load(exercise.getImageUrl()).into(_ivImageUrl);
     }
@@ -196,7 +202,6 @@ public class ExerciseDetailFragment extends Fragment {
         _pbTraining.setProgress(0);
         _tvProgressTraining.setText(String.format(Locale.getDefault(), "%d/%d", 0, exercises.size()));
     }
-
 
 
     private void updateProgress(int completedExercises) {
@@ -232,19 +237,28 @@ public class ExerciseDetailFragment extends Fragment {
     }
 
     private void finishExercise() {
+        Log.d("ExerciseDetailFragment", "Упражнение завершено. Индекс: " + _currentExerciseIndex);
         stopTimer();
-        completeExercise(exercises.get(currentExerciseIndex));
+        completeExercise(exercises.get(_currentExerciseIndex));
     }
 
+
+
     private void nextExercise() {
-        currentExerciseIndex++;
-        saveInSharedPreference("currentExerciseIndex", currentExerciseIndex);
-        if (currentExerciseIndex < exercises.size()) {
+        Log.d("ExerciseDetailFragment", "Переход к следующему упражнению. Индекс: " + _currentExerciseIndex);
+
+        _currentExerciseIndex++;
+        saveInSharedPreference("currentExerciseIndex", _currentExerciseIndex);
+
+        if (_currentExerciseIndex < exercises.size()) {
+            Log.d("ExerciseDetailFragment", "Отображение следующего упражнения.");
             resetTimer();
-            displayExerciseDetails(exercises.get(currentExerciseIndex));
+            displayExerciseDetails(exercises.get(_currentExerciseIndex));
             updateButtonState("Начать упражнение", R.color.black, R.drawable.back_start_exercise);
         } else {
+            Log.d("ExerciseDetailFragment", "Все упражнения завершены.");
             Toast.makeText(getContext(), "Вы завершили все упражнения на сегодня!", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -255,60 +269,84 @@ public class ExerciseDetailFragment extends Fragment {
     }
 
     private void completeExercise(Exercise exercise) {
-        String exerciseId = exercise.getId();
-        saveInSharedPreference("currentExerciseIndex", currentExerciseIndex);
+        if (_currentDayPlan == null) {
+            Toast.makeText(getContext(), "План дня отсутствует.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-//        dayPlanRepository.markExerciseAsCompleted(getArguments().getString(USER_ID), getArguments().getString(ARG_DAY).toUpperCase(), exerciseId, _timeElapsed,
-//                new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        updateProgress(currentExerciseIndex + 1);
-//                        if (currentExerciseIndex + 1 < exercises.size()) {
-//                            updateButtonState("Далее", R.color.black, R.drawable.back_start_exercise);
-//                        } else {
-//                            updateUserExperience();
-//                            updateUserCountDays();
-//                            updateButtonState("Завершить", R.color.white, R.drawable.background_finish_exercise);
-//                            Bundle result = new Bundle();
-//                            saveInSharedPreference("currentExerciseIndex", 0);
-//                            saveInSharedPreference("isCompletedTodayTraining", true);
-//                            result.putBoolean("isCompletedTodayTraining", true);
-//                            getParentFragmentManager().setFragmentResult("trainingResult", result);
-//                            goToRewardFragment();
-//                        }
-//                    }
-//                },
-//                new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//        );
+        String userId = getArguments().getString(USER_ID);
+        String childId = getChildIdFromPreferences();
+        String dayPlanId = getArguments().getString(ARG_DAY).toLowerCase();
+        String exerciseId = exercise.getId();
+        float timeElapsed = _timeElapsed;
+        int rewardPoints = _currentDayPlan.getRewardPointsDay();
+
+        saveInSharedPreference("currentExerciseIndex", _currentExerciseIndex);
+
+        dayPlanRepository.updateExerciseCompletedTime(userId, dayPlanId, exerciseId, timeElapsed, aVoid -> {
+            Log.d("ExerciseDetailFragment", "Упражнение завершено и время выполнения обновлено.");
+            updateProgress(_currentExerciseIndex + 1);
+
+            if (_currentExerciseIndex + 1 < exercises.size()) {
+                updateButtonState("Далее", R.color.black, R.drawable.back_start_exercise);
+            } else {
+                // Обновляем опыт ребенка
+                updateChildExperience(userId, childId, rewardPoints, requireContext());
+
+                // Обновляем количество дней
+                updateChildCountDays(userId, childId, requireContext());
+
+                updateButtonState("Завершить", R.color.white, R.drawable.background_finish_exercise);
+
+                saveInSharedPreference("currentExerciseIndex", 0);
+                saveInSharedPreference("isCompletedTodayTraining", true);
+
+                Bundle result = new Bundle();
+                result.putBoolean("isCompletedTodayTraining", true);
+                getParentFragmentManager().setFragmentResult("trainingResult", result);
+
+                goToRewardFragment();
+            }
+        }, e -> {
+            Log.e("ExerciseDetailFragment", "Ошибка завершения упражнения: ", e);
+            Toast.makeText(getContext(), "Ошибка завершения упражнения.", Toast.LENGTH_SHORT).show();
+        });
     }
 
-    private void updateUserExperience() {
-        int points = 800;
-        SharedPreferences sharedPref = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+
+
+    /**
+     * Обновляет опыт ребенка, добавляя новые очки, и сохраняет изменения в Firestore и SharedPreferences.
+     *
+     * @param userId    идентификатор пользователя.
+     * @param childId   идентификатор ребенка.
+     * @param newPoints количество новых очков опыта.
+     * @param context   контекст для доступа к SharedPreferences.
+     */
+    private void updateChildExperience(String userId, String childId, int newPoints, Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
+
         int currentExp = sharedPref.getInt("exp", 0);
-        currentExp += points;
+        int updatedExp = currentExp + newPoints;
 
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("exp", currentExp).apply();
+        editor.putInt("exp", updatedExp);
+        editor.apply();
 
-        userRepository.updateUserItem("exp", currentExp, getContext());
+        _childRepository.updateChildItem(userId, childId, "exp", updatedExp, context);
     }
 
 
-    private void updateUserCountDays() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+
+    private void updateChildCountDays(String userId, String childId, Context context) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences("child_data", Context.MODE_PRIVATE);
         int currentCountDays = sharedPref.getInt("countDays", 0);
         currentCountDays++;
 
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt("countDays", currentCountDays).apply();
 
-        userRepository.updateUserItem("countDays", currentCountDays, getContext());
+        _childRepository.updateChildItem(userId, childId, "countDays", currentCountDays, context);
     }
 
     private void startTimer() {
@@ -318,11 +356,12 @@ public class ExerciseDetailFragment extends Fragment {
                 _timeElapsed += 1000;
                 int seconds = (int) (_timeElapsed / 1000) % 60;
                 int minutes = (int) (_timeElapsed / (1000 * 60)) % 60;
-                _tvTimer.setText(String.format(Locale.getDefault(), "Time: %02d:%02d",  minutes, seconds));
+                _tvTimer.setText(String.format(Locale.getDefault(), "Time: %02d:%02d", minutes, seconds));
             }
 
             @Override
-            public void onFinish() {}
+            public void onFinish() {
+            }
         };
         _timer.start();
     }
@@ -349,5 +388,18 @@ public class ExerciseDetailFragment extends Fragment {
                 .replace(R.id.mainTraining, rewardFragment)
                 .commit();
     }
+
+
+    /**
+     * Извлекает идентификатор ребенка из SharedPreferences.
+     *
+     * @return идентификатор ребенка (childId), или пустую строку, если идентификатор не найден.
+     */
+    private String getChildIdFromPreferences() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("child_data", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("childId", "");
+    }
+
+
 
 }
