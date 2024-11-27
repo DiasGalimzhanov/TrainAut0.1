@@ -268,10 +268,18 @@ public class DayPlanRepository {
      * @return ссылка на документ дневного плана.
      */
     private DocumentReference getUserDayPlanReference(String userId, String dayPlanId) {
+        if (userId == null || userId.isEmpty()) {
+            throw new IllegalArgumentException("UserId не может быть пустым.");
+        }
+        if (dayPlanId == null || dayPlanId.isEmpty()) {
+            throw new IllegalArgumentException("DayPlanId не может быть пустым.");
+        }
+
         return _db.collection("users")
                 .document(userId)
                 .collection("dayPlans")
                 .document(dayPlanId);
     }
+
 
 }

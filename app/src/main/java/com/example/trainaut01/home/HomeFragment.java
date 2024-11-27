@@ -27,8 +27,10 @@ import com.example.trainaut01.models.Avatar;
 import com.example.trainaut01.models.Exercise;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.AvatarRepository;
+import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.NewsRepository;
+import com.example.trainaut01.repository.UserRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -129,9 +131,6 @@ public class HomeFragment extends Fragment {
         String fullName = sharedPref.getString("fullName", "Гость");
         tvHello.setText(String.format("Привет, %s", fullName));
 
-        int exp = sharedPref.getInt("exp", 0);
-        int lvl = exp / 5000;
-
         loadAvatar(8);
     }
 
@@ -199,6 +198,12 @@ public class HomeFragment extends Fragment {
      */
     private void loadExercises() {
         String userId = getUserId();
+        if (userId.isEmpty()) {
+            Log.e("HomeFragment", "Не удалось получить userId. Убедитесь, что пользователь авторизован.");
+            Toast.makeText(getContext(), "Ошибка загрузки данных: пользователь не авторизован.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String dayOfWeek = getCurrentDayOfWeek();
 
         dayPlanRepository.getDayPlanForUserAndDay(userId, dayOfWeek.toLowerCase(), dayPlan -> {
@@ -208,7 +213,7 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "План дня отсутствует или пуст", Toast.LENGTH_SHORT).show();
             }
         }, error -> {
-            Log.e("HOME", "Ошибка загрузки плана дня: ", error);
+            Log.e("HomeFragment", "Ошибка загрузки плана дня: ", error);
             Toast.makeText(getActivity(), "Не удалось загрузить упражнения", Toast.LENGTH_SHORT).show();
         });
     }

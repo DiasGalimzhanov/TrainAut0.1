@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.models.Child;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -79,7 +80,6 @@ public class ChildRepository{
                 .addOnFailureListener(onFailure);
     }
 
-
     /**
      * Получить ссылку на коллекцию `child` для конкретного пользователя.
      */
@@ -145,5 +145,72 @@ public class ChildRepository{
                 .addOnFailureListener(e -> {
                     Toast.makeText(context, "Ошибка при обновлении поля: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * Загружает данные первого ребенка и сохраняет их в SharedPreferences.
+     *
+     * @param userId  Идентификатор пользователя.
+     * @param context Контекст для доступа к SharedPreferences.
+     */
+    public void saveChildData(String userId, Context context) {
+        getFirstChild(userId, childData -> {
+            if (childData != null) {
+                saveChildToPreferences(childData, context);
+                Toast.makeText(context, "Данные ребенка сохранены", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Данные ребенка отсутствуют", Toast.LENGTH_SHORT).show();
+            }
+        }, error -> {
+            Toast.makeText(context, "Ошибка загрузки данных ребенка: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+
+
+    /**
+     * Сохраняет данные ребенка в SharedPreferences.
+     *
+     * @param childData Данные ребенка.
+     * @param context   Контекст для доступа к SharedPreferences.
+     */
+    private void saveChildToPreferences(Map<String, Object> childData, Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString("childId", (String) childData.get("childId"));
+        editor.putString("fullName", (String) childData.get("fullName"));
+        editor.putString("birthDate", (String) childData.get("birthDate"));
+        editor.putString("gender", (String) childData.get("gender"));
+        editor.putString("diagnosis", (String) childData.get("diagnosis"));
+        editor.putFloat("height", ((Number) childData.get("height")).floatValue());
+        editor.putFloat("weight", ((Number) childData.get("weight")).floatValue());
+        editor.putInt("exp", ((Number) childData.get("exp")).intValue());
+        editor.putInt("lvl", ((Number) childData.get("lvl")).intValue());
+        editor.putInt("countDays", ((Number) childData.get("countDays")).intValue());
+
+        editor.apply();
+    }
+
+    /**
+     * Получить первого ребенка из коллекции `child` для конкретного пользователя.
+     *
+     * @param userId    Идентификатор пользователя.
+     * @param onSuccess Callback для успешного получения данных ребенка.
+     * @param onFailure Callback для обработки ошибок.
+     */
+    public void getFirstChild(String userId, OnSuccessListener<Map<String, Object>> onSuccess, OnFailureListener onFailure) {
+        getChildCollection(userId)
+                .limit(1) // Ограничиваем запрос одним результатом
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot childSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        onSuccess.onSuccess(childSnapshot.getData());
+                    } else {
+                        onSuccess.onSuccess(null);
+                    }
+                })
+                .addOnFailureListener(onFailure);
     }
 }
