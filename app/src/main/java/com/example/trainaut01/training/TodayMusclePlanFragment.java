@@ -212,7 +212,7 @@
         }
 
         private void toggleButtonState() {
-            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user_progress", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("child_progress", Context.MODE_PRIVATE);
             boolean isFinishDailyTraining = sharedPreferences.getBoolean("isCompletedTodayTraining", false);
 
             setButtonState(_btnGoToTraining, isFinishDailyTraining);

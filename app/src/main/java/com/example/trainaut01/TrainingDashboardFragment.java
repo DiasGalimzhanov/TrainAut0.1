@@ -21,8 +21,7 @@ import com.example.trainaut01.adapter.CalendarAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.models.CalendarDay;
-import com.example.trainaut01.profile.SupportFragment;
-import com.example.trainaut01.repository.UserProgressRepository;
+import com.example.trainaut01.repository.ChildProgressRepository;
 import com.example.trainaut01.training.AAC.CognitiveExerciseFragment;
 import com.example.trainaut01.training.ProgressFragment;
 import com.example.trainaut01.training.TodayMusclePlanFragment;
@@ -47,13 +46,13 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     private RecyclerView _calendarRecyclerView;
     private CalendarAdapter _calendarAdapter;
     private List<CalendarDay> _calendarDays;
-    private LinearLayout _loyoutProgress;
+    private LinearLayout _layoutProgress;
     private int _currentDay;
 
     private AppComponent _appComponent;
 
     @Inject
-    UserProgressRepository userProgressRepository;
+    ChildProgressRepository _childProgressRepository;
 
     @Nullable
     @Override
@@ -66,9 +65,9 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         setButtonListenerToOpenFragment(_btnExercisesMotor, new TodayMusclePlanFragment());
         setButtonListenerToOpenFragment(_btnAAC, new CognitiveExerciseFragment());
 
-        loadUserProgress();
+        loadChildProgress();
 
-        _loyoutProgress.setOnClickListener(new View.OnClickListener() {
+        _layoutProgress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
@@ -87,9 +86,11 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
 
         _btnExercisesMotor = view.findViewById(R.id.btnExercisesMotor);
         _btnAAC = view.findViewById(R.id.btnAAC);
-        _loyoutProgress = view.findViewById(R.id.layoutProgress);
+        _layoutProgress = view.findViewById(R.id.layoutProgress);
         _calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         _currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+        setupCalendar();
         Log.d("TrainingDashboardFragment", "Initialized components");
     }
 
@@ -123,6 +124,8 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     }
 
     private void generateCalendarDays() {
+        _calendarDays.clear();
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
 
@@ -142,32 +145,39 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         Log.d("TrainingDashboardFragment", "Generated calendar days: " + _calendarDays.size());
     }
 
+
     public void markDayAsCompleted(int day) {
         int offset = getFirstDayOffset();
         int index = day + offset - 1;
 
         if (day > 0 && index < _calendarDays.size()) {
-            _calendarDays.get(index).setCompleted(true);
-            _calendarAdapter.notifyItemChanged(index);
+            CalendarDay calendarDay = _calendarDays.get(index);
+            if (!calendarDay.isCompleted()) {
+                calendarDay.setCompleted(true);
+                _calendarAdapter.notifyItemChanged(index);
 
-            Log.d("TrainingDashboardFragment", "Marked day as completed: " + day);
-            saveUserProgress();
+                Log.d("TrainingDashboardFragment", "Marked day as completed: " + day);
+                saveUserProgress();
+            } else {
+                Log.d("TrainingDashboardFragment", "Day " + day + " is already marked as completed.");
+            }
         }
         Log.d("TrainingDashboardFragment", "Offset: " + offset + ", Index: " + index + ", _calendarDays.size(): " + _calendarDays.size());
-
     }
 
-    private void loadUserProgress() {
+
+    private void loadChildProgress() {
         String userId = getUserId();
         if (userId == null) return;
 
         Log.d("TrainingDashboardFragment", "Loading user progress for user: " + userId);
-        checkTodayTrainingCompletion();
         loadUserProgressFromRepository(userId);
+        checkTodayTrainingCompletion();
     }
 
+
     private void checkTodayTrainingCompletion() {
-        SharedPreferences progressPref = requireContext().getSharedPreferences("user_progress", Context.MODE_PRIVATE);
+        SharedPreferences progressPref = requireContext().getSharedPreferences("child_progress", Context.MODE_PRIVATE);
         boolean isCompletedTodayTraining = progressPref.getBoolean("isCompletedTodayTraining", false);
 
         if (isCompletedTodayTraining) {
@@ -177,7 +187,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     }
 
     private void loadUserProgressFromRepository(String userId) {
-        userProgressRepository.loadUserProgress(userId,
+        _childProgressRepository.loadUserProgress(userId,
                 new OnSuccessListener<JSONObject>() {
                     @Override
                     public void onSuccess(JSONObject jsonObject) {
@@ -225,13 +235,16 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
 
             for (int j = 0; j < completedDaysArray.length(); j++) {
                 int day = completedDaysArray.getInt(j);
-                markDayAsCompleted(day);
+                if (day > 0) {
+                    markDayAsCompleted(day);
+                }
             }
             _calendarAdapter.notifyDataSetChanged();
         } catch (Exception e) {
             Log.e("TrainingDashboardFragment", "Failed to load completed days: " + e.getMessage(), e);
         }
     }
+
 
     private int getFirstDayOffset() {
         Calendar calendar = Calendar.getInstance();
@@ -296,7 +309,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         }
 
         private void saveProgressToRepository(String userId, String year, String month, List<Integer> completedDays) {
-            userProgressRepository.saveUserProgress(userId, year, month, completedDays,
+            _childProgressRepository.saveUserProgress(userId, year, month, completedDays,
                     new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
@@ -312,11 +325,11 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
             );
         }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (_calendarDays == null || _calendarDays.isEmpty()) {
-            setupCalendar();
-        }
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (_calendarDays == null || _calendarDays.isEmpty()) {
+//            setupCalendar();
+//        }
+//    }
 }

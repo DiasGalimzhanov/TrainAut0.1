@@ -27,32 +27,49 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
+            android:text="Логин"
+            android:textColor="@color/dark_indigo"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/etLogin"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+             android:layout_marginEnd="20dp"
             android:background="@drawable/edit_text_signup"
             android:textColorHint="@color/violet_blossom"
             android:drawableStart="@drawable/email"
             android:ems="10"
-            android:hint="Адрес Эл. Почты(Email)"
+            android:hint="E-mail"
             android:inputType="text"
             android:paddingStart="10dp"
             android:textAlignment="center"
             android:textColor="@color/indigo"
             android:textSize="18sp" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
+            android:text="Пароль"
+            android:textColor="@color/dark_indigo"
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/edit_text_signup"
             android:drawableStart="@drawable/password"
             android:ems="10"
@@ -67,11 +84,12 @@
 
         <TextView
             android:id="@+id/tvForgotPas"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Забыли свой пароль?(в разработке)"
-            android:textAlignment="center"
+            android:text="Забыли свой пароль?\n(в разработке)"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
             android:textColor="@color/primary"
             android:textSize="16sp" />
 
