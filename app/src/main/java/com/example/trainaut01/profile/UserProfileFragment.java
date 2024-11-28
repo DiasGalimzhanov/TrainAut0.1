@@ -27,6 +27,7 @@ import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.Avatar;
 import com.example.trainaut01.repository.AvatarRepository;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,7 +39,7 @@ import javax.inject.Inject;
 
 
 public class UserProfileFragment extends Fragment {
-    private TextView _parentName, _tvEmail, _tvPhone, _tvBd;
+    private TextView _parentName, _tvEmail, _tvPhone, _tvBd, _city , _child_name, _child_gender_diagnosis, _child_height_weight;
     private ImageView _userProfileImage, _btnExit;
     private Button _btnUpdateProfile, _btnSupport, _btnWatchConnect;
     private AppComponent appComponent;
@@ -71,6 +72,9 @@ public class UserProfileFragment extends Fragment {
 
                 SharedPreferences userProgress = getActivity().getSharedPreferences("child_progress", getActivity().MODE_PRIVATE);
                 clearSharedPreference(userProgress);
+
+                SharedPreferences childData = getActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
+                clearSharedPreference(childData);
 
                 FirebaseAuth.getInstance().signOut();
 
@@ -111,6 +115,7 @@ public class UserProfileFragment extends Fragment {
         appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
         _userProfileImage = view.findViewById(R.id.profile_image);
+        _city = view.findViewById(R.id.parent_city);
         _parentName = view.findViewById(R.id.parent_name);
         _tvEmail = view.findViewById(R.id.parent_email);
         _tvPhone = view.findViewById(R.id.parent_phone);
@@ -119,13 +124,15 @@ public class UserProfileFragment extends Fragment {
         _btnUpdateProfile = view.findViewById(R.id.edit_profile_button);
         _btnSupport = view.findViewById(R.id.support_button);
         _tvBd = view.findViewById(R.id.parent_bd);
+        _child_name = view.findViewById(R.id.child_name);
+        _child_gender_diagnosis = view.findViewById(R.id.child_gender_diagnosis);
+        _child_height_weight = view.findViewById(R.id.child_height_weight);
 
     }
 
     private void loadAvatar(){
-        SharedPreferences userData = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
-        int exp = userData.getInt("exp", 0);
-//        Log.d("EXP", exp);
+        sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        int exp = sharedPref.getInt("exp", 0);
         int lvl = exp / 5000;
         Log.d("HOME", "User experience: " + exp);
 
@@ -183,7 +190,6 @@ public class UserProfileFragment extends Fragment {
         dialog.show();
     }
 
-
     private void verifyPassword(String password) {
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
@@ -208,20 +214,39 @@ public class UserProfileFragment extends Fragment {
 
 
     public void printData() {
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
-        String firstName = sharedPref.getString("firstName", null);
-        String lastName = sharedPref.getString("lastName", null);
+        sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        Log.d("USER DATA", sharedPref.toString());
+
+        String firstName = sharedPref.getString("fullName", null);
         String email = sharedPref.getString("email", null);
+        String city = sharedPref.getString("city", null);
         String phone = sharedPref.getString("phone", null);
         String birthDate = sharedPref.getString("birthDate", null);
 
-        if (firstName != null && lastName != null && email != null && phone != null) {
-            _parentName.setText(firstName + " " + lastName);
-            _tvEmail.setText(email);
-            _tvPhone.setText(phone);
-            _tvBd.setText(birthDate);
+        if (firstName != null && email != null && phone != null) {
+            _parentName.setText("Имя Фамилия: " + firstName);
+            _tvEmail.setText("Почта: " + email);
+            _city.setText("Город: " + city);
+            _tvPhone.setText("Телефон: " + phone);
+            _tvBd.setText("Дата рождения: " + birthDate);
         }
+
+        sharedPref = getActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
+        String childName = sharedPref.getString("fullName", null);
+        String childGender = sharedPref.getString("gender", null);
+        String childDiagnosis = sharedPref.getString("diagnosis", null);
+
+        float childHeight = sharedPref.getFloat("height", 0.0f);
+        float childWeight = sharedPref.getFloat("weight", 0.0f);
+
+        String childGenderDiagnosis = "Пол: " + Gender.fromString(childGender).getDisplayName() + " • " + "Диагноз: " + childDiagnosis;
+        String childHeightWeight = "Рост: " + childHeight + " • " + "Вес: " + childWeight;
+
+        _child_name.setText(childName);
+        _child_gender_diagnosis.setText(childGenderDiagnosis);
+        _child_height_weight.setText(childHeightWeight);
     }
+
 
     public void updateBottomNavigation() {
         ((BottomNavigationUpdater) getActivity()).updateBottomNavigationSelection(this);

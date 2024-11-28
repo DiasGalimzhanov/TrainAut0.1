@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#F3F4F6">
 
     <ScrollView
         android:id="@+id/scrollView3"
@@ -27,18 +27,19 @@
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="70dp"
                     android:gravity="center"
+                    android:layout_marginBottom="20dp"
                     android:text="Прогресс"
-                    android:textColor="@color/indigo"
-                    android:textSize="60sp"
+                    android:textColor="@color/dark_indigo"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/indigo"
+                    android:background="@drawable/btn1_login_back"
                     android:padding="16dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
@@ -46,13 +47,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView2"
                     tools:layout_editor_absoluteX="10dp">
 
-                    <!-- Прогресс бар для уровня -->
                     <TextView
                         android:id="@+id/tvLevel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingBottom="8dp"
-                        android:text="Уровень 5 / 10"
+                        android:text="Уровень 5"
                         android:textColor="#333333"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -66,12 +66,11 @@
                         android:layout_width="0dp"
                         android:layout_height="20dp"
                         android:layout_marginStart="16dp"
-
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/progress_bar_background"
-                        android:elevation="4dp"
+                        android:elevation="10dp"
                         android:progress="60"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHeight_default="wrap"
@@ -96,8 +95,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:background="@drawable/card_background"
+                android:elevation="8dp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2"
                 tools:layout_editor_absoluteX="10dp">
@@ -137,7 +140,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/indigo"
+                android:background="@drawable/btn1_login_back"
                 android:padding="16dp">
 
 
@@ -160,11 +163,26 @@
                     tools:ignore="MissingConstraints" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Ачивки"
+                android:textColor="@color/dark_indigo"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <GridView
                 android:id="@+id/grdAchiv"
                 android:layout_width="match_parent"
                 android:layout_height="542dp"
                 android:gravity="center"
+                android:background="@drawable/card_background"
+                android:elevation="8dp"
+                android:padding="16dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:horizontalSpacing="10dp"
                 android:numColumns="2"
                 android:stretchMode="columnWidth"

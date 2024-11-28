@@ -131,7 +131,10 @@ public class HomeFragment extends Fragment {
         String fullName = sharedPref.getString("fullName", "Гость");
         tvHello.setText(String.format("Привет, %s", fullName));
 
-        loadAvatar(8);
+        int exp = sharedPref.getInt("exp", 0);
+        int lvl = exp / 5000;
+
+        loadAvatar(lvl);
     }
 
     /**

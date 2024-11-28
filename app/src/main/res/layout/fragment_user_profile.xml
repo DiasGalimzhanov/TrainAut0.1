@@ -105,7 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Имя: Иван Иванов"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#666666" />
 
         <TextView
@@ -113,7 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Возраст: 35 лет"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#666666" />
 
         <TextView
@@ -129,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Почта: ivanov@mail.com"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#666666" />
 
         <TextView
@@ -137,7 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Телефон: +7 999 123 45 67"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#666666" />
     </LinearLayout>
 
