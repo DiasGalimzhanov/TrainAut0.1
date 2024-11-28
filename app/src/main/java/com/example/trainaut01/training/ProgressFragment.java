@@ -54,9 +54,12 @@ public class ProgressFragment extends Fragment {
         appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("child_data", Context.MODE_PRIVATE);
         int exp = sharedPreferences.getInt("exp", 0);
         int streakDays = sharedPreferences.getInt("countDays", 0);
+
+//        int exp = 12500;
+//        int streakDays = 121;
 
         setLevelProgress(exp);
         setStreakProgress(streakDays);

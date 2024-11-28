@@ -1,11 +1,9 @@
 package com.example.trainaut01.profile;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -37,111 +34,93 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-
 public class UserProfileFragment extends Fragment {
-    private TextView _parentName, _tvEmail, _tvPhone, _tvBd, _city , _child_name, _child_gender_diagnosis, _child_height_weight;
-    private ImageView _userProfileImage, _btnExit;
-    private Button _btnUpdateProfile, _btnSupport, _btnWatchConnect;
-    private AppComponent appComponent;
-    private SharedPreferences sharedPref;
 
     @Inject
     AvatarRepository avatarRepository;
+
+    private TextView parentName, emailTextView, phoneTextView, birthDateTextView, cityTextView, childNameTextView, childGenderDiagnosisTextView, childHeightWeightTextView;
+    private ImageView userProfileImage, btnExit;
+    private Button btnUpdateProfile, btnSupport, btnWatchConnect;
+    private SharedPreferences sharedPref;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-
-        init(view);
-        printData();
+        initDependencies();
+        initViews(view);
+        loadUserData();
         loadAvatar();
-
-        _btnUpdateProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPasswordDialog();
-            }
-        });
-
-        _btnExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences userData = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
-                clearSharedPreference(userData);
-
-                SharedPreferences userProgress = getActivity().getSharedPreferences("child_progress", getActivity().MODE_PRIVATE);
-                clearSharedPreference(userProgress);
-
-                SharedPreferences childData = getActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
-                clearSharedPreference(childData);
-
-                FirebaseAuth.getInstance().signOut();
-
-                Toast.makeText(getActivity(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-
-                getActivity().finish();
-            }
-        });
-
-        _btnSupport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, new SupportFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
-
-        _btnWatchConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, new WatchFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
-
+        setupListeners();
         return view;
     }
 
-    public void init(View view) {
-        appComponent = DaggerAppComponent.create();
+    private void initDependencies() {
+        AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
-        _userProfileImage = view.findViewById(R.id.profile_image);
-        _city = view.findViewById(R.id.parent_city);
-        _parentName = view.findViewById(R.id.parent_name);
-        _tvEmail = view.findViewById(R.id.parent_email);
-        _tvPhone = view.findViewById(R.id.parent_phone);
-        _btnWatchConnect = view.findViewById(R.id.watch_button);
-        _btnExit = view.findViewById(R.id.btnExit);
-        _btnUpdateProfile = view.findViewById(R.id.edit_profile_button);
-        _btnSupport = view.findViewById(R.id.support_button);
-        _tvBd = view.findViewById(R.id.parent_bd);
-        _child_name = view.findViewById(R.id.child_name);
-        _child_gender_diagnosis = view.findViewById(R.id.child_gender_diagnosis);
-        _child_height_weight = view.findViewById(R.id.child_height_weight);
-
     }
 
-    private void loadAvatar(){
-        sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
-        int exp = sharedPref.getInt("exp", 0);
-        int lvl = exp / 5000;
-        Log.d("HOME", "User experience: " + exp);
+    private void initViews(View view) {
+        userProfileImage = view.findViewById(R.id.profile_image);
+        cityTextView = view.findViewById(R.id.parent_city);
+        parentName = view.findViewById(R.id.parent_name);
+        emailTextView = view.findViewById(R.id.parent_email);
+        phoneTextView = view.findViewById(R.id.parent_phone);
+        btnWatchConnect = view.findViewById(R.id.watch_button);
+        btnExit = view.findViewById(R.id.btnExit);
+        btnUpdateProfile = view.findViewById(R.id.edit_profile_button);
+        btnSupport = view.findViewById(R.id.support_button);
+        birthDateTextView = view.findViewById(R.id.parent_bd);
+        childNameTextView = view.findViewById(R.id.child_name);
+        childGenderDiagnosisTextView = view.findViewById(R.id.child_gender_diagnosis);
+        childHeightWeightTextView = view.findViewById(R.id.child_height_weight);
+    }
 
-        avatarRepository.getAvatarByLevel(lvl, new AvatarRepository.AvatarCallback() {
+    private void loadUserData() {
+        sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        String firstName = sharedPref.getString("fullName", "");
+        String email = sharedPref.getString("email", "");
+        String city = sharedPref.getString("city", "");
+        String phone = sharedPref.getString("phone", "");
+        String birthDate = sharedPref.getString("birthDate", "");
+
+        parentName.setText("Имя Фамилия: " + firstName);
+        emailTextView.setText("Почта: " + email);
+        cityTextView.setText("Город: " + city);
+        phoneTextView.setText("Телефон: " + phone);
+        birthDateTextView.setText("Дата рождения: " + birthDate);
+
+        loadChildData();
+    }
+
+    private void loadChildData() {
+        sharedPref = requireActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
+        String childName = sharedPref.getString("fullName", "");
+        String childGender = sharedPref.getString("gender", "");
+        String childDiagnosis = sharedPref.getString("diagnosis", "");
+        float childHeight = sharedPref.getFloat("height", 0.0f);
+        float childWeight = sharedPref.getFloat("weight", 0.0f);
+
+        String childGenderDiagnosis = "Пол: " + Gender.fromString(childGender).getDisplayName() + " • Диагноз: " + childDiagnosis;
+        String childHeightWeight = "Рост: " + childHeight + " • Вес: " + childWeight;
+
+        childNameTextView.setText(childName);
+        childGenderDiagnosisTextView.setText(childGenderDiagnosis);
+        childHeightWeightTextView.setText(childHeightWeight);
+    }
+
+    private void loadAvatar() {
+        sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        int exp = sharedPref.getInt("exp", 0);
+        int level = exp / 5000;
+
+        avatarRepository.getAvatarByLevel(level, new AvatarRepository.AvatarCallback() {
             @Override
             public void onSuccess(List<Avatar> avatars) {
                 if (!avatars.isEmpty()) {
                     Avatar avatar = avatars.get(0);
-                    Picasso.get().load(avatar.getUrlAvatar()).into(_userProfileImage);
+                    Picasso.get().load(avatar.getUrlAvatar()).into(userProfileImage);
                 }
             }
 
@@ -152,7 +131,29 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
-    private void clearSharedPreference(SharedPreferences sharedPreferences){
+    private void setupListeners() {
+        btnUpdateProfile.setOnClickListener(view -> showPasswordDialog());
+        btnExit.setOnClickListener(view -> logOutUser());
+        btnSupport.setOnClickListener(view -> navigateToFragment(new SupportFragment()));
+        btnWatchConnect.setOnClickListener(view -> navigateToFragment(new WatchFragment()));
+    }
+
+    private void logOutUser() {
+        clearSharedPreferences("user_data");
+        clearSharedPreferences("child_progress");
+        clearSharedPreferences("child_data");
+
+        FirebaseAuth.getInstance().signOut();
+        Toast.makeText(getActivity(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        requireActivity().finish();
+    }
+
+    private void clearSharedPreferences(String prefName) {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(prefName, getActivity().MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
@@ -161,7 +162,6 @@ public class UserProfileFragment extends Fragment {
     private void showPasswordDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-
         View dialogView = inflater.inflate(R.layout.dialog_password, null);
         builder.setView(dialogView);
 
@@ -171,33 +171,24 @@ public class UserProfileFragment extends Fragment {
 
         final AlertDialog dialog = builder.create();
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String password = input.getText().toString();
-                verifyPassword(password);
-                dialog.dismiss();
-            }
+        btnSubmit.setOnClickListener(v -> {
+            String password = input.getText().toString();
+            verifyPassword(password);
+            dialog.dismiss();
         });
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
     }
 
     private void verifyPassword(String password) {
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
         if (email != null) {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            goToUpdateProfile();
+                            navigateToFragment(new UserUpdateFragment());
                         } else {
                             Toast.makeText(getActivity(), "Неправильный пароль", Toast.LENGTH_SHORT).show();
                         }
@@ -205,51 +196,15 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-    private void goToUpdateProfile() {
+    private void navigateToFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new UserUpdateFragment());
+        transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
-
-    public void printData() {
-        sharedPref = getActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
-        Log.d("USER DATA", sharedPref.toString());
-
-        String firstName = sharedPref.getString("fullName", null);
-        String email = sharedPref.getString("email", null);
-        String city = sharedPref.getString("city", null);
-        String phone = sharedPref.getString("phone", null);
-        String birthDate = sharedPref.getString("birthDate", null);
-
-        if (firstName != null && email != null && phone != null) {
-            _parentName.setText("Имя Фамилия: " + firstName);
-            _tvEmail.setText("Почта: " + email);
-            _city.setText("Город: " + city);
-            _tvPhone.setText("Телефон: " + phone);
-            _tvBd.setText("Дата рождения: " + birthDate);
-        }
-
-        sharedPref = getActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
-        String childName = sharedPref.getString("fullName", null);
-        String childGender = sharedPref.getString("gender", null);
-        String childDiagnosis = sharedPref.getString("diagnosis", null);
-
-        float childHeight = sharedPref.getFloat("height", 0.0f);
-        float childWeight = sharedPref.getFloat("weight", 0.0f);
-
-        String childGenderDiagnosis = "Пол: " + Gender.fromString(childGender).getDisplayName() + " • " + "Диагноз: " + childDiagnosis;
-        String childHeightWeight = "Рост: " + childHeight + " • " + "Вес: " + childWeight;
-
-        _child_name.setText(childName);
-        _child_gender_diagnosis.setText(childGenderDiagnosis);
-        _child_height_weight.setText(childHeightWeight);
-    }
-
-
     public void updateBottomNavigation() {
-        ((BottomNavigationUpdater) getActivity()).updateBottomNavigationSelection(this);
+        ((BottomNavigationUpdater) requireActivity()).updateBottomNavigationSelection(this);
     }
 
     @Override

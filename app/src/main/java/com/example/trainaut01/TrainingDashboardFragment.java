@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +43,7 @@ import javax.inject.Inject;
 
 public class TrainingDashboardFragment extends Fragment implements ProgressResetListener {
 
+    private TextView _tvLevelDashboard, _tvExpDashboard;
     private Button _btnExercisesMotor, _btnAAC;
     private RecyclerView _calendarRecyclerView;
     private CalendarAdapter _calendarAdapter;
@@ -66,6 +68,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         setButtonListenerToOpenFragment(_btnAAC, new CognitiveExerciseFragment());
 
         loadChildProgress();
+        loadLevel();
 
         _layoutProgress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +87,8 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         _appComponent = DaggerAppComponent.create();
         _appComponent.inject(this);
 
+        _tvExpDashboard = view.findViewById(R.id.tvExpDashboard);
+        _tvLevelDashboard = view.findViewById(R.id.tvLvlDashboard);
         _btnExercisesMotor = view.findViewById(R.id.btnExercisesMotor);
         _btnAAC = view.findViewById(R.id.btnAAC);
         _layoutProgress = view.findViewById(R.id.layoutProgress);
@@ -145,7 +150,6 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         Log.d("TrainingDashboardFragment", "Generated calendar days: " + _calendarDays.size());
     }
 
-
     public void markDayAsCompleted(int day) {
         int offset = getFirstDayOffset();
         int index = day + offset - 1;
@@ -174,7 +178,6 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         loadUserProgressFromRepository(userId);
         checkTodayTrainingCompletion();
     }
-
 
     private void checkTodayTrainingCompletion() {
         SharedPreferences progressPref = requireContext().getSharedPreferences("child_progress", Context.MODE_PRIVATE);
@@ -244,7 +247,6 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
             Log.e("TrainingDashboardFragment", "Failed to load completed days: " + e.getMessage(), e);
         }
     }
-
 
     private int getFirstDayOffset() {
         Calendar calendar = Calendar.getInstance();
@@ -325,11 +327,13 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
             );
         }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (_calendarDays == null || _calendarDays.isEmpty()) {
-//            setupCalendar();
-//        }
-//    }
+    public void loadLevel(){
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
+        int exp = sharedPreferences.getInt("exp", 0);
+        int level = exp / 5000;
+        int expForNextLevel = 5000;
+
+        _tvLevelDashboard.setText("Уровень: " + level);
+        _tvExpDashboard.setText(exp + " / " + (level + 1) * expForNextLevel + " опыта");
+    }
 }

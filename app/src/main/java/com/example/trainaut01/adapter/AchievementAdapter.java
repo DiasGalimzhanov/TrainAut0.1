@@ -49,7 +49,7 @@ public class AchievementAdapter extends BaseAdapter {
         }
 
 //        int countDays = 51;
-        SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
         int countDays = sharedPref.getInt("countDays", 0);
 
 
@@ -59,7 +59,6 @@ public class AchievementAdapter extends BaseAdapter {
         ImageView imageView = convertView.findViewById(R.id.item_image);
         TextView textView = convertView.findViewById(R.id.item_text);
 
-        // Загрузка изображения с помощью Picasso
         Picasso.get()
                 .load(achievement.getImageUrl())
                 .into(imageView);

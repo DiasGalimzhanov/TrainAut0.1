@@ -21,7 +21,6 @@ public class AchievementRepository {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference achievementRef = db.collection("achievements");
 
-    // Метод для получения списка достижений из Firestore
     public void getAchievements(final AchievementCallback callback) {
         achievementRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -29,23 +28,22 @@ public class AchievementRepository {
                 if (task.isSuccessful()) {
                     List<Achievement> achievements = new ArrayList<>();
                     for (DocumentSnapshot document : task.getResult()) {
-                        int day = document.getLong("day").intValue();  // Получаем день
-                        String description = document.getString("desc");  // Получаем описание
-                        String imageUrl = document.getString("urlAchiv");  // Получаем URL изображения
+                        int day = document.getLong("day").intValue();
+                        String description = document.getString("desc");
+                        String imageUrl = document.getString("urlAchiv");
 
                         Achievement achievement = new Achievement(day, imageUrl, description);
-                        achievements.add(achievement);  // Добавляем объект в список
+                        achievements.add(achievement);
                     }
-                    callback.onSuccess(achievements);  // Возвращаем результат через callback
+                    callback.onSuccess(achievements);
                 } else {
                     Log.d("Firestore", "Error getting documents: ", task.getException());
-                    callback.onFailure(task.getException());  // Возвращаем ошибку через callback
+                    callback.onFailure(task.getException());
                 }
             }
         });
     }
 
-    // Интерфейс для callback для обработки результата получения данных
     public interface AchievementCallback {
         void onSuccess(List<Achievement> achievements);
         void onFailure(Exception e);
