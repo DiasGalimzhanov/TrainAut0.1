@@ -58,9 +58,6 @@ public class ProgressFragment extends Fragment {
         int exp = sharedPreferences.getInt("exp", 0);
         int streakDays = sharedPreferences.getInt("countDays", 0);
 
-//        int exp = 12500;
-//        int streakDays = 121;
-
         setLevelProgress(exp);
         setStreakProgress(streakDays);
         loadAchievements();
