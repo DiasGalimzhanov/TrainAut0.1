@@ -25,6 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="48dp"
+                    android:elevation="8dp"
                     android:background="@drawable/btn1_login_back"
                     app:layout_constraintBottom_toTopOf="@+id/tvName"
                     app:layout_constraintTop_toTopOf="parent"
@@ -105,6 +106,7 @@
                     android:background="@drawable/back_violet_encircle"
                     android:orientation="vertical"
                     android:padding="10dp"
+                    android:elevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvName">
