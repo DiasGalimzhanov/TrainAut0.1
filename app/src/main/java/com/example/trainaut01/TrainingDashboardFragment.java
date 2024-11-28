@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +44,7 @@ import javax.inject.Inject;
 
 public class TrainingDashboardFragment extends Fragment implements ProgressResetListener {
 
+    private TextView _tvLevelDashboard, _tvExpDashboard;
     private Button _btnExercisesMotor, _btnAAC;
     private RecyclerView _calendarRecyclerView;
     private CalendarAdapter _calendarAdapter;
@@ -67,6 +69,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         setButtonListenerToOpenFragment(_btnAAC, new CognitiveExerciseFragment());
 
         loadUserProgress();
+        loadLevel();
 
         _loyoutProgress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +88,8 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         _appComponent = DaggerAppComponent.create();
         _appComponent.inject(this);
 
+        _tvExpDashboard = view.findViewById(R.id.tvExpDashboard);
+        _tvLevelDashboard = view.findViewById(R.id.tvLvlDashboard);
         _btnExercisesMotor = view.findViewById(R.id.btnExercisesMotor);
         _btnAAC = view.findViewById(R.id.btnAAC);
         _loyoutProgress = view.findViewById(R.id.layoutProgress);
@@ -246,7 +251,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         }
     }
 
-        private void saveUserProgress() {
+    private void saveUserProgress() {
             String userId = getUserId();
             if (userId == null) return;
 
@@ -318,5 +323,15 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         if (_calendarDays == null || _calendarDays.isEmpty()) {
             setupCalendar();
         }
+    }
+
+    public void loadLevel(){
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
+        int exp = sharedPreferences.getInt("exp", 0);
+        int level = exp / 5000;
+        int expForNextLevel = 5000;
+
+        _tvLevelDashboard.setText("Уровень: " + level);
+        _tvExpDashboard.setText(exp + " / " + (level + 1) * expForNextLevel + " опыта");
     }
 }
