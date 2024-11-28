@@ -42,8 +42,6 @@ public class ChildRepository{
                 .addOnFailureListener(onFailure);
     }
 
-
-
     /**
      * Обновить данные ребенка в коллекции `child` для конкретного пользователя.
      */
@@ -53,29 +51,6 @@ public class ChildRepository{
         getChildCollection(userId)
                 .document(updateChild.getChildId())
                 .set(updatedChildData)
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
-    }
-
-    /**
-     * Удалить ребенка из коллекции `child` для конкретного пользователя.
-     */
-    public void deleteChild(String userId, String childId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        getChildCollection(userId)
-                .document(childId)
-                .delete()
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
-    }
-
-    /**
-     * Получить данные ребенка из коллекции `child` для конкретного пользователя.
-     */
-    public void getChild(String userId, String childId,
-                         OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
-        getChildCollection(userId)
-                .document(childId)
-                .get()
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }

@@ -17,10 +17,10 @@ import java.util.List;
 
 import com.google.android.gms.tasks.OnFailureListener;
 
-public class UserProgressRepository {
+public class ChildProgressRepository {
     private final FirebaseStorage firebaseStorage;
 
-    public UserProgressRepository() {
+    public ChildProgressRepository() {
         this.firebaseStorage = FirebaseStorage.getInstance();
     }
 
@@ -46,7 +46,7 @@ public class UserProgressRepository {
 
     private StorageReference getUserProgressReference(String userId) {
         StorageReference storageRef = firebaseStorage.getReference();
-        return storageRef.child("user_progress/" + userId + "/progress.json");
+        return storageRef.child("child_progress/" + userId + "/progress.json");
     }
 
     private void getUserProgress(StorageReference userProgressRef, OnSuccessListener<JSONObject> onSuccessListener, OnFailureListener onFailureListener) {

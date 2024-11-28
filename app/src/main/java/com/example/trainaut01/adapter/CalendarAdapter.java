@@ -64,9 +64,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             if (day.getDay() == 0) {
                 dayHolder._dayTextView.setText("");
-                dayHolder._llDayContainer.setBackgroundResource(R.drawable.calendar_day_background);
+                dayHolder._llDayContainer.setBackgroundColor(Color.TRANSPARENT);
+                dayHolder._dayTextView.setBackgroundColor(Color.TRANSPARENT);
                 Log.d("CalendarAdapter", "Binding empty day at position: " + position);
-            } else {
+            }else {
                 dayHolder._dayTextView.setText(String.valueOf(day.getDay()));
                 dayHolder._dayTextView.setTextColor(Color.BLACK);
                 dayHolder._llDayContainer.setBackgroundResource(R.drawable.calendar_day_background);

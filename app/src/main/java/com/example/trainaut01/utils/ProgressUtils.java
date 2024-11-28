@@ -8,7 +8,7 @@ import java.util.Calendar;
 
 public class ProgressUtils {
     public static void resetDailyProgress(Context context, ProgressResetListener listener) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("user_progress", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("child_progress", Context.MODE_PRIVATE);
         int lastSavedDay = sharedPreferences.getInt("lastSavedDayOfWeek", -1);
         int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 

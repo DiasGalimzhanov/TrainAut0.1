@@ -7,8 +7,7 @@ import com.example.trainaut01.repository.AvatarRepository;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.ExerciseRepository;
 import com.example.trainaut01.repository.NewsRepository;
-import com.example.trainaut01.repository.PreferencesRepository;
-import com.example.trainaut01.repository.UserProgressRepository;
+import com.example.trainaut01.repository.ChildProgressRepository;
 import com.example.trainaut01.repository.UserRepository;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -58,8 +57,8 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    public UserProgressRepository provideUserProgressRepository() {
-        return new UserProgressRepository();
+    public ChildProgressRepository provideChildProgressRepository() {
+        return new ChildProgressRepository();
     }
 
     @Provides
