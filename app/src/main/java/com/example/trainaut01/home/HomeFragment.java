@@ -167,7 +167,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onNewsFetched(List<News> newsList) {
                 adapterNews = new NewsAdapter(newsList, newsItem -> {
-                    // Обработка клика по новости
                 });
                 recyclerViewNews.setAdapter(adapterNews);
             }
@@ -209,16 +208,18 @@ public class HomeFragment extends Fragment {
 
         String dayOfWeek = getCurrentDayOfWeek();
 
-        dayPlanRepository.getDayPlanForUserAndDay(userId, dayOfWeek.toLowerCase(), dayPlan -> {
-            if (dayPlan != null && dayPlan.getExercisesGrossMotor() != null) {
-                updateExerciseList(dayPlan.getExercisesGrossMotor());
-            } else {
-                Toast.makeText(getActivity(), "План дня отсутствует или пуст", Toast.LENGTH_SHORT).show();
-            }
-        }, error -> {
-            Log.e("HomeFragment", "Ошибка загрузки плана дня: ", error);
-            Toast.makeText(getActivity(), "Не удалось загрузить упражнения", Toast.LENGTH_SHORT).show();
-        });
+        if (dayOfWeek.equals("Sunday") || dayOfWeek.equals("Saturday")) {
+            updateExerciseList(new ArrayList<>());
+        } else {
+            dayPlanRepository.getDayPlanForUserAndDay(userId, dayOfWeek.toLowerCase(), dayPlan -> {
+                if (dayPlan != null && dayPlan.getExercisesGrossMotor() != null && !dayPlan.getExercisesGrossMotor().isEmpty()) {
+                    updateExerciseList(dayPlan.getExercisesGrossMotor());
+                }
+            }, error -> {
+                Toast.makeText(getActivity(), "Не удалось загрузить упражнения", Toast.LENGTH_SHORT).show();
+            });
+        }
+
     }
 
     /**
@@ -228,8 +229,12 @@ public class HomeFragment extends Fragment {
      */
     private void updateExerciseList(List<Exercise> exercises) {
         exerciseList.clear();
-        for (Exercise exercise : exercises) {
-            exerciseList.add(exercise.getName());
+        if (exercises == null || exercises.isEmpty()) {
+            exerciseList.add("На сегодня занятий нету");
+        } else {
+            for (Exercise exercise : exercises) {
+                exerciseList.add(exercise.getName());
+            }
         }
 
         exerciseAdapter = new ExerciseAdapter(exerciseList);

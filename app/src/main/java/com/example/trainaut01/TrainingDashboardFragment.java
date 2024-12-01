@@ -326,14 +326,6 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
             );
         }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (_calendarDays == null || _calendarDays.isEmpty()) {
-//            setupCalendar();
-//        }
-//    }
-
 
     public void loadLevel(){
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
