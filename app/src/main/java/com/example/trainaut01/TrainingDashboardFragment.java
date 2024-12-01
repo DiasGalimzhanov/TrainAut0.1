@@ -169,7 +169,6 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         Log.d("TrainingDashboardFragment", "Offset: " + offset + ", Index: " + index + ", _calendarDays.size(): " + _calendarDays.size());
     }
 
-
     private void loadChildProgress() {
         String userId = getUserId();
         if (userId == null) return;
@@ -261,7 +260,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         }
     }
 
-        private void saveUserProgress() {
+    private void saveUserProgress() {
             String userId = getUserId();
             if (userId == null) return;
 
@@ -326,6 +325,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
                     }
             );
         }
+
 
     public void loadLevel(){
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
