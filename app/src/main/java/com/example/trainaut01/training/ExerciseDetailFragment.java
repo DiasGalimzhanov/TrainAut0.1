@@ -33,7 +33,6 @@ import com.example.trainaut01.utils.ToastUtils;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -318,7 +317,7 @@ public class ExerciseDetailFragment extends Fragment {
 
         String userId = requireArguments().getString(USER_ID);
         String childId = getChildIdFromPreferences();
-        String dayPlanId = Objects.requireNonNull(requireArguments().getString(ARG_DAY)).toLowerCase();
+        String dayPlanId = requireArguments().getString(ARG_DAY).toLowerCase();
         String exerciseId = exercise.getId();
         float timeElapsed = _timeElapsed;
         int rewardPoints = _currentDayPlan.getRewardPointsDay();
