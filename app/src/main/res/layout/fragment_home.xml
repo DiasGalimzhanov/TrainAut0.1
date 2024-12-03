@@ -49,8 +49,9 @@
                 android:id="@+id/imgNotifications"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:src="@drawable/notification"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
+                android:src="@drawable/notification"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -109,16 +110,16 @@
                 android:layout_weight="1"
                 android:text="Новости"
                 android:textSize="18sp"
-                android:textColor="#4C39CC"
+                android:textColor="@color/indigo"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvMoreNews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Больше новостей"
+                android:text="Больше новостей ->"
                 android:textSize="16sp"
-                android:textColor="#666666" />
+                android:textColor="@color/violet_blossom" />
         </LinearLayout>
 
 
@@ -129,6 +130,13 @@
             android:nestedScrollingEnabled="false"
             android:paddingTop="8dp"
             android:paddingBottom="8dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="25dp"
+            android:background="@color/white" />
 
     </LinearLayout>
 </ScrollView>

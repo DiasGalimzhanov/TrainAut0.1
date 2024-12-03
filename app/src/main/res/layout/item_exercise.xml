@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
 
     <ImageView
         android:id="@+id/imgExerciseIcon"
@@ -19,5 +20,6 @@
         android:layout_height="wrap_content"
         android:text="Упражнение 1"
         android:textSize="16sp"
-        android:textColor="#333333" />
+        android:textColor="@color/dark_indigo"
+        android:gravity="center_vertical" />
 </LinearLayout>

@@ -37,7 +37,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
-                        android:text="За выполнение всех упражнений вы получите +NNN Tricoins"
+                        android:text="За выполнение всех упражнений вы получите +NNN опыта"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="20sp"
@@ -166,6 +166,8 @@
                         android:textColor="@color/indigo"
                         android:textSize="20sp" />
 
+
+
                     <TextView
                         android:id="@+id/tvPoints"
                         android:layout_width="match_parent"
@@ -176,9 +178,10 @@
                         android:drawablePadding="10dp"
                         android:fontFamily="@font/federo_regular"
                         android:paddingStart="10dp"
-                        android:text="За выполнение этого упражнения вы полусите +N Tricoins"
+                        android:text="За выполнение этого упражнения вы получите +N опыта"
                         android:textColor="@color/indigo"
                         android:textSize="20sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -208,7 +211,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="30dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@drawable/btn1_login_back"
+                        android:background="@drawable/back_start_exercise"
                         android:text="Начать упражнение"
                         android:textColor="#ffffff"
                         android:textSize="18sp"
@@ -282,13 +285,15 @@
                         android:textColor="#F4EBEB"
                         android:textSize="20sp" />
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="25dp"
+                        android:background="#F3F4F6" />
 
                 </LinearLayout>
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

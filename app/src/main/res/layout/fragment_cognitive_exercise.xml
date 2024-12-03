@@ -36,7 +36,7 @@
             android:id="@+id/deleteLastButton"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
-            android:background="@drawable/delete_button" />
+            android:background="@drawable/delete" />
     </LinearLayout>
 
     <!-- Кнопка для озвучки выбранных звуков -->
@@ -50,6 +50,8 @@
             android:id="@+id/playSelectedSoundsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn1_login_back"
+            android:padding="5dp"
             android:text="Озвучить выбранные"
             android:layout_marginEnd="16dp"
             android:gravity="center"/>
@@ -59,6 +61,8 @@
             android:id="@+id/clearAllButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn1_login_back"
+            android:padding="5dp"
             android:text="Очистить все"
             android:gravity="center" />
     </LinearLayout>
@@ -82,7 +86,8 @@
             android:layout_column="0"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton1"
             android:text="Привет" />
 
@@ -94,7 +99,8 @@
             android:layout_column="1"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton2"
             android:text="Я" />
 
@@ -106,7 +112,8 @@
             android:layout_column="2"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton3"
             android:text="Хочу" />
 
@@ -118,7 +125,8 @@
             android:layout_column="3"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton4"
             android:text="Кушать" />
 
@@ -131,7 +139,8 @@
             android:layout_column="0"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton5"
             android:text="Пить" />
 
@@ -143,7 +152,8 @@
             android:layout_column="1"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton6"
             android:text="Спать" />
 
@@ -155,7 +165,8 @@
             android:layout_column="2"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton7"
             android:text="Да" />
 
@@ -167,7 +178,8 @@
             android:layout_column="3"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton8"
             android:text="Нет" />
 
@@ -179,7 +191,8 @@
             android:layout_column="0"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton9"
             android:text="9" />
 
@@ -191,7 +204,8 @@
             android:layout_column="1"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton10"
             android:text="10" />
 
@@ -203,7 +217,8 @@
             android:layout_column="2"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:id="@+id/soundButton11"
             android:text="11" />
 
@@ -217,7 +232,8 @@
             android:layout_column="3"
             android:layout_columnWeight="1"
             android:layout_margin="4dp"
-            android:background="@drawable/button_border"
+            android:background="@drawable/back_violet_encircle"
+            android:textColor="@color/dark_indigo"
             android:text="→" />
     </GridLayout>
 
@@ -234,6 +250,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/btn1_login_back"
+            android:padding="5dp"
             android:text="Filter 1" />
 
         <Button
@@ -241,6 +259,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/btn1_login_back"
+            android:padding="5dp"
             android:text="Filter 2" />
 
         <Button
@@ -248,6 +268,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/btn1_login_back"
+            android:padding="5dp"
             android:text="Filter 3" />
 
         <Button
@@ -255,6 +277,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/btn1_login_back"
+            android:padding="5dp"
             android:text="Поиск" />
     </LinearLayout>
 

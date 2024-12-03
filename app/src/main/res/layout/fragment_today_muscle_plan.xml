@@ -83,20 +83,19 @@
                     android:id="@+id/btnBiceps"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_marginStart="160dp"
-                    android:layout_marginTop="288dp"
+                    android:layout_marginStart="128dp"
+                    android:layout_marginTop="264dp"
                     android:background="@drawable/circle_button"
                     android:scaleType="centerInside"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
                 <ImageButton
                     android:id="@+id/btnPectoralMuscles"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_marginStart="204dp"
-                    android:layout_marginTop="308dp"
+                    android:layout_marginStart="192dp"
+                    android:layout_marginTop="236dp"
                     android:background="@drawable/circle_button"
                     android:scaleType="centerInside"
                     app:layout_constraintStart_toStartOf="parent"
@@ -110,10 +109,10 @@
                     android:scaleType="centerInside"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.358"
+                    app:layout_constraintHorizontal_bias="0.23"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.458" />
+                    app:layout_constraintVertical_bias="0.388" />
 
                 <ImageButton
                     android:id="@+id/btnDeltoidMuscles"
@@ -123,17 +122,17 @@
                     android:scaleType="centerInside"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.598"
+                    app:layout_constraintHorizontal_bias="0.659"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.379" />
+                    app:layout_constraintVertical_bias="0.285" />
 
                 <ImageButton
                     android:id="@+id/btnPress"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_marginStart="204dp"
-                    android:layout_marginTop="372dp"
+                    android:layout_marginStart="192dp"
+                    android:layout_marginTop="312dp"
                     android:background="@drawable/circle_button"
                     android:scaleType="centerInside"
                     app:layout_constraintStart_toStartOf="parent"
@@ -144,7 +143,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="192dp"
-                    android:layout_marginTop="276dp"
+                    android:layout_marginTop="228dp"
                     android:background="@drawable/circle_button"
                     android:scaleType="centerInside"
                     app:layout_constraintStart_toStartOf="parent"
@@ -155,7 +154,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="160dp"
-                    android:layout_marginTop="492dp"
+                    android:layout_marginTop="472dp"
                     android:background="@drawable/circle_button"
                     android:scaleType="centerInside"
                     app:layout_constraintStart_toStartOf="parent"
@@ -166,7 +165,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="192dp"
-                    android:layout_marginTop="360dp"
+                    android:layout_marginTop="320dp"
                     android:background="@drawable/circle_button"
                     android:scaleType="centerInside"
                     app:layout_constraintStart_toStartOf="parent"
@@ -174,11 +173,20 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFineMotorTasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:padding="8dp" />
+
             <Button
                 android:id="@+id/btnGoToTraining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/btn_active_today_muscle_plan"
@@ -186,6 +194,13 @@
                 android:textColor="@color/white"
                 tools:layout_editor_absoluteX="7dp"
                 tools:layout_editor_absoluteY="614dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="25dp"
+                android:background="@color/white" />
 
         </LinearLayout>
     </ScrollView>
