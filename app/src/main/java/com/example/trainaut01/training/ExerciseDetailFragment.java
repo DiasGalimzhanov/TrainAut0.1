@@ -61,7 +61,6 @@ public class ExerciseDetailFragment extends Fragment {
     @Inject
     ChildRepository _childRepository;
 
-
     @Inject
     DayPlanRepository dayPlanRepository;
 

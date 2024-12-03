@@ -187,8 +187,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Подключить часы"
+            android:layout_marginBottom="8dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn1_login_back" />
+
+        <Button
+            android:id="@+id/exit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Удалить аккаунт"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_exit" />
     </LinearLayout>
 
 </LinearLayout>

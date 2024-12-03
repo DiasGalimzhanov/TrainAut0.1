@@ -33,7 +33,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginEnd="50dp"
-                    android:background="@drawable/ic_lvl_up" />
+                    android:background="@drawable/level_up" />
 
                 <TextView
                     android:id="@+id/tvLvlDashboard"
