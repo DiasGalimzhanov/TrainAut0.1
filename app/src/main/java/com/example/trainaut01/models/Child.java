@@ -3,6 +3,7 @@ package com.example.trainaut01.models;
 import com.example.trainaut01.enums.Gender;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Child {
-    private String childId = UUID.randomUUID().toString();;
+    private String childId = UUID.randomUUID().toString();
     private String fullName;
     private String birthDate;
     private Gender gender;
@@ -24,6 +25,7 @@ public class Child {
     private int exp = 0;
     private int lvl = 0;
     private int countDays = 0;
+    private List<ChildNote> childNotes;
 
     public Child(String fullName, String birthDate, Gender gender, String diagnosis, float height, float weight) {
         this.fullName = fullName;
@@ -50,6 +52,6 @@ public class Child {
         childMap.put("exp", exp);
         childMap.put("lvl", lvl);
         childMap.put("countDays", countDays);
-        return childMap;
+         return childMap;
     }
 }

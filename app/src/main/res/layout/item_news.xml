@@ -6,46 +6,51 @@
     android:layout_height="300dp"
     android:layout_margin="5dp"
     app:cardCornerRadius="10dp"
-    app:cardElevation="3dp">
+    app:cardElevation="3dp"
+    android:clipToPadding="true"
+    android:clipChildren="true">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
         android:background="@drawable/card_background"
-        android:paddingTop="8dp"
-        android:elevation="2dp"
-        android:orientation="vertical">
+        android:clipToPadding="true">
 
         <ImageView
             android:id="@+id/image_news"
             android:layout_width="match_parent"
             android:layout_height="220dp"
+            android:scaleType="centerCrop"
             app:srcCompat="@drawable/default_image_news" />
 
-        <TextView
-            android:id="@+id/tv_title_news"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/card_background"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#545454"
-            android:lines="2"
-            android:text="title" />
+            android:orientation="vertical"
+            android:paddingTop="8dp">
 
-        <TextView
-            android:id="@+id/tv_subtitle_news"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="4dp"
-            android:textSize="12sp"
-            android:textColor="#545454"
-            android:text="subtitle" />
+            <TextView
+                android:id="@+id/tv_title_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#545454"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:text="Title" />
+
+            <TextView
+                android:id="@+id/tv_subtitle_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#545454"
+                android:layout_marginTop="4dp"
+                android:text="Subtitle" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

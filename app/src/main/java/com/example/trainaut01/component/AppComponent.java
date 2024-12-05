@@ -15,6 +15,7 @@ import com.example.trainaut01.profile.UserUpdateFragment;
 import com.example.trainaut01.repository.AppInitializer;
 import com.example.trainaut01.training.ExerciseDetailFragment;
 import com.example.trainaut01.training.ProgressFragment;
+import com.example.trainaut01.training.TodayMusclePlanFragment;
 
 import javax.inject.Singleton;
 
@@ -38,5 +39,6 @@ public interface AppComponent {
     void inject(TrainingDashboardFragment trainingDashboardFragment);
     void inject(UserProfileFragment userProfileFragment);
     void inject(ChildSignUpFragment childSignUpFragment);
+    void inject(TodayMusclePlanFragment todayMusclePlanFragment);
 }
 

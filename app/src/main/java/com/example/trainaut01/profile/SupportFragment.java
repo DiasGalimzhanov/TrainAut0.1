@@ -22,7 +22,7 @@ public class SupportFragment extends Fragment {
     @Inject
     UserRepository db;
 
-    private EditText _etTheme,_etMessege;
+    private EditText _etTheme, _etMessage;
     private Button _btnSupport;
 
     @Override
@@ -38,9 +38,9 @@ public class SupportFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String theme = _etTheme.getText().toString();
-                String messege = _etMessege.getText().toString();
-                if (!theme.isEmpty() && !messege.isEmpty()) {
-                    db.saveMessageToFirestore(theme, messege, getActivity());
+                String message = _etMessage.getText().toString();
+                if (!theme.isEmpty() && !message.isEmpty()) {
+                    db.saveMessageToFirestore(theme, message, getActivity());
                 }else {
                     Toast.makeText(getActivity(), "Заполните все поля", Toast.LENGTH_SHORT).show();
                 }
@@ -51,10 +51,8 @@ public class SupportFragment extends Fragment {
     }
 
     public void init(View view){
-
-
         _etTheme = view.findViewById(R.id.etThema);
-        _etMessege = view.findViewById(R.id.etMessege);
+        _etMessage = view.findViewById(R.id.etMessege);
         _btnSupport = view.findViewById(R.id.btnSupport);
     }
 }

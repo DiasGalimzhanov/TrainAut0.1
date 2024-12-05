@@ -43,7 +43,8 @@
         <!-- Login and SignUp -->
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".SignUpActivity"
             android:exported="false"

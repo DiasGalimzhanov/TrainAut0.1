@@ -14,6 +14,18 @@
         android:gravity="center"
         android:padding="24dp">
 
+
+        <TextView
+            android:id="@+id/congratulationsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Поздравляем, ты справился со всеми упражнениями!"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/dark_indigo"
+            android:layout_marginBottom="24dp"/>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,31 +47,24 @@
                 app:lottie_loop="false"/>
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/congratulationsText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Поздравляем, ты справился со всеми упражнениями!"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:layout_marginBottom="24dp"/>
 
         <TextView
             android:id="@+id/rewardDescriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ты заслужил награду! 🎉 Теперь у тебя +800 EXP. Продолжай в том же духе!"
+            android:text="Ты заслужил награду! 🎉 Теперь у тебя +0 EXP. Продолжай в том же духе!"
             android:textSize="22sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:background="@drawable/back_violet_encircle"
+            android:padding="8dp"
+            android:textColor="@color/dark_indigo"
+            android:elevation="4dp"
             android:layout_marginBottom="32dp"/>
 
         <Button
             android:id="@+id/btnReturnTrainingDashboard"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Готово, возвращаемся!"
             android:background="@drawable/btn1_login_back"

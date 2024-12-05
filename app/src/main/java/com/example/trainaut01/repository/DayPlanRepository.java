@@ -136,7 +136,7 @@ public class DayPlanRepository {
      * @param onFailure callback, вызываемый при ошибке операции.
      */
     public void getDayPlanForUserAndDay(String userId, String dayOfWeek, OnSuccessListener<DayPlan> onSuccess, OnFailureListener onFailure) {
-        DocumentReference dayPlanRef = getUserDayPlanReference(userId, dayOfWeek);
+        DocumentReference dayPlanRef = getUserDayPlanReference(userId, dayOfWeek.toLowerCase());
 
         dayPlanRef.get()
                 .addOnSuccessListener(documentSnapshot -> handleDayPlanDocument(documentSnapshot, onSuccess, onFailure))

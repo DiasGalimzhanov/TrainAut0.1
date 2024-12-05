@@ -6,6 +6,7 @@ import com.example.trainaut01.enums.FineMotorMuscleGroup;
 import com.example.trainaut01.enums.GrossMotorMuscleGroup;
 import com.example.trainaut01.enums.WeekDay;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DayPlan {
+public class DayPlan implements Serializable {
 
     private String dayPlanId;
     private WeekDay weekDay;

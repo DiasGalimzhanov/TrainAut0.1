@@ -4,8 +4,7 @@ public enum FineMotorMuscleGroup {
     HAND_CONTROL("Развитие пальцев и кистей"),
     FINGER_STRENGTH("Сила пальцев"),
     COORDINATION("Координация и точность"),
-    SENSORY_PERCEPTION("Сенсорные упражнения и тактильное восприятие"),
-    SKILL_REINFORCEMENT("Закрепление навыков");
+    SENSORY_PERCEPTION("Сенсорные упражнения и тактильное восприятие");
 
     private final String displayName;
 

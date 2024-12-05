@@ -1,76 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Найдите нужную статью здесь"
+        android:textAlignment="center"
+        android:textColor="@color/indigo"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp" />
+
+    <EditText
+        android:id="@+id/etSearchNews"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/edit_text_signup"
+        android:drawableStart="@drawable/search"
+        android:drawablePadding="16dp"
+        android:hint="Поиск"
+        android:inputType="text"
+        android:padding="16dp"
+        android:textColor="@color/indigo"
+        android:textColorHint="@color/indigo" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecyclerView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:nestedScrollingEnabled="false"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        tools:listitem="@layout/item_news" />
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:ignore="MissingConstraints">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="25dp"
+        android:background="@color/white" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true">
-
-
-                <TextView
-                    android:id="@+id/textView10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Найдите нужную статью здесь"
-                    android:textAlignment="center"
-                    android:textColor="@color/indigo"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.495"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:layout_editor_absoluteY="16dp" />
-
-                <EditText
-                    android:id="@+id/etSearchNews"
-                    android:layout_width="0dp"
-                    android:layout_height="55dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/edit_text_signup"
-                    android:drawableStart="@drawable/search"
-                    android:drawablePadding="16dp"
-                    android:ems="10"
-                    android:hint="Поиск"
-                    android:inputType="text"
-                    android:padding="16dp"
-                    android:textColor="@color/indigo"
-                    android:textColorHint="@color/indigo"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/RecyclerView1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etSearchNews"
-                tools:layout_editor_absoluteX="0dp" />
-
-        </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
