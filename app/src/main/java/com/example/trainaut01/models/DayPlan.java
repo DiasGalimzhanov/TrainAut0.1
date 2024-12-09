@@ -1,7 +1,5 @@
 package com.example.trainaut01.models;
 
-import android.util.Log;
-
 import com.example.trainaut01.enums.FineMotorMuscleGroup;
 import com.example.trainaut01.enums.GrossMotorMuscleGroup;
 import com.example.trainaut01.enums.WeekDay;

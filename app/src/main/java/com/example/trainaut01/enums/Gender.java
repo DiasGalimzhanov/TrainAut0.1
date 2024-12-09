@@ -1,5 +1,8 @@
 package com.example.trainaut01.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Gender {
     MALE("Мужской"),
     FEMALE("Женский"),
@@ -9,10 +12,6 @@ public enum Gender {
 
     Gender(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public static String[] getGenderValues() {

@@ -4,19 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.models.Child;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class ChildRepository{
 
@@ -36,7 +31,7 @@ public class ChildRepository{
                 .document(child.getChildId())
                 .set(childData)
                 .addOnSuccessListener(aVoid -> {
-                    saveChildDataToPreferences(child, context);
+                    saveChildDataToPreferences(child.toMap(), context);
                     onSuccess.onSuccess(aVoid);
                 })
                 .addOnFailureListener(onFailure);
@@ -60,27 +55,6 @@ public class ChildRepository{
      */
     private CollectionReference getChildCollection(String userId) {
         return _db.collection("users").document(userId).collection("child");
-    }
-
-
-    private void saveChildDataToPreferences(Child child, Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putString("childId", child.getChildId());
-        editor.putString("fullName", child.getFullName());
-        editor.putString("birthDate", child.getBirthDate());
-        editor.putString("gender", child.getGender().toString());
-        editor.putString("diagnosis", child.getDiagnosis());
-        editor.putFloat("height", child.getHeight());
-        editor.putFloat("weight", child.getWeight());
-        editor.putInt("exp", child.getExp());
-        editor.putInt("lvl", child.getExp());
-        editor.putInt("countDays", child.getExp());
-
-        editor.apply();
-
-        Toast.makeText(context, "Данные ребенка сохранены", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -131,7 +105,7 @@ public class ChildRepository{
     public void saveChildData(String userId, Context context) {
         getFirstChild(userId, childData -> {
             if (childData != null) {
-                saveChildToPreferences(childData, context);
+                saveChildDataToPreferences(childData, context);
             }
         }, error -> {
             Toast.makeText(context, "Ошибка загрузки данных ребенка: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -146,7 +120,8 @@ public class ChildRepository{
      * @param childData Данные ребенка.
      * @param context   Контекст для доступа к SharedPreferences.
      */
-    private void saveChildToPreferences(Map<String, Object> childData, Context context) {
+
+    private void saveChildDataToPreferences(Map<String, Object> childData, Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
@@ -162,7 +137,9 @@ public class ChildRepository{
         editor.putInt("countDays", ((Number) childData.get("countDays")).intValue());
 
         editor.apply();
+        Toast.makeText(context, "Данные ребёнка сохранены", Toast.LENGTH_SHORT).show();
     }
+
 
     /**
      * Получить первого ребенка из коллекции `child` для конкретного пользователя.
@@ -173,7 +150,7 @@ public class ChildRepository{
      */
     public void getFirstChild(String userId, OnSuccessListener<Map<String, Object>> onSuccess, OnFailureListener onFailure) {
         getChildCollection(userId)
-                .limit(1) // Ограничиваем запрос одним результатом
+                .limit(1)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {

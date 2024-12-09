@@ -1,7 +1,6 @@
 package com.example.trainaut01.training;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +22,7 @@ import com.example.trainaut01.models.Achievement;
 import com.example.trainaut01.models.Avatar;
 import com.example.trainaut01.repository.AchievementRepository;
 import com.example.trainaut01.repository.AvatarRepository;
+import com.example.trainaut01.utils.SharedPreferencesUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -31,8 +31,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class ProgressFragment extends Fragment {
-    private AppComponent appComponent;
-
     @Inject
     AchievementRepository achievementRepository;
     @Inject
@@ -42,7 +40,6 @@ public class ProgressFragment extends Fragment {
     private ProgressBar levelProgressBar;
     private ImageView imgAvatar;
     private TextView tvLvl;
-    private GridView gridView;
     private AchievementAdapter achievementAdapter;
 
     @Override
@@ -51,12 +48,11 @@ public class ProgressFragment extends Fragment {
 
         init(view);
 
-        appComponent = DaggerAppComponent.create();
+        AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("child_data", Context.MODE_PRIVATE);
-        int exp = sharedPreferences.getInt("exp", 0);
-        int streakDays = sharedPreferences.getInt("countDays", 0);
+        int exp = SharedPreferencesUtils.getInt(requireContext(), "child_data", "exp", 0);
+        int streakDays = SharedPreferencesUtils.getInt(requireContext(), "child_data", "countDays", 0);
 
         setLevelProgress(exp);
         setStreakProgress(streakDays);
@@ -74,21 +70,23 @@ public class ProgressFragment extends Fragment {
         levelProgressBar = view.findViewById(R.id.progressBarLevel);
         streakTitle = view.findViewById(R.id.tvDays);
 
-        gridView = view.findViewById(R.id.grdAchiv);
+        GridView gridView = view.findViewById(R.id.grdAchiv);
         achievementAdapter = new AchievementAdapter(getActivity(), new ArrayList<>());
         gridView.setAdapter(achievementAdapter);
     }
 
+    @SuppressLint("SetTextI18n")
     private void setLevelProgress(int exp) {
         int level = exp / 5000;
         int expForNextLevel = 5000;
-        int progress = (int) ((exp % expForNextLevel) * 100 / expForNextLevel);
+        int progress = ((exp % expForNextLevel) * 100 / expForNextLevel);
 
         levelTitle.setText("Уровень: " + level);
         levelProgressText.setText(exp + " / " + (level + 1) * expForNextLevel + " опыта");
         levelProgressBar.setProgress(progress);
     }
 
+    @SuppressLint("SetTextI18n")
     private void setStreakProgress(int streakDays) {
         streakTitle.setText("Дней: " + streakDays);
     }

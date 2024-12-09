@@ -21,13 +21,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_WEEKDAY = 0;
     private static final int VIEW_TYPE_DAY = 1;
 
-    private final List<CalendarDay> calendarDays;
-    private final int currentDay;
-    private final String[] weekdays = {"Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"};
+    private final List<CalendarDay> _calendarDays;
+    private final int _currentDay;
+    private final String[] _weekdays = {"Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"};
 
     public CalendarAdapter(List<CalendarDay> calendarDays, int currentDay) {
-        this.calendarDays = calendarDays;
-        this.currentDay = currentDay;
+        this._calendarDays = calendarDays;
+        this._currentDay = currentDay;
     }
 
     @Override
@@ -51,13 +51,15 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof WeekdayViewHolder) {
             WeekdayViewHolder weekdayViewHolder = (WeekdayViewHolder) holder;
-            weekdayViewHolder._weekdayTextView.setText(weekdays[position]);
+            weekdayViewHolder._weekdayTextView.setText(_weekdays[position]);
         } else if (holder instanceof CalendarViewHolder) {
-            CalendarDay day = calendarDays.get(position - 7);
+            CalendarDay day = _calendarDays.get(position - 7);
             CalendarViewHolder dayHolder = (CalendarViewHolder) holder;
 
 
@@ -70,14 +72,19 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 dayHolder._dayTextView.setTextColor(Color.BLACK);
                 dayHolder._llDayContainer.setBackgroundResource(R.drawable.calendar_day_background);
 
-                if(day.isCompleted() && day.getDay() == currentDay){
+                if (isWeekend(position)) {
+                    dayHolder._llDayContainer.setBackgroundResource(R.drawable.weekend_calendar_back);
+                    dayHolder._dayTextView.setTextColor(Color.RED);
+                }
+
+                if(day.isCompleted() && day.getDay() == _currentDay){
                     dayHolder._llDayContainer.setBackgroundResource(R.drawable.current_calendar_day_back);
                     dayHolder._dayTextView.setBackgroundResource(R.drawable.completed_calendar_day_back);
                 }
                 else if (day.isCompleted()) {
                     dayHolder._llDayContainer.setBackgroundResource(R.drawable.completed_calendar_day_back);
                 }
-                else if (day.getDay() == currentDay) {
+                else if (day.getDay() == _currentDay) {
                     dayHolder._llDayContainer.setBackgroundResource(R.drawable.current_calendar_day_back);
                 }
             }
@@ -87,7 +94,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return calendarDays.size() + 7;
+        return _calendarDays.size() + 7;
     }
 
     static class WeekdayViewHolder extends RecyclerView.ViewHolder {
@@ -98,6 +105,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             _weekdayTextView = itemView.findViewById(R.id.tvWeekday);
         }
     }
+
+    private boolean isWeekend(int position) {
+        int dayOfWeek = (position % 7) + 1;
+        return dayOfWeek == 6 || dayOfWeek == 7;
+    }
+
 
     static class CalendarViewHolder extends RecyclerView.ViewHolder {
         TextView _dayTextView;

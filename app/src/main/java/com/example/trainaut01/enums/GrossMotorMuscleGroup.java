@@ -20,10 +20,6 @@ public enum GrossMotorMuscleGroup {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
     public static GrossMotorMuscleGroup fromString(String value) {
         for (GrossMotorMuscleGroup group : values()) {
             if (group.name().equalsIgnoreCase(value)) {

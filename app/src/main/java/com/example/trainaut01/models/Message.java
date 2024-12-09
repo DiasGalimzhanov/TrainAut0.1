@@ -3,10 +3,10 @@ package com.example.trainaut01.models;
 import java.io.Serializable;
 
 public class Message implements Serializable {
-    private String id;
+    private final String id;
     private String title;
-    private String content;
-    private long timestamp;
+    private final String content;
+    private final long timestamp;
     private boolean isRead;
 
     public Message(String id,String title, String content, long timestamp, boolean isRead) {

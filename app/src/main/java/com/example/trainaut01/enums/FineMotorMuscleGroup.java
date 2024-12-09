@@ -16,10 +16,6 @@ public enum FineMotorMuscleGroup {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
     public static FineMotorMuscleGroup fromString(String value) {
         for (FineMotorMuscleGroup group : values()) {
             if (group.name().equalsIgnoreCase(value)) {

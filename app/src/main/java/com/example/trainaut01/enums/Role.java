@@ -1,5 +1,8 @@
 package com.example.trainaut01.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Role {
     USER("Пользователь"),
     ADMIN("Админ");
@@ -8,10 +11,6 @@ public enum Role {
 
     Role(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public static Role fromString(String text) {

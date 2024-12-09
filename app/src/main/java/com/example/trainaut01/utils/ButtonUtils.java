@@ -9,7 +9,6 @@ import com.example.trainaut01.R;
 public class ButtonUtils {
 
     public static void updateButtonState(Context context, Button btn, String text, int textColor, int backgroundResource, boolean isEnabled) {
-        Log.d("ButtonUtils", "updateButtonState: text=" + text + ", isEnabled=" + isEnabled);
         btn.setText(text);
         btn.setEnabled(isEnabled);
         btn.setTextColor(context.getResources().getColor(textColor));
