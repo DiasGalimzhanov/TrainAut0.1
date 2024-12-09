@@ -21,7 +21,7 @@ import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.UserRepository;
-import com.example.trainaut01.utils.DatePickerUtils;
+import com.example.trainaut01.utils.DateUtils;
 import com.example.trainaut01.utils.SpinnerUtils;
 import com.example.trainaut01.utils.ToastUtils;
 import com.example.trainaut01.utils.ValidationUtils;
@@ -92,7 +92,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setupBirthDatePicker() {
-        _etBirthDate.setOnClickListener(v -> DatePickerUtils.showDatePickerDialog(this, _etBirthDate));
+        _etBirthDate.setOnClickListener(v -> DateUtils.showDatePickerDialog(this, _etBirthDate));
     }
 
     private void setupPasswordValidation() {

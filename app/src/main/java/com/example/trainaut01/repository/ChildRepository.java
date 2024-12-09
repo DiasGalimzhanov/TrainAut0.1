@@ -132,9 +132,6 @@ public class ChildRepository{
         getFirstChild(userId, childData -> {
             if (childData != null) {
                 saveChildToPreferences(childData, context);
-                Toast.makeText(context, "Данные ребенка сохранены", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Данные ребенка отсутствуют", Toast.LENGTH_SHORT).show();
             }
         }, error -> {
             Toast.makeText(context, "Ошибка загрузки данных ребенка: " + error.getMessage(), Toast.LENGTH_SHORT).show();

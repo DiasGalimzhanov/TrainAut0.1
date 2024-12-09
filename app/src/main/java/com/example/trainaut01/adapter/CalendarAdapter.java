@@ -56,7 +56,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof WeekdayViewHolder) {
             WeekdayViewHolder weekdayViewHolder = (WeekdayViewHolder) holder;
             weekdayViewHolder._weekdayTextView.setText(weekdays[position]);
-            Log.d("CalendarAdapter", "Binding weekday: " + weekdays[position]);
         } else if (holder instanceof CalendarViewHolder) {
             CalendarDay day = calendarDays.get(position - 7);
             CalendarViewHolder dayHolder = (CalendarViewHolder) holder;
@@ -66,13 +65,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 dayHolder._dayTextView.setText("");
                 dayHolder._llDayContainer.setBackgroundColor(Color.TRANSPARENT);
                 dayHolder._dayTextView.setBackgroundColor(Color.TRANSPARENT);
-                Log.d("CalendarAdapter", "Binding empty day at position: " + position);
             }else {
                 dayHolder._dayTextView.setText(String.valueOf(day.getDay()));
                 dayHolder._dayTextView.setTextColor(Color.BLACK);
                 dayHolder._llDayContainer.setBackgroundResource(R.drawable.calendar_day_background);
-
-                Log.d("CalendarAdapter", "Day: " + day.getDay() + ", isCompleted: " + day.isCompleted() + " (before checking condition)");
 
                 if(day.isCompleted() && day.getDay() == currentDay){
                     dayHolder._llDayContainer.setBackgroundResource(R.drawable.current_calendar_day_back);
@@ -80,18 +76,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
                 else if (day.isCompleted()) {
                     dayHolder._llDayContainer.setBackgroundResource(R.drawable.completed_calendar_day_back);
-                    Log.d("CalendarAdapter", "Day: " + day.getDay() + ", isCompleted: " + day.isCompleted());
-                    Log.d("CalendarAdapter", "Binding completed day: " + day.getDay() + " at position: " + position);
                 }
                 else if (day.getDay() == currentDay) {
                     dayHolder._llDayContainer.setBackgroundResource(R.drawable.current_calendar_day_back);
-                    Log.d("CalendarAdapter", "Binding current day: " + day.getDay() + " at position: " + position);
                 }
             }
         }
 
     }
-
 
     @Override
     public int getItemCount() {

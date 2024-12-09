@@ -1,5 +1,9 @@
 package com.example.trainaut01.enums;
 
+
+import lombok.Getter;
+
+@Getter
 public enum FineMotorMuscleGroup {
     HAND_CONTROL("Развитие пальцев и кистей"),
     FINGER_STRENGTH("Сила пальцев"),
@@ -14,5 +18,14 @@ public enum FineMotorMuscleGroup {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public static FineMotorMuscleGroup fromString(String value) {
+        for (FineMotorMuscleGroup group : values()) {
+            if (group.name().equalsIgnoreCase(value)) {
+                return group;
+            }
+        }
+        throw new IllegalArgumentException("Invalid FineMotorMuscleGroup: " + value);
     }
 }

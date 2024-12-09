@@ -22,7 +22,7 @@ import com.example.trainaut01.models.User;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.UserRepository;
-import com.example.trainaut01.utils.DatePickerUtils;
+import com.example.trainaut01.utils.DateUtils;
 import com.example.trainaut01.utils.SpinnerUtils;
 import com.example.trainaut01.utils.ToastUtils;
 import com.example.trainaut01.utils.ValidationUtils;
@@ -182,7 +182,7 @@ public class ChildSignUpFragment extends Fragment {
     }
 
     private void setupBirthDateChildPicker() {
-        _etBirthDateChild.setOnClickListener(v -> DatePickerUtils.showDatePickerDialog(ChildSignUpFragment.this.getContext(), _etBirthDateChild));
+        _etBirthDateChild.setOnClickListener(v -> DateUtils.showDatePickerDialog(ChildSignUpFragment.this.getContext(), _etBirthDateChild));
     }
 
 }

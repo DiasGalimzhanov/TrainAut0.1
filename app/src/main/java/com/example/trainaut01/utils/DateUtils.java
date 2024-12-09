@@ -6,7 +6,7 @@ import android.widget.EditText;
 
 import java.util.Calendar;
 
-public class DatePickerUtils {
+public class DateUtils {
 
     /**
      * Показывает диалог выбора даты и устанавливает выбранную дату в EditText.
@@ -36,6 +36,16 @@ public class DatePickerUtils {
     }
 
     /**
+     * Проверяет, является ли текущий день выходным (суббота или воскресенье).
+     *
+     * @return true, если выходной, иначе false.
+     */
+    public static boolean isWeekend() {
+        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
+    }
+
+    /**
      * Форматирует число в двухзначный формат.
      *
      * @param value Число для форматирования.
@@ -43,5 +53,16 @@ public class DatePickerUtils {
      */
     private static String formatToTwoDigits(int value) {
         return value < 10 ? "0" + value : String.valueOf(value);
+    }
+
+    /**
+     * Возвращает строку, представляющую текущий день недели.
+     *
+     * @param dayOfWeek День недели из Calendar.
+     * @return Строка с названием дня недели.
+     */
+    public static String getDayOfWeekString(int dayOfWeek) {
+        String[] days = {"Unknown", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        return dayOfWeek >= 1 && dayOfWeek <= 7 ? days[dayOfWeek] : "Unknown";
     }
 }

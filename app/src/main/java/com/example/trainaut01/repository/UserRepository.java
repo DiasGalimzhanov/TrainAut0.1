@@ -136,8 +136,6 @@ public class UserRepository {
         editor.putString("role", user.getRole().toString());
 
         editor.apply();
-
-        Toast.makeText(context, "Данные пользователя сохранены", Toast.LENGTH_SHORT).show();
     }
 
 
