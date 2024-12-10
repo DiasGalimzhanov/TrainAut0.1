@@ -27,12 +27,8 @@ import com.example.trainaut01.models.Avatar;
 import com.example.trainaut01.models.Exercise;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.AvatarRepository;
-import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.NewsRepository;
-import com.example.trainaut01.repository.UserRepository;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 

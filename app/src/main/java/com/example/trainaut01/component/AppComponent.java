@@ -9,10 +9,12 @@ import com.example.trainaut01.dagger.module.RepositoryModule;
 import com.example.trainaut01.home.DetailedNewsFragment;
 import com.example.trainaut01.home.HomeFragment;
 import com.example.trainaut01.home.NewsFragment;
+import com.example.trainaut01.profile.NoteFragment;
 import com.example.trainaut01.profile.SupportFragment;
 import com.example.trainaut01.profile.UserProfileFragment;
 import com.example.trainaut01.profile.UserUpdateFragment;
 import com.example.trainaut01.repository.AppInitializer;
+import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.training.ExerciseDetailFragment;
 import com.example.trainaut01.training.ProgressFragment;
 import com.example.trainaut01.training.TodayMusclePlanFragment;
@@ -40,5 +42,7 @@ public interface AppComponent {
     void inject(UserProfileFragment userProfileFragment);
     void inject(ChildSignUpFragment childSignUpFragment);
     void inject(TodayMusclePlanFragment todayMusclePlanFragment);
+    void inject(NoteFragment noteFragment);
+//    void inject(UserRepository userRepository);
 }
 

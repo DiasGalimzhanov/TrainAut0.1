@@ -140,7 +140,6 @@ public class ChildSignUpFragment extends Fragment {
         _userRepository.addUser(_user, ChildSignUpFragment.this.getContext(), task -> {
             if (task.isSuccessful()) {
                 String newUserId = task.getResult().getUser().getUid();
-
                 addChild(newUserId, fullName, birthDate, diagnosis, height, weight, gender);
             } else {
                 ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка регистрации пользователя: " + task.getException().getMessage());

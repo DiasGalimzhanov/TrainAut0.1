@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -177,6 +178,7 @@ public class SignUpActivity extends AppCompatActivity {
         String birthDate = _etBirthDate.getText().toString();
         String city = _etCity.getText().toString();
         String selectedGender = _spGender.getSelectedItem().toString();
+        Log.d("GENDER1", selectedGender);
         String email = _etEmail.getText().toString();
         String pass = _etPassReg.getText().toString();
 

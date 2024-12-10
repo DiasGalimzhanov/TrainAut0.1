@@ -43,16 +43,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @Override
     public void onBindViewHolder(NewsViewHolder holder, int position) {
-        News newsItem = filteredNewsList.get(position); // Используем filteredNewsList
+        News newsItem = filteredNewsList.get(position);
         holder.bind(newsItem, listener);
     }
 
     @Override
     public int getItemCount() {
-        return filteredNewsList.size(); // Возвращаем размер filteredNewsList
+        return filteredNewsList.size();
     }
 
-    // Метод для фильтрации новостей по заголовку
     public void filter(String text) {
         filteredNewsList.clear();
         if (text.isEmpty()) {
@@ -83,21 +82,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         public void bind(final News newsItem, final OnItemClickListener listener) {
             title.setText(newsItem.getTitle());
             description.setText(newsItem.getDescription());
-            Picasso.get().load(newsItem.getImageUrl()).into(image); // Загрузка изображения в элемент списка
+            Picasso.get().load(newsItem.getImageUrl()).into(image);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Создание нового фрагмента
                     DetailedNewsFragment detailedNewsFragment = new DetailedNewsFragment();
 
-                    // Передача данных через Bundle
                     Bundle bundle = new Bundle();
                     bundle.putString("news_id", newsItem.getId());
-//                    bundle.putString("news_image_url", newsItem.getImageUrl()); // URL изображения
                     detailedNewsFragment.setArguments(bundle);
 
-                    // Открытие фрагмента
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
                     FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, detailedNewsFragment);
@@ -106,8 +101,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
                 }
             });
         }
-
-
     }
 }
 

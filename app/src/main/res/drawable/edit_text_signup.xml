@@ -5,7 +5,7 @@
             <corners android:radius="8dp"/>
             <stroke
                 android:width="2dp"
-                android:color="@color/violet_blossom" />
+                android:color="@color/bright_cerulean" />
         </shape>
     </item>
 </selector>

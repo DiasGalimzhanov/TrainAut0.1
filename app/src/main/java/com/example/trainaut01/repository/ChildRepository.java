@@ -8,13 +8,17 @@ import androidx.annotation.NonNull;
 
 import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.models.Child;
+import com.example.trainaut01.models.ChildNote;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -36,7 +40,7 @@ public class ChildRepository{
                 .document(child.getChildId())
                 .set(childData)
                 .addOnSuccessListener(aVoid -> {
-                    saveChildDataToPreferences(child, context);
+                    saveChildToPreferences(child.toMap(), context);
                     onSuccess.onSuccess(aVoid);
                 })
                 .addOnFailureListener(onFailure);
@@ -63,25 +67,25 @@ public class ChildRepository{
     }
 
 
-    private void saveChildDataToPreferences(Child child, Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putString("childId", child.getChildId());
-        editor.putString("fullName", child.getFullName());
-        editor.putString("birthDate", child.getBirthDate());
-        editor.putString("gender", child.getGender().toString());
-        editor.putString("diagnosis", child.getDiagnosis());
-        editor.putFloat("height", child.getHeight());
-        editor.putFloat("weight", child.getWeight());
-        editor.putInt("exp", child.getExp());
-        editor.putInt("lvl", child.getExp());
-        editor.putInt("countDays", child.getExp());
-
-        editor.apply();
-
-        Toast.makeText(context, "Данные ребенка сохранены", Toast.LENGTH_SHORT).show();
-    }
+//    private void saveChildDataToPreferences(Child child, Context context) {
+//        SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//
+//        editor.putString("childId", child.getChildId());
+//        editor.putString("fullName", child.getFullName());
+//        editor.putString("birthDate", child.getBirthDate());
+//        editor.putString("gender", child.getGender().toString());
+//        editor.putString("diagnosis", child.getDiagnosis());
+//        editor.putFloat("height", child.getHeight());
+//        editor.putFloat("weight", child.getWeight());
+//        editor.putInt("exp", child.getExp());
+//        editor.putInt("lvl", child.getExp());
+//        editor.putInt("countDays", child.getExp());
+//
+//        editor.apply();
+//
+//        Toast.makeText(context, "Данные ребенка сохранены", Toast.LENGTH_SHORT).show();
+//    }
 
     /**
      * Обновляет определенное поле ребенка в коллекции `child` и SharedPreferences.
@@ -141,8 +145,6 @@ public class ChildRepository{
         });
     }
 
-
-
     /**
      * Сохраняет данные ребенка в SharedPreferences.
      *
@@ -176,7 +178,7 @@ public class ChildRepository{
      */
     public void getFirstChild(String userId, OnSuccessListener<Map<String, Object>> onSuccess, OnFailureListener onFailure) {
         getChildCollection(userId)
-                .limit(1) // Ограничиваем запрос одним результатом
+                .limit(1)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
@@ -188,4 +190,86 @@ public class ChildRepository{
                 })
                 .addOnFailureListener(onFailure);
     }
+
+    /**
+     * Сохранение заметки в Firestore и обновление списка заметок у ребенка.
+     */
+    public void addChildNote(String userId, String childId, ChildNote note, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        getChildCollection(userId)
+                .document(childId)
+                .collection("notes")
+                .document(note.getChildId())
+                .set(note.toMap())
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * Загрузка всех заметок для ребенка.
+     */
+    public void getChildNotes(String userId, String childId, OnSuccessListener<List<ChildNote>> onSuccess, OnFailureListener onFailure) {
+        getChildCollection(userId)
+                .document(childId)
+                .collection("notes")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<ChildNote> notes = new ArrayList<>();
+                    for (DocumentSnapshot snapshot : querySnapshot) {
+                        notes.add(snapshot.toObject(ChildNote.class));
+                    }
+                    onSuccess.onSuccess(notes);
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    public void saveNoteToFirebase(String userId, String childId, ChildNote note, OnSuccessListener<Void> onSuccess,
+                                   OnFailureListener onFailure) {
+        _db.collection("users")
+                .document(userId)
+                .collection("child")
+                .document(childId)
+                .collection("notes")
+                .document(note.getId())
+                .set(note.toMap())
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+    public ListenerRegistration listenForNotesUpdates(String userId, String childId, OnSuccessListener<List<ChildNote>> onNoteUpdate,
+                                                      OnFailureListener onFailure) {
+        return _db.collection("users")
+                .document(userId)
+                .collection("child")
+                .document(childId)
+                .collection("notes")
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) {
+                        onFailure.onFailure(e);
+                        return;
+                    }
+
+                    if (snapshots != null) {
+                        List<ChildNote> notes = new ArrayList<>();
+                        for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                            notes.add(doc.toObject(ChildNote.class));
+                        }
+                        onNoteUpdate.onSuccess(notes);
+                    }
+                });
+    }
+
+    public void deleteNoteFromFirebase(String userId, String childId, String noteId, OnSuccessListener<Void> onSuccess,
+                                       OnFailureListener onFailure) {
+        _db.collection("users")
+                .document(userId)
+                .collection("child")
+                .document(childId)
+                .collection("notes")
+                .document(noteId)
+                .delete()
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+
 }

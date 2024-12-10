@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-<!--    &lt;!&ndash; Тень &ndash;&gt;-->
-<!--    <item>-->
-<!--        <shape android:shape="rectangle">-->
-<!--            <solid android:color="#44000000"/> &lt;!&ndash; Темно-серый цвет с прозрачностью для тени &ndash;&gt;-->
-<!--            <corners android:radius="10dp"/>-->
-<!--        </shape>-->
-<!--    </item>-->
-
-    <!-- Основной фон -->
-    <item android:left="4dp" android:top="4dp"> <!-- Смещение основного фона, чтобы тень была видна -->
+    <item android:left="4dp" android:top="4dp">
         <shape android:shape="rectangle">
-            <solid android:color="#FFFFFF"/> <!-- Белый цвет для фона -->
+            <solid android:color="#FFFFFF"/>
             <corners android:radius="10dp"/>
-            <stroke android:color="@color/indigo" android:width="2dp"/> <!-- Фиолетовая обводка -->
+            <stroke android:color="@color/bright_azure" android:width="2dp"/>
         </shape>
     </item>
 

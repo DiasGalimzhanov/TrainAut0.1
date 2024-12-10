@@ -298,7 +298,7 @@
                 android:layout_marginTop="16dp"
                 android:text="Уже есть аккаунт? Войти"
                 android:textAlignment="center"
-                android:textColor="@color/primary"
+                android:textColor="@color/bright_sky_blue"
                 android:textSize="16sp" />
 
             <LinearLayout

@@ -25,8 +25,10 @@ import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.enums.Gender;
+import com.example.trainaut01.enums.PasswordAction;
 import com.example.trainaut01.models.Avatar;
 import com.example.trainaut01.repository.AvatarRepository;
+import com.example.trainaut01.repository.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -39,9 +41,12 @@ public class UserProfileFragment extends Fragment {
     @Inject
     AvatarRepository avatarRepository;
 
+    @Inject
+    UserRepository userRepository;
+
     private TextView parentName, emailTextView, phoneTextView, birthDateTextView, cityTextView, childNameTextView, childGenderDiagnosisTextView, childHeightWeightTextView;
     private ImageView userProfileImage, btnExit;
-    private Button btnUpdateProfile, btnSupport, btnWatchConnect;
+    private Button btnUpdateProfile, btnSupport, btnWatchConnect, btnNotes, btnDelete;
     private SharedPreferences sharedPref;
 
     @Nullable
@@ -71,6 +76,8 @@ public class UserProfileFragment extends Fragment {
         btnExit = view.findViewById(R.id.btnExit);
         btnUpdateProfile = view.findViewById(R.id.edit_profile_button);
         btnSupport = view.findViewById(R.id.support_button);
+        btnNotes = view.findViewById(R.id.notes_button);
+        btnDelete = view.findViewById(R.id.delete_button);
         birthDateTextView = view.findViewById(R.id.parent_bd);
         childNameTextView = view.findViewById(R.id.child_name);
         childGenderDiagnosisTextView = view.findViewById(R.id.child_gender_diagnosis);
@@ -111,7 +118,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void loadAvatar() {
-        sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        sharedPref = requireActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
         int exp = sharedPref.getInt("exp", 0);
         int level = exp / 5000;
 
@@ -132,10 +139,12 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void setupListeners() {
-        btnUpdateProfile.setOnClickListener(view -> showPasswordDialog());
+        btnUpdateProfile.setOnClickListener(view -> showPasswordDialog(PasswordAction.UPDATE_PROFILE));
+        btnDelete.setOnClickListener(view -> showPasswordDialog(PasswordAction.DELETE_ACCOUNT));
         btnExit.setOnClickListener(view -> logOutUser());
         btnSupport.setOnClickListener(view -> navigateToFragment(new SupportFragment()));
         btnWatchConnect.setOnClickListener(view -> navigateToFragment(new WatchFragment()));
+        btnNotes.setOnClickListener(view -> navigateToFragment(new NoteFragment()));
     }
 
     private void logOutUser() {
@@ -159,8 +168,8 @@ public class UserProfileFragment extends Fragment {
         editor.apply();
     }
 
-    private void showPasswordDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    private void showPasswordDialog(PasswordAction action) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_password, null);
         builder.setView(dialogView);
@@ -172,9 +181,8 @@ public class UserProfileFragment extends Fragment {
         final AlertDialog dialog = builder.create();
 
         btnSubmit.setOnClickListener(v -> {
-            String password = input.getText().toString();
-            verifyPassword(password);
-            dialog.dismiss();
+            String password = input.getText().toString().trim();
+            verifyPassword(password, action, dialog);
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
@@ -182,19 +190,53 @@ public class UserProfileFragment extends Fragment {
         dialog.show();
     }
 
-    private void verifyPassword(String password) {
-        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        if (email != null) {
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            navigateToFragment(new UserUpdateFragment());
-                        } else {
-                            Toast.makeText(getActivity(), "Неправильный пароль", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+    private void verifyPassword(String password, PasswordAction action, AlertDialog dialog) {
+        String email = FirebaseAuth.getInstance().getCurrentUser() != null
+                ? FirebaseAuth.getInstance().getCurrentUser().getEmail()
+                : null;
+
+        if (email == null) {
+            Toast.makeText(requireContext(), "Пользователь не авторизован", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        dialog.dismiss();
+                        if (action == PasswordAction.UPDATE_PROFILE) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("PASSWORD_KEY", password);
+
+                            UserUpdateFragment updateFragment = new UserUpdateFragment();
+                            updateFragment.setArguments(bundle);
+
+                            navigateToFragment(updateFragment);
+                        } else if (action == PasswordAction.DELETE_ACCOUNT) {
+                            deleteUserAccount();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Неправильный пароль", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
+
+
+    private void deleteUserAccount() {
+        sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        String userId = sharedPref.getString("userId", "");
+        if (userId.isEmpty()) {
+            Toast.makeText(requireContext(), "Не удалось определить пользователя", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        userRepository.deleteUserAccount(userId, requireContext(), aVoid -> {
+            Toast.makeText(requireContext(), "Аккаунт удален", Toast.LENGTH_SHORT).show();
+            logOutUser();
+        }, e -> Toast.makeText(requireContext(), "Ошибка удаления аккаунта: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+
 
     private void navigateToFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();

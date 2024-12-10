@@ -334,6 +334,6 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         int expForNextLevel = 5000;
 
         _tvLevelDashboard.setText("Уровень: " + level);
-        _tvExpDashboard.setText(exp + " / " + (level + 1) * expForNextLevel + " опыта");
+        _tvExpDashboard.setText(exp + " / " + (level + 1) * expForNextLevel);
     }
 }

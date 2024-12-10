@@ -3,7 +3,7 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@color/light_cloud">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -27,16 +27,16 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 
         <ImageView
             android:id="@+id/btnExit"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/exit"  />
+            android:src="@drawable/btn_exit"  />
     </RelativeLayout>
 
     <ImageView
         android:id="@+id/profile_image"
-        android:layout_width="120dp"
+        android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
@@ -81,7 +81,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_marginBottom="16dp"
         android:background="#DDDDDD" />
 
-    <!--   Recycle -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -141,14 +140,12 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             android:textColor="@color/dark_indigo" />
     </LinearLayout>
 
-    <!-- Разделитель -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
         android:background="#DDDDDD" />
 
-    <!-- Кнопки -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -161,6 +158,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="Заметки о ребенке"
+            android:drawableStart="@drawable/ic_note"
+            android:paddingStart="10dp"
+            android:paddingEnd="25dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn1_login_back" />
 
@@ -170,6 +170,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="Редактировать профиль"
+            android:drawableStart="@drawable/ic_edit"
+            android:paddingStart="10dp"
+            android:paddingEnd="25dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn1_login_back" />
 
@@ -179,6 +182,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:text="Служба поддержки"
             android:layout_marginBottom="8dp"
+            android:drawableStart="@drawable/bottom_btn3"
+            android:paddingStart="10dp"
+            android:paddingEnd="25dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn1_login_back" />
 
@@ -188,16 +194,22 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:text="Подключить часы"
             android:layout_marginBottom="8dp"
+            android:drawableStart="@drawable/ic_watch"
+            android:paddingStart="10dp"
+            android:paddingEnd="25dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn1_login_back" />
 
         <Button
-            android:id="@+id/exit_button"
+            android:id="@+id/delete_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Удалить аккаунт"
+            android:drawableStart="@drawable/ic_delete"
+            android:paddingStart="10dp"
+            android:paddingEnd="25dp"
             android:textColor="#FFFFFF"
-            android:background="@drawable/btn_exit" />
+            android:background="@drawable/ic_exit" />
 
         <View
             android:layout_width="match_parent"

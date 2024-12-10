@@ -36,6 +36,16 @@ public class Child {
         this.weight = weight;
     }
 
+    public Child(String childId, String fullName, String birthDate, Gender gender, String diagnosis, float height, float weight) {
+        this.childId = childId;
+        this.fullName = fullName;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.diagnosis = diagnosis;
+        this.height = height;
+        this.weight = weight;
+    }
+
     /**
      * Преобразует объект Child в Map<String, Object> для сохранения в Firestore.
      * @return Map с данными ребенка.

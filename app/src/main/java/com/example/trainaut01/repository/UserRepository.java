@@ -2,6 +2,7 @@ package com.example.trainaut01.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -9,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.R;
+import com.example.trainaut01.component.AppComponent;
+import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.enums.Gender;
+import com.example.trainaut01.models.Child;
 import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.profile.UserProfileFragment;
@@ -17,7 +21,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import javax.inject.Inject;
 
 public class UserRepository {
     private FirebaseFirestore db;
@@ -44,14 +52,14 @@ public class UserRepository {
         String rawPassword = user.getPass();
         user.setPass(rawPassword);
 
-        mAuth.createUserWithEmailAndPassword(user.getEmail(), rawPassword)
+        mAuth.createUserWithEmailAndPassword(user.getEmail(),rawPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                         if (firebaseUser != null) {
                             String userId = firebaseUser.getUid();
                             user.setUserId(userId);
-
+//                            user.setPass(null);
                             db.collection("users").document(userId)
                                     .set(user.toMap())
                                     .addOnSuccessListener(aVoid -> {
@@ -121,87 +129,29 @@ public class UserRepository {
     }
 
 
-    private void saveUserDataToPreferences(User user, Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putString("userId", user.getUserId());
-        editor.putString("fullName", user.getFullName());
-        editor.putString("phone", user.getPhone());
-        editor.putString("birthDate", user.getBirthDate());
-        editor.putString("city", user.getCity());
-        editor.putString("gender", user.getGender().toString());
-        editor.putString("email", user.getEmail());
-        editor.putString("pass", user.getPass());
-        editor.putString("role", user.getRole().toString());
-
-        editor.apply();
-
-        Toast.makeText(context, "Данные пользователя сохранены", Toast.LENGTH_SHORT).show();
-    }
-
-
     public void updateUser(User updatedUser, Context context) {
         String userId = updatedUser.getUserId();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("firstName", updatedUser.getFullName());
-            userMap.put("phone", updatedUser.getPhone());
+            Map<String, Object> userMap = updatedUser.toMap();
 
             db.collection("users").document(userId)
-                    .update(userMap)
+                    .set(userMap)
                     .addOnSuccessListener(unused -> {
                         Toast.makeText(context, "Данные успешно обновлены", Toast.LENGTH_SHORT).show();
                         saveUserDataToPreferences(updatedUser, context);
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(context, "Ошибка обновления данных в Firestore", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Ошибка обновления данных в Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
 
+        } else {
+            Toast.makeText(context, "Пользователь не авторизован", Toast.LENGTH_SHORT).show();
         }
     }
-//
-//
-//    public void updateUserItem(String fieldName, Object fieldValue, Context context) {
-//        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-//
-//        db.collection("users").document(userId)
-//                .update(fieldName, fieldValue)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
-//                        SharedPreferences.Editor editor = sharedPref.edit();
-//
-//                        if (fieldValue instanceof String) {
-//                            editor.putString(fieldName, (String) fieldValue);
-//                        } else if (fieldValue instanceof Integer) {
-//                            editor.putInt(fieldName, (Integer) fieldValue);
-//                        } else if (fieldValue instanceof Boolean) {
-//                            editor.putBoolean(fieldName, (Boolean) fieldValue);
-//                        } else if (fieldValue instanceof Float) {
-//                            editor.putFloat(fieldName, (Float) fieldValue);
-//                        } else if (fieldValue instanceof Long) {
-//                            editor.putLong(fieldName, (Long) fieldValue);
-//                        } else {
-//                            Toast.makeText(context, "Неподдерживаемый тип данных", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//
-//                        editor.apply();
-//                        Toast.makeText(context, "Поле успешно обновлено", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(context, "Ошибка при обновлении поля", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
+
 
 
     public void saveMessageToFirestore(String theme, String messege, Context context) {
@@ -226,4 +176,38 @@ public class UserRepository {
                     Toast.makeText(context, "Что-то не так, сообщение не отправленно", Toast.LENGTH_SHORT).show();
                 });
     }
+
+    public void deleteUserAccount(String userId, Context context, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        db.collection("users").document(userId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    if (currentUser != null) {
+                        currentUser.delete()
+                                .addOnSuccessListener(onSuccess)
+                                .addOnFailureListener(onFailure);
+                    } else {
+                        onFailure.onFailure(new Exception("No currently signed-in user."));
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    private void saveUserDataToPreferences(User user, Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString("userId", user.getUserId());
+        editor.putString("fullName", user.getFullName());
+        editor.putString("phone", user.getPhone());
+        editor.putString("birthDate", user.getBirthDate());
+        editor.putString("city", user.getCity());
+        editor.putString("gender", user.getGender().toString());
+        editor.putString("email", user.getEmail());
+        editor.putString("pass", user.getPass());
+        editor.putString("role", user.getRole().toString());
+
+        editor.apply();
+    }
+
 }

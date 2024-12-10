@@ -4,7 +4,7 @@
     android:id="@+id/mainTraining"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F4F6"
+    android:background="@color/light_cloud"
     tools:context=".TrainingDashboardFragment">
 
 
@@ -39,16 +39,16 @@
                     android:id="@+id/tvLvlDashboard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="18dp"
+                    android:paddingEnd="16dp"
                     android:text="Прогресс"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tvExpDashboard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0/0"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
 
             </LinearLayout>
@@ -75,9 +75,9 @@
 
                     <Button
                         android:id="@+id/btnExercisesMotor"
-                        android:layout_width="190dp"
-                        android:layout_height="150dp"
-                        android:background="@drawable/ic_ex"
+                        android:layout_width="150dp"
+                        android:layout_height="130dp"
+                        android:background="@drawable/img_dum"
                         android:textColor="@color/indigo"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -87,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:text="Упражнения на моторику"
                         android:textColor="@color/indigo"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="8dp"
                         android:gravity="center"/>
                 </LinearLayout>
@@ -103,9 +103,9 @@
 
                     <Button
                         android:id="@+id/btnAAC"
-                        android:layout_width="190dp"
-                        android:layout_height="150dp"
-                        android:background="@drawable/ic_brain"
+                        android:layout_width="150dp"
+                        android:layout_height="130dp"
+                        android:background="@drawable/img_idea"
                         android:textColor="@color/disabledColorButton" />
 
                     <TextView
@@ -113,7 +113,7 @@
                         android:layout_height="wrap_content"
                         android:text="Альтернативная коммуникация (AAC)"
                         android:textColor="@color/indigo"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="8dp"
                         android:gravity="center"/>
                 </LinearLayout>
