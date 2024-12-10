@@ -2,6 +2,7 @@ package com.example.trainaut01.repository;
 
 import android.util.Log;
 
+import com.example.trainaut01.utils.DateUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
@@ -24,10 +25,10 @@ public class ChildProgressRepository {
         this._firebaseStorage = FirebaseStorage.getInstance();
     }
 
-    public void saveUserProgress(String userId, String year, String month, List<Integer> completedDays, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
-        StorageReference userProgressRef = getUserProgressReference(userId);
+    public void saveChildProgress(String userId, String year, String month, List<Integer> completedDays, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
+        StorageReference userProgressRef = getChildProgressReference(userId);
 
-        getUserProgress(userProgressRef, progressData -> {
+        getChildProgress(userProgressRef, progressData -> {
             JSONObject updatedProgress = createOrUpdateProgressObject(progressData, year, month, completedDays);
             uploadProgress(userProgressRef, updatedProgress, onSuccessListener, onFailureListener);
         }, e -> {
@@ -40,12 +41,12 @@ public class ChildProgressRepository {
         });
     }
 
-    private StorageReference getUserProgressReference(String userId) {
+    private StorageReference getChildProgressReference(String userId) {
         StorageReference storageRef = _firebaseStorage.getReference();
         return storageRef.child("child_progress/" + userId + "/progress.json");
     }
 
-    private void getUserProgress(StorageReference userProgressRef, OnSuccessListener<JSONObject> onSuccessListener, OnFailureListener onFailureListener) {
+    private void getChildProgress(StorageReference userProgressRef, OnSuccessListener<JSONObject> onSuccessListener, OnFailureListener onFailureListener) {
         userProgressRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
             try {
                 String jsonStr = new String(bytes);
@@ -146,8 +147,8 @@ public class ChildProgressRepository {
         return false;
     }
 
-    public void loadUserProgress(String userId, OnSuccessListener<JSONObject> onSuccessListener, OnFailureListener onFailureListener) {
-        StorageReference userProgressRef = getUserProgressReference(userId);
+    public void loadChildProgress(String userId, OnSuccessListener<JSONObject> onSuccessListener, OnFailureListener onFailureListener) {
+        StorageReference userProgressRef = getChildProgressReference(userId);
 
         userProgressRef.getBytes(Long.MAX_VALUE)
                 .addOnSuccessListener(bytes -> {
@@ -174,6 +175,52 @@ public class ChildProgressRepository {
                         Log.e("loadUserProgress", "Не удалось загрузить прогресс для пользователя: " + userId + ". Ошибка: " + e.getMessage(), e);
                     }
                     onFailureListener.onFailure(e);
+                });
+    }
+
+    public void saveToStorage(String userId, JSONObject progressData, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
+        try {
+            String fileName = "progress_details" + ".json";
+            StorageReference storageRef = _firebaseStorage.getReference("child_progress/" + userId + "/" + fileName);
+
+            InputStream inputStream = new ByteArrayInputStream(progressData.toString().getBytes());
+            UploadTask uploadTask = storageRef.putStream(inputStream);
+
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                Log.d("saveToStorage", "Данные успешно сохранены в Firestore Storage");
+                onSuccessListener.onSuccess(null);
+            }).addOnFailureListener(e -> {
+                Log.e("saveToStorage", "Ошибка при сохранении в Firestore Storage: " + e.getMessage(), e);
+                onFailureListener.onFailure(e);
+            });
+        } catch (Exception e) {
+            Log.e("saveToStorage", "Исключение во время сохранения: " + e.getMessage(), e);
+            onFailureListener.onFailure(e);
+        }
+    }
+
+    public void loadChildProgressDetails(String userId, OnSuccessListener<JSONObject> onSuccessListener, OnFailureListener onFailureListener) {
+        StorageReference storageRef = _firebaseStorage.getReference("child_progress/" + userId + "/progress_details.json");
+
+        storageRef.getBytes(Long.MAX_VALUE)
+                .addOnSuccessListener(bytes -> {
+                    try {
+                        String jsonStr = new String(bytes);
+                        JSONObject jsonObject = new JSONObject(jsonStr);
+                        onSuccessListener.onSuccess(jsonObject);
+                    } catch (Exception e) {
+                        Log.e("loadChildProgressDetails", "Ошибка при парсинге JSON: " + e.getMessage(), e);
+                        onFailureListener.onFailure(e);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (isFileNotFound(e)) {
+                        Log.w("loadChildProgressDetails", "Файл не найден, создается новый.");
+                        onSuccessListener.onSuccess(null);
+                    } else {
+                        Log.e("loadChildProgressDetails", "Ошибка загрузки файла: " + e.getMessage(), e);
+                        onFailureListener.onFailure(e);
+                    }
                 });
     }
 

@@ -34,14 +34,11 @@ import javax.inject.Inject;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
-    private Button btnLog, btnGoogleReg;
-    private TextView tvReg, tvForgotPas;
     private EditText etLog;
     private EditText etPas;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
 
-    private AppComponent appComponent;
     @Inject
     UserRepository _userRepository;
 
@@ -54,13 +51,13 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        appComponent = DaggerAppComponent.create();
+        AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
 
-        btnLog = findViewById(R.id.btnLogin);
-        btnGoogleReg = findViewById(R.id.btnGoogleReg);
-        tvForgotPas = findViewById(R.id.tvForgotPas);
-        tvReg = findViewById(R.id.tvRegister);
+        Button btnLog = findViewById(R.id.btnLogin);
+        Button btnGoogleReg = findViewById(R.id.btnGoogleReg);
+        TextView tvForgotPas = findViewById(R.id.tvForgotPas);
+        TextView tvReg = findViewById(R.id.tvRegister);
         etLog = findViewById(R.id.etLogin);
         etPas = findViewById(R.id.etPassword);
         mAuth = FirebaseAuth.getInstance();

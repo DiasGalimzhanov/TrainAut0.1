@@ -37,8 +37,6 @@ import javax.inject.Inject;
 
 public class TodayMusclePlanFragment extends Fragment implements ProgressResetListener {
 
-    private static final String TAG = "TodayMusclePlanFragment";
-
     private String _userId;
     private DayPlan _currentDayPlan;
 

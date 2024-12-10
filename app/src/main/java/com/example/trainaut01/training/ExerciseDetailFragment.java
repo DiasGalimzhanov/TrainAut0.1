@@ -66,8 +66,6 @@ public class ExerciseDetailFragment extends Fragment {
     private int _skippedExercises = 0;
     private int _remainingPoints;
 
-    private AppComponent _appComponent;
-
     @Inject
     ChildRepository _childRepository;
 
@@ -107,7 +105,7 @@ public class ExerciseDetailFragment extends Fragment {
     }
 
     public void init(View view) {
-        _appComponent = DaggerAppComponent.create();
+        AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(this);
 
         _tvSet = view.findViewById(R.id.tvSet);
@@ -312,7 +310,11 @@ public class ExerciseDetailFragment extends Fragment {
 
     private void handleMissAction() {
         if (_currentExerciseIndex < _exercises.size()) {
-            updateProgress(_currentExerciseIndex + 1);
+            Exercise missedExercise = _exercises.get(_currentExerciseIndex);
+
+            updateExerciseTime(missedExercise, 0, () -> {
+                updateProgress(_currentExerciseIndex + 1);
+            });
         }
 
         _skippedExercises++;
@@ -357,24 +359,37 @@ public class ExerciseDetailFragment extends Fragment {
     }
 
     private void completeExercise(Exercise exercise) {
+
+        float timeElapsed = _timeElapsed;
+        int rewardPoints = _currentDayPlan.getRewardPointsDay();
+
+        updateExerciseTime(exercise, timeElapsed, () -> {
+            updateExperienceAndProgress(exercise);
+            updateProgress(_currentExerciseIndex + 1);
+            handleCompletion(rewardPoints);
+        });
+    }
+
+
+    private void updateExerciseTime(Exercise exercise, float timeElapsed, Runnable onSuccessAction) {
         if (_currentDayPlan == null) {
-            Toast.makeText(getContext(), "План дня отсутствует.", Toast.LENGTH_SHORT).show();
+            ToastUtils.showErrorMessage(getContext(), "План дня отсутствует.");
             return;
         }
 
         String dayPlanId = requireArguments().getString(ARG_DAY).toLowerCase();
         String exerciseId = exercise.getId();
-        float timeElapsed = _timeElapsed;
-        int rewardPoints = _currentDayPlan.getRewardPointsDay();
 
-        SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "currentExerciseIndex", _currentExerciseIndex);
-
-        _dayPlanRepository.updateExerciseCompletedTime(_userId, dayPlanId, exerciseId, timeElapsed, aVoid -> {
-            updateExperienceAndProgress(exercise);
-            updateProgress(_currentExerciseIndex + 1);
-            handleCompletion(rewardPoints);
-        }, e -> ToastUtils.showErrorMessage(ExerciseDetailFragment.this.getContext(), "Ошибка завершения упражнения."));
+        _dayPlanRepository.updateExerciseCompletedTime(_userId, dayPlanId, exerciseId, timeElapsed,
+                aVoid -> {
+                    if (onSuccessAction != null) {
+                        onSuccessAction.run();
+                    }
+                },
+                e -> ToastUtils.showErrorMessage(getContext(), "Ошибка обновления времени выполнения упражнения.")
+        );
     }
+
 
     private void updateExperienceAndProgress(Exercise exercise) {
         updateChildExperience(exercise.getRewardPoints());

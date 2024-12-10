@@ -6,6 +6,8 @@ import com.example.trainaut01.enums.FineMotorMuscleGroup;
 import com.example.trainaut01.enums.GrossMotorMuscleGroup;
 import com.example.trainaut01.enums.MotorSkillGroup;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,5 +92,15 @@ public class Exercise implements Serializable {
         return exerciseMap;
     }
 
+    public JSONObject toJsonObject() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("title", this.getName());
+            jsonObject.put("timeElapsed", this.getCompletedTime());
+        } catch (Exception e) {
+            Log.e("Exercise", "Ошибка при преобразовании объекта в JSON: " + e.getMessage(), e);
+        }
+        return jsonObject;
+    }
 
 }

@@ -1,7 +1,5 @@
 package com.example.trainaut01;
 
-import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -39,8 +37,6 @@ public class SignUpActivity extends AppCompatActivity {
     private TextView _tvPasswordMatch, _tvLogin;
     private CheckBox _chbUserAgreement;
 
-    private AppComponent _appComponent;
-
     @Inject
     UserRepository _userRepository;
 
@@ -58,7 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
-        _appComponent = DaggerAppComponent.create();
+        AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(SignUpActivity.this);
 
         _tvLogin = findViewById(R.id.tvLogin);
@@ -133,12 +129,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean isUserAgreementChecked() {
         return _chbUserAgreement.isChecked();
-    }
-
-
-    @SuppressLint("DefaultLocale")
-    private DatePickerDialog.OnDateSetListener getDateSetListener() {
-        return (view, year, month, day) -> _etBirthDate.setText(String.format("%02d.%02d.%d", day, month + 1, year));
     }
 
     private void navigateToLogin() {

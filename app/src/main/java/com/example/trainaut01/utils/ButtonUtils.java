@@ -1,10 +1,7 @@
 package com.example.trainaut01.utils;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Button;
-
-import com.example.trainaut01.R;
 
 public class ButtonUtils {
 

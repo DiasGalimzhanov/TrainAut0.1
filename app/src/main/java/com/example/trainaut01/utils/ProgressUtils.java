@@ -1,8 +1,6 @@
 package com.example.trainaut01.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.Calendar;
 
@@ -15,6 +13,7 @@ public class ProgressUtils {
             SharedPreferencesUtils.saveBoolean(context, "child_progress", "isCompletedTodayTraining", false);
             SharedPreferencesUtils.saveInt(context, "child_progress", "lastSavedDayOfWeek", currentDay);
             SharedPreferencesUtils.saveInt(context, "child_progress", "progressBar", 0);
+            SharedPreferencesUtils.saveBoolean(context, "child_progress", "isProgressSavedToday", false);
 
             if (listener != null) {
                 listener.onProgressReset();

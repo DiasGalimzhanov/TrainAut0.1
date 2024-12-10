@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.EditText;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class DateUtils {
 
@@ -51,7 +52,7 @@ public class DateUtils {
      * @param value Число для форматирования.
      * @return Строка с двухзначным числом.
      */
-    private static String formatToTwoDigits(int value) {
+    public static String formatToTwoDigits(int value) {
         return value < 10 ? "0" + value : String.valueOf(value);
     }
 
@@ -64,5 +65,15 @@ public class DateUtils {
     public static String getDayOfWeekString(int dayOfWeek) {
         String[] days = {"Unknown", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         return dayOfWeek >= 1 && dayOfWeek <= 7 ? days[dayOfWeek] : "Unknown";
+    }
+
+    public static String getCurrentYear() {
+        Calendar currentCalendar = Calendar.getInstance();
+        return String.valueOf(currentCalendar.get(Calendar.YEAR));
+    }
+
+    public static String getCurrentMonth() {
+        Calendar currentCalendar = Calendar.getInstance();
+        return currentCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
     }
 }
