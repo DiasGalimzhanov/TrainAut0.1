@@ -22,11 +22,13 @@ import com.example.trainaut01.models.User;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.UserRepository;
-import com.example.trainaut01.utils.DatePickerUtils;
+import com.example.trainaut01.utils.DateUtils;
 import com.example.trainaut01.utils.SpinnerUtils;
 import com.example.trainaut01.utils.ToastUtils;
 import com.example.trainaut01.utils.ValidationUtils;
 import com.google.gson.Gson;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -37,10 +39,6 @@ public class ChildSignUpFragment extends Fragment {
 
     private EditText _etFullNameChild, _etBirthDateChild, _etDiagnosisChild, _etHeightChild, _etWeightChild;
     private Spinner _spGenderChild;
-
-    private Button _btnContinue, _btnBack;
-
-    private AppComponent _appComponent;
 
     @Inject
     UserRepository _userRepository;
@@ -58,7 +56,6 @@ public class ChildSignUpFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +84,7 @@ public class ChildSignUpFragment extends Fragment {
     }
 
     private void initComponents(View view) {
-        _appComponent = DaggerAppComponent.create();
+        AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(ChildSignUpFragment.this);
 
         _etFullNameChild = view.findViewById(R.id.etFullNameChild);
@@ -97,8 +94,8 @@ public class ChildSignUpFragment extends Fragment {
         _etWeightChild = view.findViewById(R.id.etWeightChild);
         _spGenderChild = view.findViewById(R.id.spGenderChild);
 
-        _btnContinue = view.findViewById(R.id.btnContinue);
-        _btnBack = view.findViewById(R.id.btnBack);
+        Button _btnContinue = view.findViewById(R.id.btnContinue);
+        Button _btnBack = view.findViewById(R.id.btnBack);
 
         _btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
         _btnContinue.setOnClickListener(v -> handleContinue());
@@ -114,7 +111,7 @@ public class ChildSignUpFragment extends Fragment {
         String weightStr = _etWeightChild.getText().toString().trim();
         Gender gender = Gender.fromString(_spGenderChild.getSelectedItem().toString().trim());
 
-        if (!ValidationUtils.areFieldsFilled(fullName, birthDate, diagnosis, heightStr, weightStr) || gender == null) {
+        if (!ValidationUtils.areFieldsFilled(fullName, birthDate, diagnosis, heightStr, weightStr)) {
             ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Пожалуйста, заполните все поля.");
             return;
         }
@@ -139,10 +136,10 @@ public class ChildSignUpFragment extends Fragment {
     private void registerUser(String fullName, String birthDate, String diagnosis, float height, float weight, Gender gender) {
         _userRepository.addUser(_user, ChildSignUpFragment.this.getContext(), task -> {
             if (task.isSuccessful()) {
-                String newUserId = task.getResult().getUser().getUid();
+                String newUserId = Objects.requireNonNull(task.getResult().getUser()).getUid();
                 addChild(newUserId, fullName, birthDate, diagnosis, height, weight, gender);
             } else {
-                ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка регистрации пользователя: " + task.getException().getMessage());
+                ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка регистрации пользователя: " + Objects.requireNonNull(task.getException()).getMessage());
             }
         });
     }
@@ -151,9 +148,7 @@ public class ChildSignUpFragment extends Fragment {
         Child child = new Child(fullName, birthDate, gender, diagnosis, height, weight);
 
         _childRepository.addChild(userId, child, ChildSignUpFragment.this.getContext(), aVoid -> {
-
             addDayPlans(userId);
-
         }, error -> {
             ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления ребенка: " + error.getMessage());
         });
@@ -162,9 +157,7 @@ public class ChildSignUpFragment extends Fragment {
 
     private void addDayPlans(String userId) {
         _dayPlanRepository.addAllDayPlansToUser(userId, unused -> {
-
             navigateToBaseActivity();
-
         }, error -> {
             ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления DayPlans: " + error.getMessage());
         });
@@ -181,7 +174,7 @@ public class ChildSignUpFragment extends Fragment {
     }
 
     private void setupBirthDateChildPicker() {
-        _etBirthDateChild.setOnClickListener(v -> DatePickerUtils.showDatePickerDialog(ChildSignUpFragment.this.getContext(), _etBirthDateChild));
+        _etBirthDateChild.setOnClickListener(v -> DateUtils.showDatePickerDialog(ChildSignUpFragment.this.getContext(), _etBirthDateChild));
     }
 
 }

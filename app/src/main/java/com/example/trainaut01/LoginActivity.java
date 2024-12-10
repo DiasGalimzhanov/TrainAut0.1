@@ -16,6 +16,7 @@ import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.UserRepository;
+import com.example.trainaut01.utils.ToastUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,14 +34,11 @@ import javax.inject.Inject;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
-    private Button btnLog, btnGoogleReg;
-    private TextView tvReg, tvForgotPas;
     private EditText etLog;
     private EditText etPas;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
 
-    private AppComponent appComponent;
     @Inject
     UserRepository _userRepository;
 
@@ -53,13 +51,13 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        appComponent = DaggerAppComponent.create();
+        AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
 
-        btnLog = findViewById(R.id.btnLogin);
-        btnGoogleReg = findViewById(R.id.btnGoogleReg);
-        tvForgotPas = findViewById(R.id.tvForgotPas);
-        tvReg = findViewById(R.id.tvRegister);
+        Button btnLog = findViewById(R.id.btnLogin);
+        Button btnGoogleReg = findViewById(R.id.btnGoogleReg);
+        TextView tvForgotPas = findViewById(R.id.tvForgotPas);
+        TextView tvReg = findViewById(R.id.tvRegister);
         etLog = findViewById(R.id.etLogin);
         etPas = findViewById(R.id.etPassword);
         mAuth = FirebaseAuth.getInstance();
@@ -86,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(!log.isEmpty() && !pas.isEmpty()) {
                     loginUser(log,pas);
                 }else{
-                    Toast.makeText(LoginActivity.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+                    ToastUtils.showShortMessage(LoginActivity.this, "Заполните все поля");
                 }
             }
         });
@@ -102,7 +100,6 @@ public class LoginActivity extends AppCompatActivity {
         tvForgotPas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Получаем email из EditText
                 String email = etLog.getText().toString().trim();
 
 
@@ -133,11 +130,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Проверяем результат аутентификации Google
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign-In был успешным, аутентифицируем пользователя в Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {

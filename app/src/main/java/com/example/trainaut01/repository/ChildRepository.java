@@ -4,14 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.models.Child;
 import com.example.trainaut01.models.ChildNote;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,7 +16,6 @@ import com.google.firebase.firestore.ListenerRegistration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class ChildRepository{
 
@@ -136,9 +131,6 @@ public class ChildRepository{
         getFirstChild(userId, childData -> {
             if (childData != null) {
                 saveChildToPreferences(childData, context);
-                Toast.makeText(context, "Данные ребенка сохранены", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Данные ребенка отсутствуют", Toast.LENGTH_SHORT).show();
             }
         }, error -> {
             Toast.makeText(context, "Ошибка загрузки данных ребенка: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -151,6 +143,7 @@ public class ChildRepository{
      * @param childData Данные ребенка.
      * @param context   Контекст для доступа к SharedPreferences.
      */
+
     private void saveChildToPreferences(Map<String, Object> childData, Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

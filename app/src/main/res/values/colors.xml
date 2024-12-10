@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Светлая тема -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#6200EE</color>
@@ -31,7 +30,9 @@
 
 
 
+    <color name="misty_rose">#FFE4E1</color>
+    <color name="terracotta">#B6665D</color>
 
 
-    <!-- Темная тема -->
+
 </resources>

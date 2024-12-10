@@ -56,22 +56,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/card_background"
                 android:elevation="4dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <!-- Первая кнопка с подписью -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp">
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <Button
                         android:id="@+id/btnExercisesMotor"
@@ -85,14 +84,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
                         android:text="Упражнения на моторику"
                         android:textColor="@color/indigo"
-                        android:textSize="14sp"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"/>
+                        android:textSize="14sp" />
                 </LinearLayout>
 
-                <!-- Вторая кнопка с подписью -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -111,11 +109,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
                         android:text="Альтернативная коммуникация (AAC)"
                         android:textColor="@color/indigo"
-                        android:textSize="14sp"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"/>
+                        android:textSize="14sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -128,10 +126,116 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="70dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/btn1_login_back"
                 android:numColumns="7"
                 android:padding="8dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="50dp"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginBottom="8dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/current_calendar_day_back" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="- Текущий день"
+                            android:textColor="@color/violet_blossom"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/completed_calendar_day_back" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="- Упражнения выполнены"
+                            android:textColor="@color/violet_blossom"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginBottom="8dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/calendar_day_background" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="- Неактивный день"
+                            android:textColor="@color/violet_blossom"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/weekend_calendar_back" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="- Выходной день"
+                            android:textColor="@color/violet_blossom"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"

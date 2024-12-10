@@ -25,8 +25,6 @@ import javax.inject.Inject;
  */
 public class DayPlanRepository {
 
-    private static final String TAG = "DayPlanRepository";
-
     private final FirebaseFirestore _db;
     private final CollectionReference _collection;
 

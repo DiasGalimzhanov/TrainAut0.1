@@ -2,7 +2,7 @@ package com.example.trainaut01.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -10,10 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.R;
-import com.example.trainaut01.component.AppComponent;
-import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.enums.Gender;
-import com.example.trainaut01.models.Child;
 import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.profile.UserProfileFragment;
@@ -21,9 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,8 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import javax.inject.Inject;
 
 public class UserRepository {
     private FirebaseFirestore db;
@@ -52,14 +45,14 @@ public class UserRepository {
         String rawPassword = user.getPass();
         user.setPass(rawPassword);
 
-        mAuth.createUserWithEmailAndPassword(user.getEmail(),rawPassword)
+        mAuth.createUserWithEmailAndPassword(user.getEmail(), rawPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                         if (firebaseUser != null) {
                             String userId = firebaseUser.getUid();
                             user.setUserId(userId);
-//                            user.setPass(null);
+
                             db.collection("users").document(userId)
                                     .set(user.toMap())
                                     .addOnSuccessListener(aVoid -> {

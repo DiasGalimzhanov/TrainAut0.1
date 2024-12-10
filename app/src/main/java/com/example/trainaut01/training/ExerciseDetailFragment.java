@@ -1,7 +1,6 @@
 package com.example.trainaut01.training;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -25,14 +24,15 @@ import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.Exercise;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.DayPlanRepository;
-import com.example.trainaut01.repository.ExerciseRepository;
+import com.example.trainaut01.utils.ButtonUtils;
 import com.example.trainaut01.utils.ImageUtils;
+import com.example.trainaut01.utils.ProgressUtils;
 import com.example.trainaut01.utils.SharedPreferencesUtils;
 import com.example.trainaut01.utils.TimeUtils;
 import com.example.trainaut01.utils.ToastUtils;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -44,35 +44,33 @@ public class ExerciseDetailFragment extends Fragment {
     private static final String ARG_IS_GROSS_MOTOR_SELECTED = "isGrossMotorSelected";
     private static final String ARG_SINGLE_EXERCISE = "singleExercise";
 
-    private Exercise singleExercise;
-    private DayPlan _currentDayPlan;
-    private boolean isGrossMotorSelected;
+    private String _userId;
+    private String _childId;
 
-    private TextView _tvTimer;
+    private Exercise _singleExercise;
+    private DayPlan _currentDayPlan;
+    private boolean _isGrossMotorSelected;
+
     private CountDownTimer _timer;
     private float _timeElapsed = 0;
 
-    private TextView _tvSet, _tvRep, _tvName, _tvDescription, _tvRestTime, _tvRecommendations, _tvPoints;
-    private TextView _tvProgressTraining, _tvAllPointsForDay;
+    private TextView _tvSet, _tvName, _tvDescription, _tvRestTime, _tvRecommendations, _tvPoints;
+    private TextView _tvProgressTraining, _tvAllPointsForDay, _tvTimer;
     private ImageView _ivImageUrl;
-    private Button _btnStart;
+    private Button _btnStart, _btnPause, _btnMiss;
     private ProgressBar _pbTraining;
 
     private String _text;
-    private List<Exercise> exercises;
+    private List<Exercise> _exercises;
     private int _currentExerciseIndex = 0;
-
-    private AppComponent _appComponent;
+    private int _skippedExercises = 0;
+    private int _remainingPoints;
 
     @Inject
     ChildRepository _childRepository;
 
     @Inject
-    DayPlanRepository dayPlanRepository;
-
-    @Inject
-    ExerciseRepository exerciseRepository;
-
+    DayPlanRepository _dayPlanRepository;
 
     public static ExerciseDetailFragment newInstance(String day, String userId, Object data, boolean isGrossMotorSelected) {
         ExerciseDetailFragment fragment = new ExerciseDetailFragment();
@@ -100,12 +98,17 @@ public class ExerciseDetailFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupMissButton();
+    }
+
     public void init(View view) {
-        _appComponent = DaggerAppComponent.create();
+        AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(this);
 
         _tvSet = view.findViewById(R.id.tvSet);
-        _tvRep = view.findViewById(R.id.tvRep);
         _tvName = view.findViewById(R.id.tvName);
         _tvDescription = view.findViewById(R.id.tvDescription);
         _tvRestTime = view.findViewById(R.id.tvRestTime);
@@ -113,64 +116,131 @@ public class ExerciseDetailFragment extends Fragment {
         _tvRecommendations = view.findViewById(R.id.tvRecommendations);
         _ivImageUrl = view.findViewById(R.id.ivImageUrl);
         _btnStart = view.findViewById(R.id.btnStart);
+        _btnPause = view.findViewById(R.id.btnPause);
+        _btnMiss = view.findViewById(R.id.btnMiss);
         _tvTimer = view.findViewById(R.id.tvTimer);
         _tvAllPointsForDay = view.findViewById(R.id.tvAllPointsForDay);
         _pbTraining = view.findViewById(R.id.pbTraining);
         _tvProgressTraining = view.findViewById(R.id.tvProgressTraining);
 
-        _btnStart.setOnClickListener(view1 -> handleButtonAction());
-
         _text = getDefaultRecommendationText();
+        setupListeners();
+    }
+
+    private void setupListeners() {
+        _btnStart.setOnClickListener(view -> handleButtonAction());
+        _btnPause.setOnClickListener(view -> handlePauseAction());
+        setupMissButton();
+    }
+
+    private void setupMissButton() {
+        if (_isGrossMotorSelected) {
+            ButtonUtils.updateButtonState(requireContext(), _btnMiss, "Пропустить", R.color.white, R.drawable.btn1_login_back, true);
+            _btnMiss.setOnClickListener(view1 -> handleMissAction());
+        } else {
+            ButtonUtils.updateButtonState(requireContext(), _btnMiss, "Пропустить", R.color.white, R.drawable.btn2inactive_login_back, false);
+        }
     }
 
     private void loadFragmentArguments() {
         if (getArguments() == null) {
-            ToastUtils.showErrorMessage(ExerciseDetailFragment.this.getContext(),"Ошибка: аргументы не переданы.");
+            ToastUtils.showErrorMessage(ExerciseDetailFragment.this.getContext(), "Ошибка: аргументы не переданы.");
             return;
         }
 
-        isGrossMotorSelected = getArguments().getBoolean(ARG_IS_GROSS_MOTOR_SELECTED);
+        _userId = getArguments().getString(USER_ID);
+        _childId = getChildIdFromPreferences();
+        _isGrossMotorSelected = getArguments().getBoolean(ARG_IS_GROSS_MOTOR_SELECTED);
         loadExerciseProgress();
 
-        if (isGrossMotorSelected) {
+        if (_isGrossMotorSelected) {
             loadGrossMotorExercises();
         } else {
             loadSingleExercise();
         }
     }
 
+    private void loadExerciseProgress() {
+        _currentExerciseIndex = SharedPreferencesUtils.getInt(requireContext(), "child_progress", "currentExerciseIndex", 0);
+    }
+
     private void loadGrossMotorExercises() {
         _currentDayPlan = (DayPlan) requireArguments().getSerializable(ARG_DAY_PLAN);
 
-        if (_currentDayPlan == null) {
-            ToastUtils.showErrorMessage(ExerciseDetailFragment.this.getContext(), "План дня не найден или пустой.");
+        if (_currentDayPlan == null || (_exercises = _currentDayPlan.getExercisesGrossMotor()) == null || _exercises.isEmpty()) {
+            ToastUtils.showShortMessage(requireContext(), "Нет упражнений для данного дня.");
             return;
         }
 
-        exercises = _currentDayPlan.getExercisesGrossMotor();
-        setupProgress(exercises != null ? exercises.size() : 0);
-
-        if (exercises == null || exercises.isEmpty()) {
-            ToastUtils.showShortMessage(ExerciseDetailFragment.this.getContext(), "Нет упражнений для данного дня.");
-            return;
-        }
-
-        if (_currentExerciseIndex < exercises.size()) {
-            displayExerciseDetails(exercises.get(_currentExerciseIndex));
-        } else {
-            ToastUtils.showShortMessage(ExerciseDetailFragment.this.getContext(), "Все упражнения завершены.");
-        }
+        _remainingPoints = SharedPreferencesUtils.getInt(requireContext(), "child_progress", "remainingPoints", _currentDayPlan.getRewardPointsDay());
+        setupProgress(_exercises.size());
+        displayExerciseDetails(_exercises.get(_currentExerciseIndex));
     }
 
-
     private void loadSingleExercise() {
-        singleExercise = (Exercise) requireArguments().getSerializable(ARG_SINGLE_EXERCISE);
-        if (singleExercise == null) {
-            ToastUtils.showErrorMessage(ExerciseDetailFragment.this.getContext(), "Упражнение не найдено.");
+        _singleExercise = (Exercise) requireArguments().getSerializable(ARG_SINGLE_EXERCISE);
+
+        if (_singleExercise == null) {
+            ToastUtils.showErrorMessage(getContext(), "Упражнение не найдено.");
             return;
         }
+
+        _exercises = Collections.singletonList(_singleExercise); // Создаем список с одним элементом
         setupProgress(1);
-        displayExerciseDetails(singleExercise);
+        displayExerciseDetails(_singleExercise);
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void displayExerciseDetails(Exercise exercise) {
+        _tvRecommendations.setText(_text);
+        _tvName.setText(exercise.getName());
+        _tvDescription.setText(exercise.getDescription());
+
+        if (_isGrossMotorSelected) {
+            configureTextView(_tvSet, getSetAndRepsText(exercise.getSets(), exercise.getReps(), exercise.getDuration()), true);
+            configureTextView(_tvRestTime, String.format("Время отдыха между подходами %.0f минуты", exercise.getRestTime()), true);
+            configureTextView(_tvPoints, String.format("За выполнение этого упражнения вы получите +%d EXP", exercise.getRewardPoints()), true);
+        } else {
+            configureTextView(_tvSet, "", false);
+            configureTextView(_tvRestTime, "", false);
+            configureTextView(_tvPoints, "", false);
+        }
+
+        if (!_isGrossMotorSelected) _remainingPoints = exercise.getRewardPoints();
+        loadExerciseImage(exercise);
+        updateAllPointsForDayTextView();
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void updateAllPointsForDayTextView() {
+        if (_isGrossMotorSelected)
+            _tvAllPointsForDay.setText(String.format("За выполнение всех упражнений вы получите +%d Exp", _remainingPoints));
+        else
+            _tvAllPointsForDay.setText(String.format("За выполнение этого бонусного упражнения вы получите +%d Exp", _remainingPoints));
+    }
+
+    private void configureTextView(TextView textView, String text, boolean visible) {
+        textView.setText(text);
+        textView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    private String getSetAndRepsText(int sets, int reps, String duration) {
+        String setsText = sets == 1 ? sets + " подход" : sets + " подхода";
+        String repsText;
+        if (!duration.isEmpty()) {
+            repsText = "по " + reps + " " + duration;
+        } else {
+            repsText = (reps >= 2 && reps <= 4) ? "по " + reps + " раза" : "по " + reps + " раз";
+        }
+        return setsText + " " + repsText;
+    }
+
+    private void loadExerciseImage(Exercise exercise) {
+        if (_isGrossMotorSelected) {
+            ImageUtils.setImagePicasso(exercise.getImageUrl(), _ivImageUrl, R.drawable.default_image_not_found, R.drawable.default_image_not_found);
+        } else {
+            ImageUtils.loadImageFromFirebase(exercise.getImageUrl(), _ivImageUrl, R.drawable.default_image_not_found, R.drawable.default_image_not_found);
+        }
     }
 
     private String getDefaultRecommendationText() {
@@ -182,87 +252,39 @@ public class ExerciseDetailFragment extends Fragment {
                 "Включайте разминку перед началом тренировки: несколько легких упражнений для разогрева мышц";
     }
 
-    private void loadExerciseProgress() {
-        _currentExerciseIndex = SharedPreferencesUtils.getInt(requireContext(), "child_progress","currentExerciseIndex", 0);
-
-        _timeElapsed = SharedPreferencesUtils.getInt( requireContext(), "child_progress","timeElapsed", 0);
-    }
-
-
-    @SuppressLint("DefaultLocale")
-    private void displayExerciseDetails(Exercise exercise) {
-        _tvRecommendations.setText(_text);
-        _tvName.setText(exercise.getName());
-        _tvDescription.setText(exercise.getDescription());
-        _tvSet.setText(getSetText(exercise.getSets()));
-        _tvRep.setText(getDurationText(exercise));
-        _tvRestTime.setText(String.format(Locale.getDefault(), "Время отдыха между подходами %.0f минуты", exercise.getRestTime()));
-        _tvPoints.setText(String.format("За выполнение этого упражнения вы получите +%d EXP", exercise.getRewardPoints()));
-
-        if (_currentDayPlan != null) {
-            _tvAllPointsForDay.setText(String.format("За выполнение всех упражнений вы получите +%d Exp", _currentDayPlan.getRewardPointsDay()));
-        } else {
-            _tvAllPointsForDay.setText(String.format("За выполнение бонусного упражнения вы получите: +%d Exp", exercise.getRewardPoints()));
-        }
-
-        loadExerciseImage(exercise);
-    }
-
-    private String getSetText(int sets) {
-        return sets == 1 ? sets + " подход" : sets + " подхода";
-    }
-
-    private String getDurationText(Exercise exercise) {
-        if (!exercise.getDuration().isEmpty()) {
-            return "по " + exercise.getReps() + " " + exercise.getDuration();
-        }
-        return (exercise.getReps() >= 2 && exercise.getReps() <= 4) ? "по " + exercise.getReps() + " раза" : "по " + exercise.getReps() + " раз";
-    }
-
-    private void loadExerciseImage(Exercise exercise) {
-        if (isGrossMotorSelected) {
-            ImageUtils.setImagePicasso(exercise.getImageUrl(), _ivImageUrl, R.drawable.default_image_not_found, R.drawable.default_image_not_found);
-        } else {
-            ImageUtils.loadImageFromFirebase(exercise.getImageUrl(), _ivImageUrl,R.drawable.default_image_not_found, R.drawable.default_image_not_found);
-        }
-    }
-
     private void setupProgress(int totalExercises) {
         _pbTraining.setMax(totalExercises);
 
         if (totalExercises == 1) {
-            _pbTraining.setProgress(0);
-            _tvProgressTraining.setText(String.format(Locale.getDefault(), "%d/%d", 0, 1));
+            configureProgress(0, totalExercises);
         } else {
             int savedProgress = SharedPreferencesUtils.getInt(requireContext(), "child_progress", "progressBar", 0);
-            _pbTraining.setProgress(savedProgress);
-            _tvProgressTraining.setText(String.format(Locale.getDefault(), "%d/%d", savedProgress, exercises.size()));
+            configureProgress(savedProgress, _exercises.size());
         }
     }
 
     private void updateProgress(int completedExercises) {
-        if (exercises != null) {
-            _pbTraining.setProgress(completedExercises);
-            _tvProgressTraining.setText(String.format(Locale.getDefault(), "%d/%d", completedExercises, exercises.size()));
-        } else {
-            _pbTraining.setProgress(1);
-            _tvProgressTraining.setText(String.format(Locale.getDefault(), "%d/%d", 1, 1));
+        if (_isGrossMotorSelected) {
+            configureProgress(completedExercises, _exercises.size());
+            SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "progressBar", completedExercises);
         }
+    }
 
-        SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "progressBar", completedExercises);
+    @SuppressLint("DefaultLocale")
+    private void configureProgress(int completed, int total) {
+        _pbTraining.setProgress(completed);
+        _tvProgressTraining.setText(String.format("%d/%d", completed, total));
     }
 
     private void handleButtonAction() {
+        int totalRewardPoints = _currentDayPlan != null ? _currentDayPlan.getRewardPointsDay() : 0;
+
         switch (_btnStart.getText().toString()) {
             case "Начать упражнение":
                 startExercise();
                 break;
             case "Завершить упражнение":
-                if (isGrossMotorSelected) {
-                    finishExercise();
-                } else {
-                    finishSingleExercise();
-                }
+                handleExerciseCompletion(totalRewardPoints);
                 break;
             case "Далее":
                 nextExercise();
@@ -270,96 +292,197 @@ public class ExerciseDetailFragment extends Fragment {
         }
     }
 
-    private void finishSingleExercise() {
-        stopTimer();
-        updateExperienceAndProgress(singleExercise);
-        showCompletionToast();
-        sendTrainingCompletionResult();
-        goToRewardFragment(singleExercise.getRewardPoints());
+    private void handlePauseAction() {
+        if (_timer != null) {
+            stopTimer();
+            ButtonUtils.updateButtonState(requireContext(), _btnPause, "Продолжить", R.color.white, R.drawable.back_start_exercise, true);
+            ButtonUtils.updateButtonState(requireContext(), _btnStart, "Завершить упражнение", R.color.white, R.drawable.btn2inactive_login_back, false);
+            _btnPause.setOnClickListener(view -> handleResumeAction());
+        }
     }
 
+    private void handleResumeAction() {
+        startTimer();
+        ButtonUtils.updateButtonState(requireContext(), _btnPause, "Пауза", R.color.white, R.drawable.btn1_login_back, true);
+        ButtonUtils.updateButtonState(requireContext(), _btnStart, "Завершить упражнение", R.color.white, R.drawable.finish_exercise_back, true);
+        _btnPause.setOnClickListener(view -> handlePauseAction());
+    }
 
+    private void handleMissAction() {
+        if (_currentExerciseIndex < _exercises.size()) {
+            Exercise missedExercise = _exercises.get(_currentExerciseIndex);
+
+            updateExerciseTime(missedExercise, 0, () -> {
+                updateProgress(_currentExerciseIndex + 1);
+            });
+        }
+
+        _skippedExercises++;
+        _remainingPoints = calculateFinalPoints(_currentDayPlan.getRewardPointsDay());
+
+        updateAllPointsForDayTextView();
+        SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "remainingPoints", _remainingPoints);
+
+        ButtonUtils.updateButtonState(requireContext(), _btnPause, "Пауза", R.color.white, R.drawable.btn2inactive_login_back, false);
+
+        if (_currentExerciseIndex >= _exercises.size() - 1) {
+            if (_skippedExercises == _exercises.size()) {
+                returnToPreviousPageWithoutCompletion();
+            } else {
+                finalizeTraining(_remainingPoints);
+            }
+        } else {
+            nextExercise();
+        }
+    }
 
     private void startExercise() {
         resetTimer();
         startTimer();
-        updateButtonState("Завершить упражнение", R.color.white, R.drawable.background_finish_exercise);
-    }
 
-    private void finishExercise() {
-            stopTimer();
-        completeExercise(exercises.get(_currentExerciseIndex));
+        ButtonUtils.updateButtonState(requireContext(), _btnStart, "Завершить упражнение", R.color.white, R.drawable.finish_exercise_back, true);
+        ButtonUtils.updateButtonState(requireContext(), _btnPause, "Пауза", R.color.white, R.drawable.btn1_login_back, true);
+
     }
 
     private void nextExercise() {
         _currentExerciseIndex++;
         SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "currentExerciseIndex", _currentExerciseIndex);
-        if (_currentExerciseIndex < exercises.size()) {
+        if (_currentExerciseIndex < _exercises.size()) {
             resetTimer();
-            displayExerciseDetails(exercises.get(_currentExerciseIndex));
-            updateButtonState("Начать упражнение", R.color.black, R.drawable.back_start_exercise);
+            displayExerciseDetails(_exercises.get(_currentExerciseIndex));
+            ButtonUtils.updateButtonState(requireContext(), _btnStart,"Начать упражнение", R.color.black, R.drawable.back_start_exercise, true);
         } else {
-            showCompletionToast();
+            int totalRewardPoints = _currentDayPlan != null ? _currentDayPlan.getRewardPointsDay() : 0;
+            finalizeTraining(totalRewardPoints);
         }
-    }
-
-    private void updateButtonState(String text, int textColor, int backgroundResource) {
-        _btnStart.setText(text);
-        _btnStart.setTextColor(getResources().getColor(textColor));
-        _btnStart.setBackgroundResource(backgroundResource);
     }
 
     private void completeExercise(Exercise exercise) {
-        if (_currentDayPlan == null) {
-            Toast.makeText(getContext(), "План дня отсутствует.", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
-        String userId = requireArguments().getString(USER_ID);
-        String childId = getChildIdFromPreferences();
-        String dayPlanId = requireArguments().getString(ARG_DAY).toLowerCase();
-        String exerciseId = exercise.getId();
         float timeElapsed = _timeElapsed;
         int rewardPoints = _currentDayPlan.getRewardPointsDay();
 
-        SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "currentExerciseIndex", _currentExerciseIndex);
-
-        dayPlanRepository.updateExerciseCompletedTime(userId, dayPlanId, exerciseId, timeElapsed, aVoid -> {
+        updateExerciseTime(exercise, timeElapsed, () -> {
+            updateExperienceAndProgress(exercise);
             updateProgress(_currentExerciseIndex + 1);
-            handleCompletion(userId, childId, rewardPoints);
-        }, e -> ToastUtils.showErrorMessage(ExerciseDetailFragment.this.getContext(),"Ошибка завершения упражнения."));
+            handleCompletion(rewardPoints);
+        });
     }
 
+
+    private void updateExerciseTime(Exercise exercise, float timeElapsed, Runnable onSuccessAction) {
+        if (_currentDayPlan == null) {
+            ToastUtils.showErrorMessage(getContext(), "План дня отсутствует.");
+            return;
+        }
+
+        String dayPlanId = requireArguments().getString(ARG_DAY).toLowerCase();
+        String exerciseId = exercise.getId();
+
+        _dayPlanRepository.updateExerciseCompletedTime(_userId, dayPlanId, exerciseId, timeElapsed,
+                aVoid -> {
+                    if (onSuccessAction != null) {
+                        onSuccessAction.run();
+                    }
+                },
+                e -> ToastUtils.showErrorMessage(getContext(), "Ошибка обновления времени выполнения упражнения.")
+        );
+    }
+
+
     private void updateExperienceAndProgress(Exercise exercise) {
-        String userId = requireArguments().getString(USER_ID);
-        String childId = getChildIdFromPreferences();
-        updateChildExperience(userId, childId, exercise.getRewardPoints(), requireContext());
+        updateChildExperience(exercise.getRewardPoints());
         updateProgress(1);
     }
 
-    private void updateChildExperience(String userId, String childId, int newPoints, Context context) {
+    private void updateChildExperience(int newPoints) {
         int updatedExp = SharedPreferencesUtils.getInt(requireContext(), "child_data", "exp", 0) + newPoints;
         SharedPreferencesUtils.saveInt(requireContext(), "child_data", "exp", updatedExp);
-        _childRepository.updateChildItem(userId, childId, "exp", updatedExp, context);
+        _childRepository.updateChildItem(_userId, _childId, "exp", updatedExp, requireContext());
     }
 
-    private void updateChildCountDays(String userId, String childId, Context context) {
+    private void updateChildCountDays() {
         int updatedCountDays = SharedPreferencesUtils.getInt(requireContext(), "child_data", "countDays", 0) + 1;
         SharedPreferencesUtils.saveInt(requireContext(), "child_data", "countDays", updatedCountDays);
-        _childRepository.updateChildItem(userId, childId, "countDays", updatedCountDays, context);
+        _childRepository.updateChildItem(_userId, _childId, "countDays", updatedCountDays, requireContext());
     }
 
-    private void handleCompletion(String userId, String childId, int rewardPoints) {
-        if (_currentExerciseIndex + 1 < exercises.size()) {
-            updateButtonState("Далее", R.color.black, R.drawable.back_start_exercise);
+    private void handleCompletion(int rewardPoints) {
+        if (_currentExerciseIndex + 1 < _exercises.size()) {
+            ButtonUtils.updateButtonState(requireContext(), _btnStart, "Далее", R.color.black, R.drawable.btn1_login_back, true);
+            ButtonUtils.updateButtonState(requireContext(), _btnPause, "Пауза", R.color.white, R.drawable.btn2inactive_login_back, false);
         } else {
-            updateChildExperience(userId, childId, rewardPoints, requireContext());
-            updateChildCountDays(userId, childId, requireContext());
-            updateButtonState("Завершить", R.color.white, R.drawable.background_finish_exercise);
+            finalizeTraining(rewardPoints);
+        }
+    }
+
+    private void finalizeTraining(int totalRewardPoints) {
+        if (_isGrossMotorSelected && _currentDayPlan == null) {
+            ToastUtils.showErrorMessage(getContext(), "Ошибка: План дня отсутствует.");
+            return;
+        }
+
+        if (_exercises == null || _exercises.isEmpty()) {
+            ToastUtils.showErrorMessage(getContext(), "Нет упражнений для завершения.");
+            return;
+        }
+
+        if (_skippedExercises == _exercises.size()) {
+            returnToPreviousPageWithoutCompletion();
+            return;
+        }
+
+        int finalPoints = calculateFinalPoints(totalRewardPoints);
+
+        if (_isGrossMotorSelected) {
+            handleGrossMotorCompletion(finalPoints);
+        } else {
+            updateExperienceAndProgress(_singleExercise);
+        }
+
+        if (_currentDayPlan != null) {
+            SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "remainingPoints", _currentDayPlan.getRewardPointsDay());
+        }
+
+        finalizeUI(finalPoints);
+    }
+
+
+    private void handleGrossMotorCompletion(int finalPoints) {
+        updateChildExperience(finalPoints);
+        updateChildCountDays();
+    }
+
+    private int calculateFinalPoints(int totalRewardPoints) {
+        if (!_isGrossMotorSelected) {
+            return _singleExercise != null ? _singleExercise.getRewardPoints() : 0;
+        }
+
+        int totalExercises = _exercises != null ? _exercises.size() : 1;
+        int pointsPerExercise = totalExercises > 0 ? totalRewardPoints / totalExercises : 0;
+        return Math.max(0, totalRewardPoints - (_skippedExercises * pointsPerExercise));
+    }
+
+
+
+    private void finalizeUI(int finalPoints) {
+        ButtonUtils.updateButtonState(requireContext(), _btnStart, "Завершить", R.color.white, R.drawable.finish_exercise_back, true);
+        ButtonUtils.updateButtonState(requireContext(), _btnPause, "Пауза", R.color.white, R.drawable.btn2inactive_login_back, false);
+        if (_isGrossMotorSelected) {
             SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "currentExerciseIndex", 0);
             SharedPreferencesUtils.saveBoolean(requireContext(), "child_progress", "isCompletedTodayTraining", true);
             sendTrainingCompletionResult();
-            goToRewardFragment(rewardPoints);
+        }
+        goToRewardFragment(finalPoints);
+    }
+
+    private void handleExerciseCompletion(int totalRewardPoints) {
+        if (_isGrossMotorSelected) {
+            stopTimer();
+            completeExercise(_exercises.get(_currentExerciseIndex));
+        } else {
+            finalizeTraining(totalRewardPoints);
         }
     }
 
@@ -396,7 +519,6 @@ public class ExerciseDetailFragment extends Fragment {
         _tvTimer.setText(TimeUtils.formatElapsedTime(_timeElapsed));
     }
 
-
     private void goToRewardFragment(Integer rewardPoints) {
         requireActivity().getSupportFragmentManager().popBackStack("TrainingDashboardFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         RewardFragment rewardFragment = RewardFragment.newInstance(rewardPoints);
@@ -405,8 +527,10 @@ public class ExerciseDetailFragment extends Fragment {
                 .commit();
     }
 
-    private void showCompletionToast() {
-        ToastUtils.showShortMessage(getContext(), "Вы завершили упражнение!");
+    private void returnToPreviousPageWithoutCompletion() {
+        ProgressUtils.resetAllProgress(requireContext());
+        ToastUtils.showShortMessage(requireContext(), "Все упражнения пропущены. Прогресс сброшен.");
+        requireActivity().getSupportFragmentManager().popBackStack();
     }
 
     private String getChildIdFromPreferences() {

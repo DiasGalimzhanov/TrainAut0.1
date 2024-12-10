@@ -25,7 +25,6 @@ import javax.inject.Inject;
 public class BaseActivity extends AppCompatActivity implements BottomNavigationUpdater {
 
     private BottomNavigationView _bottomNavigationView;
-    private AppComponent _appComponent;
     private int _previousPosition = 0;
 
     @Inject
@@ -41,7 +40,7 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        _appComponent = DaggerAppComponent.create();
+        AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(this);
 
         setContentView(R.layout.activity_base);

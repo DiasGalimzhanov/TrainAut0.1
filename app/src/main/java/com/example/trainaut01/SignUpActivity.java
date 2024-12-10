@@ -1,7 +1,5 @@
 package com.example.trainaut01;
 
-import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,7 +20,7 @@ import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.UserRepository;
-import com.example.trainaut01.utils.DatePickerUtils;
+import com.example.trainaut01.utils.DateUtils;
 import com.example.trainaut01.utils.SpinnerUtils;
 import com.example.trainaut01.utils.ToastUtils;
 import com.example.trainaut01.utils.ValidationUtils;
@@ -39,8 +37,6 @@ public class SignUpActivity extends AppCompatActivity {
     private Button _btnContinue;
     private TextView _tvPasswordMatch, _tvLogin;
     private CheckBox _chbUserAgreement;
-
-    private AppComponent _appComponent;
 
     @Inject
     UserRepository _userRepository;
@@ -59,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
-        _appComponent = DaggerAppComponent.create();
+        AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(SignUpActivity.this);
 
         _tvLogin = findViewById(R.id.tvLogin);
@@ -93,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setupBirthDatePicker() {
-        _etBirthDate.setOnClickListener(v -> DatePickerUtils.showDatePickerDialog(this, _etBirthDate));
+        _etBirthDate.setOnClickListener(v -> DateUtils.showDatePickerDialog(this, _etBirthDate));
     }
 
     private void setupPasswordValidation() {
@@ -134,12 +130,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean isUserAgreementChecked() {
         return _chbUserAgreement.isChecked();
-    }
-
-
-    @SuppressLint("DefaultLocale")
-    private DatePickerDialog.OnDateSetListener getDateSetListener() {
-        return (view, year, month, day) -> _etBirthDate.setText(String.format("%02d.%02d.%d", day, month + 1, year));
     }
 
     private void navigateToLogin() {

@@ -10,66 +10,65 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.trainaut01.R;
 import com.example.trainaut01.models.Exercise;
 
 import java.util.List;
 
 public class FineMotorAdapter extends RecyclerView.Adapter<FineMotorAdapter.FineMotorViewHolder> {
-    private final Context context;
-    private final List<Exercise> exerciseList;
-    private final OnExerciseClickListener listener;
-    private final String dayOfWeek;
+    private final Context _context;
+    private final List<Exercise> _exerciseList;
+    private final OnExerciseClickListener _listener;
+    private final String _dayOfWeek;
 
     public interface OnExerciseClickListener {
         void onExerciseClick(Exercise exercise);
     }
 
     public FineMotorAdapter(Context context, List<Exercise> exerciseList, OnExerciseClickListener listener, String dayOfWeek) {
-        this.context = context;
-        this.exerciseList = exerciseList;
-        this.listener = listener;
-        this.dayOfWeek = dayOfWeek;
+        this._context = context;
+        this._exerciseList = exerciseList;
+        this._listener = listener;
+        this._dayOfWeek = dayOfWeek;
     }
 
     @NonNull
     @Override
     public FineMotorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_fine_motor_exercise, parent, false);
+        View view = LayoutInflater.from(_context).inflate(R.layout.item_fine_motor_exercise, parent, false);
         return new FineMotorViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FineMotorViewHolder holder, int position) {
-        Exercise exercise = exerciseList.get(position);
-        holder.bind(exercise, listener);
+        Exercise exercise = _exerciseList.get(position);
+        holder.bind(exercise, _listener);
     }
 
     @Override
     public int getItemCount() {
-        return exerciseList.size();
+        return _exerciseList.size();
     }
 
     public class FineMotorViewHolder extends RecyclerView.ViewHolder {
-        private final TextView nameTextView;
-        private final TextView pointsTextView;
-        private final ImageView iconImageView;
+        private final TextView _nameTextView;
+        private final TextView _pointsTextView;
+        private final ImageView _ivExerciseIcon;
 
         public FineMotorViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.tvExerciseName);
-            pointsTextView = itemView.findViewById(R.id.tvExercisePoints);
-            iconImageView = itemView.findViewById(R.id.ivExerciseIcon);
+            _nameTextView = itemView.findViewById(R.id.tvExerciseName);
+            _pointsTextView = itemView.findViewById(R.id.tvExercisePoints);
+            _ivExerciseIcon = itemView.findViewById(R.id.ivExerciseIcon);
         }
 
         public void bind(Exercise exercise, OnExerciseClickListener listener) {
-            nameTextView.setText(exercise.getName());
-            pointsTextView.setText("Опыт: " + exercise.getRewardPoints());
+            _nameTextView.setText(exercise.getName());
+            _pointsTextView.setText("Опыт: " + exercise.getRewardPoints());
 
-            int dayImageRes = getDayOfWeekImage(dayOfWeek);
+            int dayImageRes = getDayOfWeekImage(_dayOfWeek);
 
-            iconImageView.setForeground(context.getDrawable(dayImageRes));
+            _ivExerciseIcon.setForeground(_context.getDrawable(dayImageRes));
 
             itemView.setOnClickListener(v -> listener.onExerciseClick(exercise));
         }
