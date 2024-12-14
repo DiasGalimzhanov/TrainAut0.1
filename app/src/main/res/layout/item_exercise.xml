@@ -10,7 +10,7 @@
         android:id="@+id/imgExerciseIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/icon_dum"
+        android:src="@drawable/icon_training"
         android:contentDescription="Иконка упражнения"
         android:layout_marginEnd="8dp" />
 

@@ -78,7 +78,7 @@ public class UserRepository {
         String city = document.getString("city");
         Gender gender = Gender.fromString(document.getString("gender"));;
         String email = document.getString("email");
-        String pass = document.getString("pass");
+//        String pass = document.getString("pass");
 
         List<Map<String, Object>> dayPlansData = (List<Map<String, Object>>) document.get("dayPlans");
         List<DayPlan> dayPlans = new ArrayList<>();
@@ -89,7 +89,7 @@ public class UserRepository {
             }
         }
 
-        return new User(userId, fullName, phone, birthDate, city, gender, email, pass);
+        return new User(userId, fullName, phone, birthDate, city, gender, email);
     }
 
     public void getUserDataById(String userId, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
@@ -197,7 +197,7 @@ public class UserRepository {
         editor.putString("city", user.getCity());
         editor.putString("gender", user.getGender().toString());
         editor.putString("email", user.getEmail());
-        editor.putString("pass", user.getPass());
+//        editor.putString("pass", user.getPass());
         editor.putString("role", user.getRole().toString());
 
         editor.apply();

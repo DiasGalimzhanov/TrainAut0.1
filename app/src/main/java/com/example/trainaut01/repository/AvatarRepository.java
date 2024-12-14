@@ -1,10 +1,10 @@
 package com.example.trainaut01.repository;
 
-import android.util.Log;
 
-import androidx.annotation.NonNull;
+import android.content.Context;
 
 import com.example.trainaut01.models.Avatar;
+import com.example.trainaut01.utils.SharedPreferencesUtils;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -14,6 +14,7 @@ import java.util.List;
 
 public class AvatarRepository {
     private FirebaseFirestore db;
+    private SharedPreferencesUtils sharedPreferencesUtils;
 
     public AvatarRepository() {
         db = FirebaseFirestore.getInstance();
@@ -24,36 +25,15 @@ public class AvatarRepository {
         void onFailure(Exception e);
     }
 
-    public void getAvatars(final AvatarCallback callback) {
-        db.collection("avatars")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Avatar> avatarList = new ArrayList<>();
-                        QuerySnapshot querySnapshot = task.getResult();
-
-                        if (querySnapshot != null) {
-                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                String id = document.getId();
-                                int lvl = document.getLong("lvl").intValue();
-                                String urlAvatar = document.getString("urlAvatar");
-                                String desc = document.getString("desc");
-
-                                Avatar avatar = new Avatar(id, lvl, urlAvatar, desc);
-                                avatarList.add(avatar);
-                            }
-                        }
-
-                        callback.onSuccess(avatarList);
-                    } else {
-                        callback.onFailure(task.getException());
-                    }
-                });
+    public int getLevel(Context context){
+        int exp = SharedPreferencesUtils.getInt(context, "child_data", "exp", 1);
+        return (exp / 5000) + 1;
     }
 
-    public void getAvatarByLevel(int userLvl, final AvatarCallback callback) {
+    public void getAvatarByLevel(Context context, final AvatarCallback callback) {
+        int level = getLevel(context);
         db.collection("avatars")
-                .whereEqualTo("lvl", userLvl)
+                .whereEqualTo("lvl", level)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

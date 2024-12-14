@@ -40,6 +40,16 @@ public class User {
         this.pass = pass;
     }
 
+    public User(String userId, String fullName, String phone, String birthDate, String city, Gender gender, String email) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.birthDate = birthDate;
+        this.city = city;
+        this.gender = gender;
+        this.email = email;
+    }
+
     public User(String fullName, String phone, String birthDate, String city, Gender gender, String email, String pass) {
         this.fullName = fullName;
         this.phone = phone;

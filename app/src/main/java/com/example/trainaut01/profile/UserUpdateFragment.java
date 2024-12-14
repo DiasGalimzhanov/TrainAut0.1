@@ -87,7 +87,7 @@ public class UserUpdateFragment extends Fragment {
         etBirthDate_update = view.findViewById(R.id.etBirthDate_update);
         etCity_update = view.findViewById(R.id.etCity_update);
         spGender_update = view.findViewById(R.id.spGender_update);
-        etEmailReg_update = view.findViewById(R.id.etEmailReg_update);
+//        etEmailReg_update = view.findViewById(R.id.etEmailReg_update);
 
         etPasReg_update = view.findViewById(R.id.etPasReg_update);
         etPasConfirm_update = view.findViewById(R.id.etPasConfirm_update);
@@ -134,7 +134,7 @@ public class UserUpdateFragment extends Fragment {
         etPhone_update.setText(phone);
         etBirthDate_update.setText(birthDate);
         etCity_update.setText(city);
-        etEmailReg_update.setText(email);
+//        etEmailReg_update.setText(email);
 
         Gender userGender;
         try {

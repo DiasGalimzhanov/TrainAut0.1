@@ -34,153 +34,205 @@ import javax.inject.Inject;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
+
     private EditText etLog;
     private EditText etPas;
+
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
 
     @Inject
-    UserRepository _userRepository;
+    UserRepository userRepository;
 
     @Inject
-    ChildRepository _childRepository;
+    ChildRepository childRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
         setContentView(R.layout.activity_login);
 
         AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
 
-        Button btnLog = findViewById(R.id.btnLogin);
-        Button btnGoogleReg = findViewById(R.id.btnGoogleReg);
-        TextView tvForgotPas = findViewById(R.id.tvForgotPas);
-        TextView tvReg = findViewById(R.id.tvRegister);
+        initUI();
+
+        mAuth = FirebaseAuth.getInstance();
+        setupGoogleSignInOptions();
+        setupClickListeners();
+    }
+
+    /**
+     * Обработка результата Activity, в частности, результата авторизации через Google.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            handleGoogleSignInResult(data);
+        }
+    }
+
+    /**
+     * Инициализация UI элементов.
+     */
+    private void initUI() {
         etLog = findViewById(R.id.etLogin);
         etPas = findViewById(R.id.etPassword);
-        mAuth = FirebaseAuth.getInstance();
+    }
 
+    /**
+     * Настройка параметров входа через Google.
+     */
+    private void setupGoogleSignInOptions() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        btnGoogleReg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signInWithGoogle();
-            }
-        });
-
-        btnLog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String log = etLog.getText().toString().trim();
-                String pas = etPas.getText().toString().trim();
-                if(!log.isEmpty() && !pas.isEmpty()) {
-                    loginUser(log,pas);
-                }else{
-                    ToastUtils.showShortMessage(LoginActivity.this, "Заполните все поля");
-                }
-            }
-        });
-
-        tvReg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        tvForgotPas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = etLog.getText().toString().trim();
-
-
-                if (!email.isEmpty()) {
-                    mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Ссылка для сброса пароля отправлена на " + email, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(LoginActivity.this, "Ошибка: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } else {
-                    Toast.makeText(LoginActivity.this, "Пожалуйста, введите свой адрес электронной почты", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 
-    private void signInWithGoogle() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+    /**
+     * Установка обработчиков нажатий.
+     */
+    private void setupClickListeners() {
+        Button btnLog = findViewById(R.id.btnLogin);
+//        Button btnGoogleReg = findViewById(R.id.btnGoogleReg);
+        TextView tvForgotPas = findViewById(R.id.tvForgotPas);
+        TextView tvReg = findViewById(R.id.tvRegister);
+
+//        btnGoogleReg.setOnClickListener(v -> signInWithGoogle());
+
+        btnLog.setOnClickListener(v -> attemptEmailLogin());
+
+        tvReg.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
+        });
+
+        tvForgotPas.setOnClickListener(v -> attemptPasswordReset());
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    /**
+     * Попытка входа через email и пароль.
+     */
+    private void attemptEmailLogin() {
+        String log = etLog.getText().toString().trim();
+        String pas = etPas.getText().toString().trim();
 
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account.getIdToken());
-            } catch (ApiException e) {
-                Toast.makeText(LoginActivity.this, "Google Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+        if (!log.isEmpty() && !pas.isEmpty()) {
+            loginUser(log, pas);
+        } else {
+            ToastUtils.showShortMessage(this, "Заполните все поля");
         }
     }
 
+    /**
+     * Попытка сброса пароля.
+     */
+    private void attemptPasswordReset() {
+        String email = etLog.getText().toString().trim();
+
+        if (!email.isEmpty()) {
+            mAuth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this,
+                                            "Ссылка для сброса пароля отправлена на " + email,
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            Toast.makeText(this,
+                                            "Ошибка: " + (task.getException() != null ? task.getException().getMessage() : "Неизвестная ошибка"),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
+        } else {
+            Toast.makeText(this,
+                            "Пожалуйста, введите свой адрес электронной почты",
+                            Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    /**
+     * Инициация входа через Google.
+     */
+//    private void signInWithGoogle() {
+//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+//        startActivityForResult(signInIntent, RC_SIGN_IN);
+//    }
+
+    /**
+     * Обработка результата авторизации через Google.
+     */
+    private void handleGoogleSignInResult(Intent data) {
+        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+        try {
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            if (account != null) {
+                firebaseAuthWithGoogle(account.getIdToken());
+            } else {
+                Toast.makeText(this, "Google Sign-In failed: Account is null", Toast.LENGTH_SHORT).show();
+            }
+        } catch (ApiException e) {
+            Toast.makeText(this, "Google Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Авторизация через Firebase с полученным токеном Google.
+     */
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(LoginActivity.this, "Google Sign-In successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Google Sign-In failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Google Sign-In successful", Toast.LENGTH_SHORT).show();
+                        navigateToBaseActivity();
+                    } else {
+                        Toast.makeText(this,
+                                "Google Sign-In failed: " + (task.getException() != null ? task.getException().getMessage() : "Неизвестная ошибка"),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+    /**
+     * Вход пользователя через email и пароль.
+     */
     private void loginUser(String email, String password) {
-        _userRepository.loginUser(email, password, this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Вход успешен", Toast.LENGTH_SHORT).show();
+        userRepository.loginUser(email, password, this, task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(this, "Вход успешен", Toast.LENGTH_SHORT).show();
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    if (firebaseUser != null) {
-                        String userId = firebaseUser.getUid();
-                        ChildRepository childRepository = new ChildRepository();
-                        childRepository.saveChildData(userId, LoginActivity.this);
-                    }
-
-                    Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(LoginActivity.this, "Ошибка входа: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                if (firebaseUser != null) {
+                    String userId = firebaseUser.getUid();
+                    ChildRepository childRepositoryLocal = new ChildRepository();
+                    childRepositoryLocal.saveChildData(userId, this);
                 }
+
+                navigateToBaseActivity();
+            } else {
+                Toast.makeText(this,
+                        "Ошибка входа: " + (task.getException() != null ? task.getException().getMessage() : "Неизвестная ошибка"),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    /**
+     * Переход к главной Activity после успешного входа.
+     */
+    private void navigateToBaseActivity() {
+        Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
+        startActivity(intent);
 
+    }
 }

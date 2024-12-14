@@ -57,7 +57,7 @@ public class ProgressFragment extends Fragment {
         setLevelProgress(exp);
         setStreakProgress(streakDays);
         loadAchievements();
-        loadAvatar(exp);
+        loadAvatar();
 
         return view;
     }
@@ -77,12 +77,12 @@ public class ProgressFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void setLevelProgress(int exp) {
-        int level = exp / 5000;
+        int level = (exp / 5000) + 1;
         int expForNextLevel = 5000;
         int progress = ((exp % expForNextLevel) * 100 / expForNextLevel);
 
         levelTitle.setText("Уровень: " + level);
-        levelProgressText.setText(exp + " / " + (level + 1) * expForNextLevel + " опыта");
+        levelProgressText.setText(exp + " / " + level * expForNextLevel + " опыта");
         levelProgressBar.setProgress(progress);
     }
 
@@ -105,9 +105,8 @@ public class ProgressFragment extends Fragment {
         });
     }
 
-    private void loadAvatar(int exp) {
-        int level = exp / 5000;
-        avatarRepository.getAvatarByLevel(level, new AvatarRepository.AvatarCallback() {
+    private void loadAvatar() {
+        avatarRepository.getAvatarByLevel(getActivity(), new AvatarRepository.AvatarCallback() {
             @Override
             public void onSuccess(List<Avatar> avatars) {
                 if (!avatars.isEmpty()) {

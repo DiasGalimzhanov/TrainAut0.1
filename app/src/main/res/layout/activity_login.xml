@@ -84,7 +84,7 @@
             android:layout_gravity="end"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
-            android:text="Забыли свой пароль?\n(в разработке)"
+            android:text="Забыли свой пароль?"
             android:textColor="@color/bright_sky_blue"
             android:textSize="16sp" />
 
@@ -102,23 +102,23 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnGoogleReg"
-            style="@android:style/Widget.Button"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/edit_text_signup"
-            android:drawableStart="@drawable/googleg_standard_color_18"
-            android:drawablePadding="10dp"
-            android:padding="8dp"
-            android:text="Войти через Google"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:textStyle="italic" />
+<!--        <Button-->
+<!--            android:id="@+id/btnGoogleReg"-->
+<!--            style="@android:style/Widget.Button"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:layout_marginEnd="20dp"-->
+<!--            android:background="@drawable/edit_text_signup"-->
+<!--            android:drawableStart="@drawable/googleg_standard_color_18"-->
+<!--            android:drawablePadding="10dp"-->
+<!--            android:padding="8dp"-->
+<!--            android:text="Войти через Google"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textSize="18sp"-->
+<!--            android:textStyle="italic" />-->
 
         <TextView
             android:id="@+id/tvRegister"

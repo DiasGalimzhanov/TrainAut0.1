@@ -40,4 +40,5 @@ public class SharedPreferencesUtils {
         editor.putBoolean(key, value);
         editor.apply();
     }
+
 }

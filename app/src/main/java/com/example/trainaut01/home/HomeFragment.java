@@ -1,5 +1,6 @@
 package com.example.trainaut01.home;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -97,7 +98,7 @@ public class HomeFragment extends Fragment {
      * @param view Основной вид фрагмента.
      */
     private void init(View view) {
-        sharedPref = requireActivity().getSharedPreferences(SHARED_PREF_NAME, getActivity().MODE_PRIVATE);
+        sharedPref = requireActivity().getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
@@ -127,19 +128,15 @@ public class HomeFragment extends Fragment {
         String fullName = sharedPref.getString("fullName", "Гость");
         tvHello.setText(String.format("Привет, %s", fullName));
 
-        int exp = sharedPref.getInt("exp", 0);
-        int lvl = exp / 5000;
-
-        loadAvatar(lvl);
+        loadAvatar();
     }
 
     /**
      * Загружает аватар пользователя в зависимости от его уровня.
      *
-     * @param level Уровень пользователя.
      */
-    private void loadAvatar(int level) {
-        avatarRepository.getAvatarByLevel(level, new AvatarRepository.AvatarCallback() {
+    private void loadAvatar() {
+        avatarRepository.getAvatarByLevel(getActivity() ,new AvatarRepository.AvatarCallback() {
             @Override
             public void onSuccess(List<Avatar> avatars) {
                 if (!avatars.isEmpty()) {
@@ -267,7 +264,7 @@ public class HomeFragment extends Fragment {
      * Обновляет выбранный элемент нижней навигации.
      */
     private void updateBottomNavigation() {
-        ((BottomNavigationUpdater) getActivity()).updateBottomNavigationSelection(this);
+        ((BottomNavigationUpdater) requireActivity()).updateBottomNavigationSelection(this);
     }
 
 }

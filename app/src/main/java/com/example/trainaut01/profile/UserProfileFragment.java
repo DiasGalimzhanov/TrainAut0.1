@@ -1,6 +1,7 @@
 package com.example.trainaut01.profile;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -85,7 +86,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void loadUserData() {
-        sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        sharedPref = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String firstName = sharedPref.getString("fullName", "");
         String email = sharedPref.getString("email", "");
         String city = sharedPref.getString("city", "");
@@ -102,7 +103,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void loadChildData() {
-        sharedPref = requireActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
+        sharedPref = requireActivity().getSharedPreferences("child_data", Context.MODE_PRIVATE);
         String childName = sharedPref.getString("fullName", "");
         String childGender = sharedPref.getString("gender", "");
         String childDiagnosis = sharedPref.getString("diagnosis", "");
@@ -118,11 +119,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void loadAvatar() {
-        sharedPref = requireActivity().getSharedPreferences("child_data", getActivity().MODE_PRIVATE);
-        int exp = sharedPref.getInt("exp", 0);
-        int level = exp / 5000;
-
-        avatarRepository.getAvatarByLevel(level, new AvatarRepository.AvatarCallback() {
+        avatarRepository.getAvatarByLevel(getActivity() ,new AvatarRepository.AvatarCallback() {
             @Override
             public void onSuccess(List<Avatar> avatars) {
                 if (!avatars.isEmpty()) {
@@ -162,7 +159,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void clearSharedPreferences(String prefName) {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(prefName, getActivity().MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
@@ -223,7 +220,7 @@ public class UserProfileFragment extends Fragment {
 
 
     private void deleteUserAccount() {
-        sharedPref = requireActivity().getSharedPreferences("user_data", getActivity().MODE_PRIVATE);
+        sharedPref = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String userId = sharedPref.getString("userId", "");
         if (userId.isEmpty()) {
             Toast.makeText(requireContext(), "Не удалось определить пользователя", Toast.LENGTH_SHORT).show();
