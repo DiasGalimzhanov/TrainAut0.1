@@ -160,6 +160,9 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
     }
 
     private void updateGrossMotorUI() {
+        _lottieCatPlaying.setVisibility(View.GONE);
+        _lottieCatPlaying.playAnimation();
+        
         _ivPerson.setVisibility(View.VISIBLE);
         _rvFineMotorTasks.setVisibility(View.GONE);
         _btnGoToTraining.setVisibility(View.VISIBLE);

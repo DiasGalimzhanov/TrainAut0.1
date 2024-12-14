@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainTraining"
     android:layout_width="match_parent"
@@ -27,13 +28,17 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/btn1_login_back"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:weightSum="1">
 
-                <ImageView
+                <com.airbnb.lottie.LottieAnimationView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_marginEnd="50dp"
-                    android:background="@drawable/level_up" />
+                    android:layout_marginEnd="70dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_fileName="progress.json"
+                    app:lottie_loop="true" />
 
                 <TextView
                     android:id="@+id/tvLvlDashboard"
@@ -47,11 +52,11 @@
                     android:id="@+id/tvExpDashboard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="50dp"
                     android:text="0/0"
                     android:textSize="16sp" />
-
-
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -72,14 +77,13 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <Button
+                    <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/btnExercisesMotor"
-                        android:layout_width="150dp"
-                        android:layout_height="130dp"
-                        android:background="@drawable/img_dum"
-                        android:textColor="@color/indigo"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:layout_width="130dp"
+                        android:layout_height="100dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_fileName="dumbbells.json"
+                        app:lottie_loop="true" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -94,17 +98,26 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp">
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                    <Button
+                    <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/btnAAC"
                         android:layout_width="150dp"
-                        android:layout_height="130dp"
-                        android:background="@drawable/img_idea"
-                        android:textColor="@color/disabledColorButton" />
+                        android:layout_height="140dp"
+                        app:lottie_autoPlay="true"
+                        android:scaleType="fitXY"
+                        app:lottie_fileName="mind.json"
+                        app:lottie_loop="true" />
+
+<!--                    <Button-->
+<!--                        android:id="@+id/btnAAC"-->
+<!--                        android:layout_width="150dp"-->
+<!--                        android:layout_height="130dp"-->
+<!--                        android:background="@drawable/img_idea"-->
+<!--                        android:textColor="@color/disabledColorButton" />-->
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -135,16 +148,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginBottom="50dp"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_marginBottom="8dp">
+                    android:weightSum="2">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -190,9 +203,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_marginBottom="8dp">
+                    android:weightSum="2">
 
                     <LinearLayout
                         android:layout_width="0dp"
