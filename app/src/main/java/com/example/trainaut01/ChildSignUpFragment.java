@@ -79,11 +79,11 @@ public class ChildSignUpFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initComponents(view);
+        init(view);
         setupUI();
     }
 
-    private void initComponents(View view) {
+    private void init(View view) {
         AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(ChildSignUpFragment.this);
 
@@ -157,16 +157,20 @@ public class ChildSignUpFragment extends Fragment {
 
     private void addDayPlans(String userId) {
         _dayPlanRepository.addAllDayPlansToUser(userId, unused -> {
-            navigateToBaseActivity();
+            goToInstructionsForUseFragment();
         }, error -> {
             ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления DayPlans: " + error.getMessage());
         });
     }
 
+    private void goToInstructionsForUseFragment(){
+        InstructionsForUseFragment instructionsFragment = new InstructionsForUseFragment();
 
-    private void navigateToBaseActivity() {
-        Intent intent = new Intent(ChildSignUpFragment.this.getContext(), BaseActivity.class);
-        startActivity(intent);
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.signUp_container, instructionsFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void setupUI() {

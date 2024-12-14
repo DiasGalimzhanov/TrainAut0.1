@@ -125,7 +125,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="25dp"
-            android:background="@color/white" />
+            android:background="@color/light_cloud" />
 
     </LinearLayout>
 </ScrollView>

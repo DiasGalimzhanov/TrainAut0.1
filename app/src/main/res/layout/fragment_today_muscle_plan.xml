@@ -54,138 +54,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
+                android:background="@drawable/card_background"
+                android:elevation="4dp"
                 android:text="Название тренировок"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
-                android:background="@drawable/card_background"
-                android:elevation="4dp"
                 android:textSize="24sp" />
 
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content">-->
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieCatPlaying"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:lottie_autoPlay="false"
+                app:lottie_fileName="cat_playing.json"
+                app:lottie_loop="true" />
 
-                <ImageView
-                    android:id="@+id/ivPerson"
-                    android:layout_width="wrap_content"
-                    android:layout_height="700dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/boy_front"/>
-
-                <!--                <View-->
-<!--                    android:id="@+id/btnBiceps"-->
-<!--                    android:layout_width="20dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:layout_marginStart="128dp"-->
-<!--                    android:layout_marginTop="264dp"-->
-<!--                    android:background="@drawable/circle_button"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <View-->
-<!--                    android:id="@+id/btnPectoralMuscles"-->
-<!--                    android:layout_width="20dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:layout_marginStart="192dp"-->
-<!--                    android:layout_marginTop="236dp"-->
-<!--                    android:background="@drawable/circle_button"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <View-->
-<!--                    android:id="@+id/btnTriceps"-->
-<!--                    android:layout_width="20dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:background="@drawable/circle_button"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintHorizontal_bias="0.23"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintVertical_bias="0.388" />-->
-
-<!--                <View-->
-<!--                    android:id="@+id/btnDeltoidMuscles"-->
-<!--                    android:layout_width="20dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:background="@drawable/circle_button"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintHorizontal_bias="0.659"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintVertical_bias="0.285" />-->
-
-<!--                <View-->
-<!--                    android:id="@+id/btnPress"-->
-<!--                    android:layout_width="20dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:layout_marginStart="192dp"-->
-<!--                    android:layout_marginTop="312dp"-->
-<!--                    android:background="@drawable/circle_button"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <View-->
-<!--                    android:id="@+id/btnUpperBackMuscles"-->
-<!--                    android:layout_width="20dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:layout_marginStart="192dp"-->
-<!--                    android:layout_marginTop="228dp"-->
-<!--                    android:background="@drawable/circle_button"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <View-->
-<!--                    android:id="@+id/btnQuadriceps"-->
-<!--                    android:layout_width="20dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:layout_marginStart="160dp"-->
-<!--                    android:layout_marginTop="472dp"-->
-<!--                    android:background="@drawable/circle_button"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <View-->
-<!--                    android:id="@+id/btnLowerBackMuscles"-->
-<!--                    android:layout_width="20dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:layout_marginStart="192dp"-->
-<!--                    android:layout_marginTop="320dp"-->
-<!--                    android:background="@drawable/circle_button"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-
+            <ImageView
+                android:id="@+id/ivPerson"
+                android:layout_width="wrap_content"
+                android:layout_height="700dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/boy_front" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFineMotorTasks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btnGoToTraining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="20dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/btn_active_today_muscle_plan"
                 android:text="Перейти к тренировке"
                 android:textColor="@color/white"

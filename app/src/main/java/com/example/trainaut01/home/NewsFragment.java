@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.trainaut01.R;
 import com.example.trainaut01.adapter.NewsAdapter;
 import com.example.trainaut01.component.AppComponent;
@@ -35,6 +36,9 @@ public class NewsFragment extends Fragment {
     private EditText etSearchNews;
     private AppComponent appComponent;
 
+    private LottieAnimationView lottieAnimationView;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,6 +57,7 @@ public class NewsFragment extends Fragment {
     private void initViews(View view) {
         etSearchNews = view.findViewById(R.id.etSearchNews);
         recyclerViewNews = view.findViewById(R.id.RecyclerView1);
+        lottieAnimationView = view.findViewById(R.id.lottieCatPlaying);
 
         recyclerViewNews.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewNews.setAdapter(adapterNews);
@@ -69,6 +74,16 @@ public class NewsFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (adapterNews != null) {
                     adapterNews.filter(s.toString());
+
+                    if (adapterNews.getItemCount() == 0) {
+                        recyclerViewNews.setVisibility(View.GONE);
+                        lottieAnimationView.setVisibility(View.VISIBLE);
+                        lottieAnimationView.playAnimation();
+                    } else {
+                        recyclerViewNews.setVisibility(View.VISIBLE);
+                        lottieAnimationView.setVisibility(View.GONE);
+                        lottieAnimationView.cancelAnimation();
+                    }
                 }
             }
 
@@ -77,16 +92,24 @@ public class NewsFragment extends Fragment {
         });
     }
 
+
     private void fetchNews() {
         newsRepository.fetchNews(new NewsRepository.NewsFetchCallback() {
             @Override
             public void onNewsFetched(List<News> newsList) {
                 adapterNews = new NewsAdapter(newsList, newsItem -> {});
                 recyclerViewNews.setAdapter(adapterNews);
+                recyclerViewNews.setVisibility(View.VISIBLE);
+                lottieAnimationView.setVisibility(View.GONE);
             }
 
             @Override
-            public void onError(Exception e) {}
+            public void onError(Exception e) {
+                recyclerViewNews.setVisibility(View.GONE);
+                lottieAnimationView.setVisibility(View.VISIBLE);
+                lottieAnimationView.playAnimation();
+            }
         });
     }
+
 }

@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.trainaut01.R;
 import com.example.trainaut01.adapter.FineMotorAdapter;
 import com.example.trainaut01.component.AppComponent;
@@ -49,6 +50,8 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
     private Button _btnGrossMotor, _btnFineMotor, _btnGoToTraining;
     private RecyclerView _rvFineMotorTasks;
 
+    private LottieAnimationView _lottieCatPlaying;
+
     @Inject
     DayPlanRepository _dayPlanRepository;
 
@@ -58,9 +61,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         View view = inflater.inflate(R.layout.fragment_today_muscle_plan, container, false);
         init(view);
 
-        if (DateUtils.isWeekend()) {
-            disableTrainingForWeekend();
-        } else {
+        if (!DateUtils.isWeekend()) {
             resetDailyProgressIfNeeded();
             loadDayPlans();
             handleTrainingTypeSelection();
@@ -89,6 +90,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         _btnFineMotor = view.findViewById(R.id.btn_fine_motor);
         _rvFineMotorTasks = view.findViewById(R.id.rvFineMotorTasks);
         _rvFineMotorTasks.setLayoutManager(new LinearLayoutManager(requireContext()));
+        _lottieCatPlaying = view.findViewById(R.id.lottieCatPlaying);
 
         _btnGrossMotor.setOnClickListener(v -> switchToGrossMotor());
         _btnFineMotor.setOnClickListener(v -> switchToFineMotor());
@@ -134,11 +136,6 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         }
     }
 
-    private void disableTrainingForWeekend() {
-        _tvTrainingSubTitle.setText("Ты отлично потрудился на неделе! Сегодня ты можешь просто отдыхать.");
-        _rvFineMotorTasks.setVisibility(View.GONE);
-    }
-
     private void switchToGrossMotor() {
         _isGrossMotorSelected = true;
         updateUI();
@@ -158,22 +155,30 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         } else {
             updateFineMotorUI();
         }
+
+        _tvTrainingSubTitle.setText(getTrainingSubtitle());
     }
 
     private void updateGrossMotorUI() {
         _ivPerson.setVisibility(View.VISIBLE);
         _rvFineMotorTasks.setVisibility(View.GONE);
         _btnGoToTraining.setVisibility(View.VISIBLE);
-        _tvTrainingSubTitle.setText(getTrainingSubtitle());
 
         updatePersonImage();
     }
 
     private void updateFineMotorUI() {
+        if (DateUtils.isWeekend()) {
+            _lottieCatPlaying.setVisibility(View.VISIBLE);
+            _lottieCatPlaying.playAnimation();
+        } else {
+            _lottieCatPlaying.setVisibility(View.GONE);
+            _lottieCatPlaying.playAnimation();
+        }
+
         _ivPerson.setVisibility(View.GONE);
         _rvFineMotorTasks.setVisibility(View.VISIBLE);
         _btnGoToTraining.setVisibility(View.GONE);
-        _tvTrainingSubTitle.setText(getTrainingSubtitle());
     }
 
     private void updateButtonStyles() {
