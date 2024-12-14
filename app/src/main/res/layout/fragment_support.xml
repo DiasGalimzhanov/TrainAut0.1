@@ -5,17 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/light_cloud">
 
     <ScrollView
-        android:id="@+id/scrollView4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="56dp"
             android:orientation="vertical">
 
@@ -154,7 +154,6 @@
                     android:background="@drawable/btn1_login_back"
                     android:drawableStart="@drawable/bottom_btn3"
                     android:paddingStart="10dp"
-                    android:drawableEnd="@drawable/arrow"
                     android:paddingEnd="25dp"
                     android:text="Отправить"
                     android:textColor="@color/white"

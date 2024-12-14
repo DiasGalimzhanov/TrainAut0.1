@@ -31,12 +31,19 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
 
-            <ImageView
+<!--            <ImageView-->
+<!--                android:id="@+id/rewardImage"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:src="@drawable/ic_trophy" />-->
+            <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/rewardImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_trophy" />
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                app:lottie_fileName="trophy.json"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="false"/>
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/rewardAnimationView"

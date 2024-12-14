@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="country_names">
+        <item>Казахстан</item>
+        <item>Россия</item>
+        <item>США</item>
+        <item>Германия</item>
+    </string-array>
+    <string-array name="country_codes">
+        <item>+7</item>
+        <item>+7</item>
+        <item>+1</item>
+        <item>+49</item>
+    </string-array>
+    <string-array name="country_lengths">
+        <item>11</item>
+        <item>11</item>
+        <item>10</item>
+        <item>10</item>
+    </string-array>
+</resources>

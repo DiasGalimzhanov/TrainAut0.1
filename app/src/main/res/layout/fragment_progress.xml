@@ -69,8 +69,8 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
-                        android:background="@drawable/progress_bar_background"
-                        android:progressDrawable="@drawable/item_training_list_background"
+
+                        android:progressDrawable="@drawable/custom_progress_bar"
                         android:elevation="10dp"
                         android:progress="60"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -117,7 +117,7 @@
                     app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/default_image_news" />
+                    app:srcCompat="@drawable/default_image" />
 
                 <TextView
                     android:id="@+id/tvLvl"

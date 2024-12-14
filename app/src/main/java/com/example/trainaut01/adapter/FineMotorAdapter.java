@@ -87,7 +87,7 @@ public class FineMotorAdapter extends RecyclerView.Adapter<FineMotorAdapter.Fine
                 case "friday":
                     return R.drawable.ic_friday;
                 default:
-                    return R.drawable.ic_weekend;
+                    return R.drawable.default_image;
             }
         }
     }

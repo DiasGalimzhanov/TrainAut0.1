@@ -78,6 +78,8 @@ dependencies {
 //   Lottie
     implementation ("com.airbnb.android:lottie:5.2.0")
 
+//    libphonenumber
+    implementation ("com.googlecode.libphonenumber:libphonenumber:8.13.14")
 
     implementation(libs.appcompat)
     implementation(libs.material)

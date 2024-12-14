@@ -21,9 +21,12 @@
     <color name="alice_blue">#F0F8FF</color>
     <color name="light_grayish_blue">#A9BDC6</color>
 
+<!--    #8fc3f7-->
     <color name="bright_sky_blue">#00BFFF</color>
+    <color name="diana_favorite_color">#8fc3f7</color>
     <color name="bright_azure">#00A2E8</color>
-    <color name="bright_dodger_blue">#1E90FF</color>
+    <color name="bright_dodger_blue">#4EA2F2</color>
+    <color name="bright_button">#1A70C3</color>
     <color name="bright_cerulean">#41B6E6</color>
     <color name="bright_light_sky_blue">#87CEFA</color>
     <color name="dark_dodger_blue">#0B3B6A</color>

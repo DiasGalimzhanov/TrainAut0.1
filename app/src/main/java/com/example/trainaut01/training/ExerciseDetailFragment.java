@@ -185,7 +185,7 @@ public class ExerciseDetailFragment extends Fragment {
             return;
         }
 
-        _exercises = Collections.singletonList(_singleExercise); // Создаем список с одним элементом
+        _exercises = Collections.singletonList(_singleExercise);
         setupProgress(1);
         displayExerciseDetails(_singleExercise);
     }
@@ -237,9 +237,9 @@ public class ExerciseDetailFragment extends Fragment {
 
     private void loadExerciseImage(Exercise exercise) {
         if (_isGrossMotorSelected) {
-            ImageUtils.setImagePicasso(exercise.getImageUrl(), _ivImageUrl, R.drawable.default_image_not_found, R.drawable.default_image_not_found);
+            ImageUtils.setImagePicasso(exercise.getImageUrl(), _ivImageUrl, R.drawable.default_image, R.drawable.default_image);
         } else {
-            ImageUtils.loadImageFromFirebase(exercise.getImageUrl(), _ivImageUrl, R.drawable.default_image_not_found, R.drawable.default_image_not_found);
+            ImageUtils.loadImageFromFirebase(exercise.getImageUrl(), _ivImageUrl, R.drawable.default_image, R.drawable.default_image);
         }
     }
 

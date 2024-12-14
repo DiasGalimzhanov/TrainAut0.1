@@ -17,20 +17,17 @@
 
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
-
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/icon_start"
+        android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/icon_start"
+        android:roundIcon="@drawable/ic_logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TrainAut01"
+        android:theme="@style/SplashTheme"
         tools:targetApi="31">
 
-        <!-- Intro Activity -->
         <activity
             android:name=".IntroActivity"
             android:exported="true">
@@ -40,7 +37,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Login and SignUp -->
         <activity
             android:name=".LoginActivity"
             android:exported="false"
@@ -50,22 +46,13 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Base Activity -->
         <activity
             android:name=".BaseActivity"
             android:exported="false"
-            android:label="@string/title_activity_base" />
+            android:label="@string/title_activity_base"/>
 
-        <!-- Firebase Service -->
-        <service
-            android:name=".service.MyFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
-        <!-- Google Play Services Metadata -->
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

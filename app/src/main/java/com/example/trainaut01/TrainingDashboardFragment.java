@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.trainaut01.adapter.CalendarAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
@@ -49,7 +50,7 @@ import javax.inject.Inject;
 public class TrainingDashboardFragment extends Fragment implements ProgressResetListener {
 
     private TextView _tvLevelDashboard, _tvExpDashboard;
-    private Button _btnExercisesMotor, _btnAAC;
+    private LottieAnimationView _btnExercisesMotor, _btnAAC;
     private RecyclerView _calendarRecyclerView;
     private CalendarAdapter _calendarAdapter;
     private List<CalendarDay> _calendarDays;
@@ -115,7 +116,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     @Override
     public void onProgressReset() {}
 
-    private void setButtonListenerToOpenFragment(Button button, Fragment fragment) {
+    private void setButtonListenerToOpenFragment(LottieAnimationView button, Fragment fragment) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

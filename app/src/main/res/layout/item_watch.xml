@@ -3,6 +3,7 @@
     android:layout_height="wrap_content"
     android:minHeight="?attr/listPreferredItemHeight"
     android:mode="twoLine"
+    android:background="@color/light_cloud"
     android:paddingStart="?attr/listPreferredItemPaddingStart"
     android:paddingEnd="?attr/listPreferredItemPaddingEnd">
 
@@ -10,8 +11,7 @@
         android:id="@+id/watch_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/indigo"
         android:layout_marginTop="8dp"
         android:textAppearance="?attr/textAppearanceListItem" />
-
-
 </TwoLineListItem>

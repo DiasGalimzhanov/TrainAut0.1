@@ -29,8 +29,7 @@ public class IntroActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_intro);
 
-        _btnReg = findViewById(R.id.btnRegister);
-        _btnLogIn = findViewById(R.id.btnLogIn);
+        init();
 
         _btnLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,5 +45,10 @@ public class IntroActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void init(){
+        _btnReg = findViewById(R.id.btnRegister);
+        _btnLogIn = findViewById(R.id.btnLogIn);
     }
 }

@@ -28,7 +28,7 @@ public class TrainingUtils {
             case Calendar.FRIDAY:
             case Calendar.SATURDAY:
             case Calendar.SUNDAY: return R.drawable.boy_front;
-            default: return R.drawable.default_image_not_found;
+            default: return R.drawable.default_image;
         }
     }
 
