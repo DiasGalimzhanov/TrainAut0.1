@@ -237,9 +237,9 @@ public class ExerciseDetailFragment extends Fragment {
 
     private void loadExerciseImage(Exercise exercise) {
         if (_isGrossMotorSelected) {
-            ImageUtils.setImagePicasso(exercise.getImageUrl(), _ivImageUrl, R.drawable.default_image, R.drawable.default_image);
+            ImageUtils.loadGifFromFirebase(exercise.getImageUrl(), _ivImageUrl);
         } else {
-            ImageUtils.loadImageFromFirebase(exercise.getImageUrl(), _ivImageUrl, R.drawable.default_image, R.drawable.default_image);
+            ImageUtils.loadImageFromFirebase(exercise.getImageUrl(), _ivImageUrl);
         }
     }
 

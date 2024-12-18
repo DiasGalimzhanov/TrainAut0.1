@@ -104,12 +104,23 @@ public class ValidationUtils {
             int age = today.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR);
 
             if (today.get(Calendar.DAY_OF_YEAR) < birthCalendar.get(Calendar.DAY_OF_YEAR)) {
-                age--; // Уменьшаем возраст, если день рождения еще не наступил в этом году
+                age--;
             }
 
             return age >= minimumAge;
         } catch (ParseException e) {
-            return false; // Если дата рождения невалидна, считаем проверку неуспешной
+            return false;
         }
+    }
+
+    /**
+     * Проверка корректности Firebase Storage URL
+     */
+    public static boolean isValidFirebaseUrl(String firebaseUrl) {
+        if (firebaseUrl == null || !firebaseUrl.startsWith("gs://")) {
+            System.out.println("ImageUtils: Некорректный URL -> " + firebaseUrl);
+            return false;
+        }
+        return true;
     }
 }

@@ -65,7 +65,7 @@ public class InstructionsForUseFragment extends Fragment {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 if (position == getInstructionPages().size() - 1) {
-                    ButtonUtils.updateButtonState(requireContext(), _btnGoToHomePage, "На  главную", R.color.white, R.drawable.btn1_login_back, true);
+                    ButtonUtils.updateButtonState(requireContext(), _btnGoToHomePage, "На  главную", R.color.white, R.drawable.btn1_intro_back, true);
                 }
             }
         });

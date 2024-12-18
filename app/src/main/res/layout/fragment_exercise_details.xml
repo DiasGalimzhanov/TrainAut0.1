@@ -113,13 +113,10 @@
 
                     <ImageView
                         android:id="@+id/ivImageUrl"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:background="@drawable/image_exercise_details"
-                        android:clipToOutline="true"
-                        android:src="@drawable/default_image" />
+                        android:layout_marginTop="20dp"/>
 
 
                         <TextView
