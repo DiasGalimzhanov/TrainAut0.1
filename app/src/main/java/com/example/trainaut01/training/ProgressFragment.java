@@ -77,7 +77,7 @@ public class ProgressFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void setLevelProgress(int exp) {
-        int level = (exp / 5000) + 1;
+        int level = SharedPreferencesUtils.getInt(requireContext(), "child_data", "lvl", 0);
         int expForNextLevel = 5000;
         int progress = ((exp % expForNextLevel) * 100 / expForNextLevel);
 

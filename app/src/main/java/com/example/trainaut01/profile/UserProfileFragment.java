@@ -1,18 +1,17 @@
+/**
+ * Фрагмент для отображения и управления профилем пользователя.
+ * Позволяет просматривать данные пользователя, редактировать их после проверки пароля,
+ * удалять аккаунт, а также выходить из системы.
+ */
 package com.example.trainaut01.profile;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +24,7 @@ import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.databinding.FragmentUserProfileBinding;
 import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.enums.PasswordAction;
 import com.example.trainaut01.models.Avatar;
@@ -45,63 +45,98 @@ public class UserProfileFragment extends Fragment {
     @Inject
     UserRepository userRepository;
 
-    private TextView parentName, emailTextView, phoneTextView, birthDateTextView, cityTextView, childNameTextView, childGenderDiagnosisTextView, childHeightWeightTextView;
-    private ImageView userProfileImage, btnExit;
-    private Button btnUpdateProfile, btnSupport, btnWatchConnect, btnNotes, btnDelete;
+    private FragmentUserProfileBinding binding;
     private SharedPreferences sharedPref;
+    private static final String TAG = "UserProfileFragment";
 
-    @Nullable
+    /**
+     * Инициализирует зависимости с помощью Dagger.
+     *
+     * @param savedInstanceState состояние фрагмента при его пересоздании (если есть)
+     */
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        initDependencies();
-        initViews(view);
-        loadUserData();
-        loadAvatar();
-        setupListeners();
-        return view;
-    }
-
-    private void initDependencies() {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
     }
 
-    private void initViews(View view) {
-        userProfileImage = view.findViewById(R.id.profile_image);
-        cityTextView = view.findViewById(R.id.parent_city);
-        parentName = view.findViewById(R.id.parent_name);
-        emailTextView = view.findViewById(R.id.parent_email);
-        phoneTextView = view.findViewById(R.id.parent_phone);
-        btnWatchConnect = view.findViewById(R.id.watch_button);
-        btnExit = view.findViewById(R.id.btnExit);
-        btnUpdateProfile = view.findViewById(R.id.edit_profile_button);
-        btnSupport = view.findViewById(R.id.support_button);
-        btnNotes = view.findViewById(R.id.notes_button);
-        btnDelete = view.findViewById(R.id.delete_button);
-        birthDateTextView = view.findViewById(R.id.parent_bd);
-        childNameTextView = view.findViewById(R.id.child_name);
-        childGenderDiagnosisTextView = view.findViewById(R.id.child_gender_diagnosis);
-        childHeightWeightTextView = view.findViewById(R.id.child_height_weight);
+    /**
+     * Создает и инициализирует макет фрагмента с использованием ViewBinding.
+     *
+     * @param inflater объект для создания представлений
+     * @param container родительский контейнер
+     * @param savedInstanceState состояние фрагмента при его пересоздании (если есть)
+     * @return корневой View фрагмента
+     */
+    @Override
+    public android.view.View onCreateView(@NonNull android.view.LayoutInflater inflater,
+                                          @Nullable android.view.ViewGroup container,
+                                          @Nullable Bundle savedInstanceState) {
+        binding = FragmentUserProfileBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
+    /**
+     * Вызывается, когда представление фрагмента полностью создано.
+     * Здесь производится инициализация данных и настройка обработчиков.
+     *
+     * @param view корневой вид фрагмента
+     * @param savedInstanceState состояние фрагмента при пересоздании (если есть)
+     */
+    @Override
+    public void onViewCreated(@NonNull android.view.View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadUserData();
+        loadAvatar();
+        setupListeners();
+    }
+
+    /**
+     * Вызывается, когда фрагмент становится видимым для пользователя.
+     * Обновляет выбранный пункт нижней навигации.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateBottomNavigation();
+    }
+
+    /**
+     * Освобождает ресурсы ViewBinding при уничтожении представления.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    /**
+     * Загружает данные пользователя из SharedPreferences и обновляет UI.
+     */
+    @SuppressLint("SetTextI18n")
     private void loadUserData() {
         sharedPref = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+
         String firstName = sharedPref.getString("fullName", "");
         String email = sharedPref.getString("email", "");
         String city = sharedPref.getString("city", "");
         String phone = sharedPref.getString("phone", "");
         String birthDate = sharedPref.getString("birthDate", "");
 
-        parentName.setText("Имя Фамилия: " + firstName);
-        emailTextView.setText("Почта: " + email);
-        cityTextView.setText("Город: " + city);
-        phoneTextView.setText("Телефон: " + phone);
-        birthDateTextView.setText("Дата рождения: " + birthDate);
+        binding.parentName.setText("Имя Фамилия: " + firstName);
+        binding.parentEmail.setText("Почта: " + email);
+        binding.parentCity.setText("Город: " + city);
+        binding.parentPhone.setText("Телефон: " + phone);
+        binding.parentBd.setText("Дата рождения: " + birthDate);
 
         loadChildData();
     }
 
+    /**
+     * Загружает данные о ребенке из SharedPreferences и обновляет UI.
+     */
     private void loadChildData() {
         sharedPref = requireActivity().getSharedPreferences("child_data", Context.MODE_PRIVATE);
         String childName = sharedPref.getString("fullName", "");
@@ -110,40 +145,50 @@ public class UserProfileFragment extends Fragment {
         float childHeight = sharedPref.getFloat("height", 0.0f);
         float childWeight = sharedPref.getFloat("weight", 0.0f);
 
-        String childGenderDiagnosis = "Пол: " + Gender.fromString(childGender).getDisplayName() + " • Диагноз: " + childDiagnosis;
+        String childGenderDiagnosis = "Пол: " + Gender.fromString(childGender).getDisplayName()
+                + " • Диагноз: " + childDiagnosis;
         String childHeightWeight = "Рост: " + childHeight + " • Вес: " + childWeight;
 
-        childNameTextView.setText(childName);
-        childGenderDiagnosisTextView.setText(childGenderDiagnosis);
-        childHeightWeightTextView.setText(childHeightWeight);
+        binding.childName.setText(childName);
+        binding.childGenderDiagnosis.setText(childGenderDiagnosis);
+        binding.childHeightWeight.setText(childHeightWeight);
     }
 
+    /**
+     * Загружает аватар пользователя в соответствии с его уровнем.
+     */
     private void loadAvatar() {
-        avatarRepository.getAvatarByLevel(getActivity() ,new AvatarRepository.AvatarCallback() {
+        avatarRepository.getAvatarByLevel(requireActivity(), new AvatarRepository.AvatarCallback() {
             @Override
             public void onSuccess(List<Avatar> avatars) {
                 if (!avatars.isEmpty()) {
                     Avatar avatar = avatars.get(0);
-                    Picasso.get().load(avatar.getUrlAvatar()).into(userProfileImage);
+                    Picasso.get().load(avatar.getUrlAvatar()).into(binding.profileImage);
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                Log.e("HOME", "Failed to load avatar", e);
+                Log.e(TAG, "Не удалось загрузить аватар", e);
             }
         });
     }
 
+    /**
+     * Настраивает обработчики нажатий для элементов интерфейса.
+     */
     private void setupListeners() {
-        btnUpdateProfile.setOnClickListener(view -> showPasswordDialog(PasswordAction.UPDATE_PROFILE));
-        btnDelete.setOnClickListener(view -> showPasswordDialog(PasswordAction.DELETE_ACCOUNT));
-        btnExit.setOnClickListener(view -> logOutUser());
-        btnSupport.setOnClickListener(view -> navigateToFragment(new SupportFragment()));
-        btnWatchConnect.setOnClickListener(view -> navigateToFragment(new WatchFragment()));
-        btnNotes.setOnClickListener(view -> navigateToFragment(new NoteFragment()));
+        binding.editProfileButton.setOnClickListener(v -> showPasswordDialog(PasswordAction.UPDATE_PROFILE));
+        binding.deleteButton.setOnClickListener(v -> showPasswordDialog(PasswordAction.DELETE_ACCOUNT));
+        binding.btnExit.setOnClickListener(v -> logOutUser());
+        binding.supportButton.setOnClickListener(v -> navigateToFragment(new SupportFragment()));
+        binding.watchButton.setOnClickListener(v -> navigateToFragment(new WatchFragment()));
+        binding.notesButton.setOnClickListener(v -> navigateToFragment(new NoteFragment()));
     }
 
+    /**
+     * Производит выход пользователя из аккаунта и очищает локальные данные.
+     */
     private void logOutUser() {
         clearSharedPreferences("user_data");
         clearSharedPreferences("child_progress");
@@ -158,6 +203,11 @@ public class UserProfileFragment extends Fragment {
         requireActivity().finish();
     }
 
+    /**
+     * Очищает данные в указанных SharedPreferences.
+     *
+     * @param prefName имя файла SharedPreferences
+     */
     private void clearSharedPreferences(String prefName) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -165,17 +215,22 @@ public class UserProfileFragment extends Fragment {
         editor.apply();
     }
 
+    /**
+     * Показывает диалог для ввода пароля перед определенными действиями.
+     *
+     * @param action действие, которое будет выполнено после валидации пароля
+     */
     private void showPasswordDialog(PasswordAction action) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_password, null);
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(requireContext());
+        android.view.LayoutInflater inflater = requireActivity().getLayoutInflater();
+        android.view.View dialogView = inflater.inflate(R.layout.dialog_password, null);
         builder.setView(dialogView);
 
-        final EditText input = dialogView.findViewById(R.id.et_password);
-        Button btnSubmit = dialogView.findViewById(R.id.btn_submit);
-        Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
+        final android.widget.EditText input = dialogView.findViewById(R.id.et_password);
+        android.widget.Button btnSubmit = dialogView.findViewById(R.id.btn_submit);
+        android.widget.Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
 
-        final AlertDialog dialog = builder.create();
+        final android.app.AlertDialog dialog = builder.create();
 
         btnSubmit.setOnClickListener(v -> {
             String password = input.getText().toString().trim();
@@ -187,6 +242,13 @@ public class UserProfileFragment extends Fragment {
         dialog.show();
     }
 
+    /**
+     * Проверяет введенный пароль, и если он корректен, выполняет запрошенное действие.
+     *
+     * @param password введенный пароль
+     * @param action действие для выполнения после проверки пароля
+     * @param dialog диалоговое окно ввода пароля
+     */
     private void verifyPassword(String password, PasswordAction action, AlertDialog dialog) {
         String email = FirebaseAuth.getInstance().getCurrentUser() != null
                 ? FirebaseAuth.getInstance().getCurrentUser().getEmail()
@@ -204,10 +266,8 @@ public class UserProfileFragment extends Fragment {
                         if (action == PasswordAction.UPDATE_PROFILE) {
                             Bundle bundle = new Bundle();
                             bundle.putString("PASSWORD_KEY", password);
-
                             UserUpdateFragment updateFragment = new UserUpdateFragment();
                             updateFragment.setArguments(bundle);
-
                             navigateToFragment(updateFragment);
                         } else if (action == PasswordAction.DELETE_ACCOUNT) {
                             deleteUserAccount();
@@ -218,7 +278,9 @@ public class UserProfileFragment extends Fragment {
                 });
     }
 
-
+    /**
+     * Удаляет аккаунт пользователя из системы.
+     */
     private void deleteUserAccount() {
         sharedPref = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String userId = sharedPref.getString("userId", "");
@@ -233,8 +295,11 @@ public class UserProfileFragment extends Fragment {
         }, e -> Toast.makeText(requireContext(), "Ошибка удаления аккаунта: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-
-
+    /**
+     * Открывает указанный фрагмент.
+     *
+     * @param fragment фрагмент для отображения
+     */
     private void navigateToFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
@@ -242,13 +307,10 @@ public class UserProfileFragment extends Fragment {
         transaction.commit();
     }
 
+    /**
+     * Обновляет выбранный пункт нижней навигации при отображении данного фрагмента.
+     */
     public void updateBottomNavigation() {
         ((BottomNavigationUpdater) requireActivity()).updateBottomNavigationSelection(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateBottomNavigation();
     }
 }

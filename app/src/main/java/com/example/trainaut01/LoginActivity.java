@@ -1,11 +1,11 @@
+/**
+ * Экран входа в приложение. Позволяет авторизоваться с помощью email/пароля.
+ * Также можно сбросить пароль или перейти к регистрации.
+ */
 package com.example.trainaut01;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.databinding.ActivityLoginBinding;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.utils.ToastUtils;
@@ -33,11 +34,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import javax.inject.Inject;
 
 public class LoginActivity extends AppCompatActivity {
+
     private static final int RC_SIGN_IN = 9001;
-
-    private EditText etLog;
-    private EditText etPas;
-
+    private ActivityLoginBinding binding;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -47,17 +46,19 @@ public class LoginActivity extends AppCompatActivity {
     @Inject
     ChildRepository childRepository;
 
+    /**
+     * Вызывается при создании активности.
+     * @param savedInstanceState сохраненное состояние.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
-        setContentView(R.layout.activity_login);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
-
-        initUI();
 
         mAuth = FirebaseAuth.getInstance();
         setupGoogleSignInOptions();
@@ -65,7 +66,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Обработка результата Activity, в частности, результата авторизации через Google.
+     * Обрабатывает результат выполнения другой активности, в частности авторизации через Google.
+     * @param requestCode код запроса.
+     * @param resultCode код результата.
+     * @param data данные, возвращаемые другой активностью.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -77,52 +81,34 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Инициализация UI элементов.
-     */
-    private void initUI() {
-        etLog = findViewById(R.id.etLogin);
-        etPas = findViewById(R.id.etPassword);
-    }
-
-    /**
-     * Настройка параметров входа через Google.
+     * Настраивает параметры входа через Google.
      */
     private void setupGoogleSignInOptions() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     /**
-     * Установка обработчиков нажатий.
+     * Настраивает обработчики нажатий на элементы интерфейса.
      */
     private void setupClickListeners() {
-        Button btnLog = findViewById(R.id.btnLogin);
-//        Button btnGoogleReg = findViewById(R.id.btnGoogleReg);
-        TextView tvForgotPas = findViewById(R.id.tvForgotPas);
-        TextView tvReg = findViewById(R.id.tvRegister);
-
-//        btnGoogleReg.setOnClickListener(v -> signInWithGoogle());
-
-        btnLog.setOnClickListener(v -> attemptEmailLogin());
-
-        tvReg.setOnClickListener(v -> {
+        binding.btnLogin.setOnClickListener(v -> attemptEmailLogin());
+        binding.tvRegister.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
-
-        tvForgotPas.setOnClickListener(v -> attemptPasswordReset());
+        binding.tvForgotPas.setOnClickListener(v -> attemptPasswordReset());
     }
 
     /**
-     * Попытка входа через email и пароль.
+     * Пытается выполнить вход по email и паролю, проверяя введенные данные.
      */
     private void attemptEmailLogin() {
-        String log = etLog.getText().toString().trim();
-        String pas = etPas.getText().toString().trim();
+        String log = binding.etLogin.getText().toString().trim();
+        String pas = binding.etPassword.getText().toString().trim();
 
         if (!log.isEmpty() && !pas.isEmpty()) {
             loginUser(log, pas);
@@ -132,11 +118,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Попытка сброса пароля.
+     * Пытается выполнить сброс пароля, отправляя письмо на указанный email.
      */
     private void attemptPasswordReset() {
-        String email = etLog.getText().toString().trim();
-
+        String email = binding.etLogin.getText().toString().trim();
         if (!email.isEmpty()) {
             mAuth.sendPasswordResetEmail(email)
                     .addOnCompleteListener(task -> {
@@ -161,15 +146,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Инициация входа через Google.
-     */
-//    private void signInWithGoogle() {
-//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-//        startActivityForResult(signInIntent, RC_SIGN_IN);
-//    }
-
-    /**
-     * Обработка результата авторизации через Google.
+     * Обрабатывает результат авторизации через Google.
+     * @param data данные, возвращаемые GoogleSignInIntent.
      */
     private void handleGoogleSignInResult(Intent data) {
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -186,7 +164,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Авторизация через Firebase с полученным токеном Google.
+     * Выполняет авторизацию в Firebase с помощью учетных данных Google.
+     * @param idToken токен, полученный от Google.
      */
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
@@ -204,7 +183,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Вход пользователя через email и пароль.
+     * Выполняет вход в систему с помощью email и пароля.
+     * @param email email пользователя.
+     * @param password пароль пользователя.
      */
     private void loginUser(String email, String password) {
         userRepository.loginUser(email, password, this, task -> {
@@ -228,11 +209,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Переход к главной Activity после успешного входа.
+     * Переход к главному экрану приложения после успешного входа.
      */
     private void navigateToBaseActivity() {
         Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
         startActivity(intent);
-
     }
 }

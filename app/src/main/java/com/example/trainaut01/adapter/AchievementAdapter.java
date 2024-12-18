@@ -48,7 +48,6 @@ public class AchievementAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_achiv, parent, false);
         }
 
-//        int countDays = 51;
         SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
         int countDays = sharedPref.getInt("countDays", 0);
 

@@ -1,5 +1,8 @@
+/**
+ * Репозиторий для получения данных о достижениях из Firestore.
+ * Позволяет загрузить список достижений.
+ */
 package com.example.trainaut01.repository;
-
 
 import android.util.Log;
 
@@ -18,22 +21,29 @@ import java.util.List;
 
 public class AchievementRepository {
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference achievementRef = db.collection("achievements");
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference achievementRef = db.collection("achievements");
 
+    /**
+     * Загружает достижения из Firestore и возвращает их через обратный вызов.
+     * @param callback объект для обработки результатов загрузки достижений.
+     */
     public void getAchievements(final AchievementCallback callback) {
         achievementRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
+                if (task.isSuccessful() && task.getResult() != null) {
                     List<Achievement> achievements = new ArrayList<>();
                     for (DocumentSnapshot document : task.getResult()) {
-                        int day = document.getLong("day").intValue();
-                        String description = document.getString("desc");
-                        String imageUrl = document.getString("urlAchiv");
+                        if (document.exists()) {
+                            Long dayLong = document.getLong("day");
+                            String description = document.getString("desc");
+                            String imageUrl = document.getString("urlAchiv");
 
-                        Achievement achievement = new Achievement(day, imageUrl, description);
-                        achievements.add(achievement);
+                            int day = (dayLong != null) ? dayLong.intValue() : 0;
+                            Achievement achievement = new Achievement(day, imageUrl, description);
+                            achievements.add(achievement);
+                        }
                     }
                     callback.onSuccess(achievements);
                 } else {
@@ -44,8 +54,20 @@ public class AchievementRepository {
         });
     }
 
+    /**
+     * Интерфейс для обработки результатов загрузки достижений.
+     */
     public interface AchievementCallback {
+        /**
+         * Вызывается при успешной загрузке достижений.
+         * @param achievements список загруженных достижений.
+         */
         void onSuccess(List<Achievement> achievements);
+
+        /**
+         * Вызывается при ошибке загрузки достижений.
+         * @param e исключение, вызвавшее ошибку.
+         */
         void onFailure(Exception e);
     }
 }

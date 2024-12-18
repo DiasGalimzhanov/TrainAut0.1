@@ -309,7 +309,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     @SuppressLint("SetTextI18n")
     public void loadLevel(){
         int exp = SharedPreferencesUtils.getInt(requireContext(), "child_data", "exp", 0);
-        int level = (exp / 5000) + 1;
+        int level = SharedPreferencesUtils.getInt(requireContext(), "child_data", "lvl", 1);
         int expForNextLevel = 5000;
 
         _tvLevelDashboard.setText("Уровень: " + level);

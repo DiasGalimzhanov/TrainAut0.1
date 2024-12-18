@@ -1,3 +1,7 @@
+/**
+ * Фрагмент для обновления данных пользователя и его ребенка.
+ * Пользователь может изменить личную информацию, а также при необходимости изменить пароль.
+ */
 package com.example.trainaut01.profile;
 
 import android.content.Context;
@@ -7,24 +11,19 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.databinding.FragmentUserUpdateBinding;
 import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.Child;
 import com.example.trainaut01.models.User;
@@ -47,74 +46,88 @@ public class UserUpdateFragment extends Fragment {
     @Inject
     ChildRepository childRepository;
 
-    private EditText etFullName_update, etPhone_update, etBirthDate_update, etCity_update, etEmailReg_update;
-    private Spinner spGender_update;
-
-    private EditText etPasReg_update, etPasConfirm_update;
-    private TextView tvPasswordMatch_update;
-
-    private EditText etFullNameChild_update, etBirthDateChild_update, etDiagnosisChild_update, etHeightChild_update, etWeightChild_update;
-    private Spinner spGenderChild_update;
-
-    private Button btnBack_update, btnContinue_update;
-
+    private FragmentUserUpdateBinding binding;
     private SharedPreferences userPrefs, childPrefs;
-    private String PASS;
+    private String oldPassword;
 
-    @Nullable
+    private static final String USER_PREFS = "user_data";
+    private static final String CHILD_PREFS = "child_data";
+
+    /**
+     * Инициализация Dagger-зависимостей.
+     *
+     * @param savedInstanceState предыдущее состояние фрагмента, если было.
+     */
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_update, container, false);
-
-        initDependencies();
-        initViews(view);
-        setupSpinners();
-        loadUserDataFromPrefs();
-        loadChildDataFromPrefs();
-        setupListeners();
-
-        return view;
-    }
-
-    private void initDependencies() {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
     }
 
-    private void initViews(View view) {
-        etFullName_update = view.findViewById(R.id.etFullName_update);
-        etPhone_update = view.findViewById(R.id.etPhone_update);
-        etBirthDate_update = view.findViewById(R.id.etBirthDate_update);
-        etCity_update = view.findViewById(R.id.etCity_update);
-        spGender_update = view.findViewById(R.id.spGender_update);
-//        etEmailReg_update = view.findViewById(R.id.etEmailReg_update);
-
-        etPasReg_update = view.findViewById(R.id.etPasReg_update);
-        etPasConfirm_update = view.findViewById(R.id.etPasConfirm_update);
-        tvPasswordMatch_update = view.findViewById(R.id.tvPasswordMatch_update);
-
-        etFullNameChild_update = view.findViewById(R.id.etFullNameChild_update);
-        etBirthDateChild_update = view.findViewById(R.id.etBirthDateChild_update);
-        spGenderChild_update = view.findViewById(R.id.spGenderChild_update);
-        etDiagnosisChild_update = view.findViewById(R.id.etDiagnosisChild_update);
-        etHeightChild_update = view.findViewById(R.id.etHeightChild_update);
-        etWeightChild_update = view.findViewById(R.id.etWeightChild_update);
-
-        btnBack_update = view.findViewById(R.id.btnBack_update);
-        btnContinue_update = view.findViewById(R.id.btnContinue_update);
-
-        userPrefs = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
-        childPrefs = requireActivity().getSharedPreferences("child_data", Context.MODE_PRIVATE);
+    /**
+     * Создание и инициализация макета фрагмента с помощью ViewBinding.
+     *
+     * @param inflater объект для "надувания" макета.
+     * @param container родительский контейнер.
+     * @param savedInstanceState предыдущее состояние фрагмента, если было.
+     * @return корневой View фрагмента.
+     */
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        binding = FragmentUserUpdateBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     /**
-     * Инициализация спиннеров используя SpinnerUtils и Gender.
+     * Вызывается, когда View фрагмента полностью создана.
+     * Здесь происходит инициализация UI, загрузка данных и настройка слушателей.
+     *
+     * @param view корневой вид фрагмента.
+     * @param savedInstanceState предыдущее состояние фрагмента, если было.
      */
-    private void setupSpinners() {
-        SpinnerUtils.setupGenderAdapter(requireContext(), spGender_update, Gender.getGenderValues());
-        SpinnerUtils.setupGenderAdapter(requireContext(), spGenderChild_update, Gender.getGenderValues());
+    @Override
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initPreferences();
+        setupSpinners();
+        loadUserDataFromPrefs();
+        loadChildDataFromPrefs();
+        setupListeners();
     }
 
+    /**
+     * Освобождает ресурсы ViewBinding при уничтожении View.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    /**
+     * Инициализация SharedPreferences.
+     */
+    private void initPreferences() {
+        userPrefs = requireActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+        childPrefs = requireActivity().getSharedPreferences(CHILD_PREFS, Context.MODE_PRIVATE);
+    }
+
+    /**
+     * Настройка спиннеров для выбора пола.
+     */
+    private void setupSpinners() {
+        SpinnerUtils.setupGenderAdapter(requireContext(), binding.spGenderUpdate, Gender.getGenderValues());
+        SpinnerUtils.setupGenderAdapter(requireContext(), binding.spGenderChildUpdate, Gender.getGenderValues());
+    }
+
+    /**
+     * Загрузка данных о пользователе из SharedPreferences и заполнение полей.
+     */
     private void loadUserDataFromPrefs() {
         String fullName = userPrefs.getString("fullName", "");
         String phone = userPrefs.getString("phone", "");
@@ -124,17 +137,16 @@ public class UserUpdateFragment extends Fragment {
         String email = userPrefs.getString("email", "");
 
         if (getArguments() != null) {
-            String password = getArguments().getString("PASSWORD_KEY", "");
-            PASS = password;
-            etPasReg_update.setText(password);
-            etPasConfirm_update.setText(password);
+            oldPassword = getArguments().getString("PASSWORD_KEY", "");
+            binding.etPasRegUpdate.setText(oldPassword);
+            binding.etPasConfirmUpdate.setText(oldPassword);
         }
 
-        etFullName_update.setText(fullName);
-        etPhone_update.setText(phone);
-        etBirthDate_update.setText(birthDate);
-        etCity_update.setText(city);
-//        etEmailReg_update.setText(email);
+        binding.etFullNameUpdate.setText(fullName);
+        binding.etPhoneUpdate.setText(phone);
+        binding.etBirthDateUpdate.setText(birthDate);
+        binding.etCityUpdate.setText(city);
+        // binding.etEmailRegUpdate.setText(email);
 
         Gender userGender;
         try {
@@ -143,9 +155,12 @@ public class UserUpdateFragment extends Fragment {
             userGender = Gender.MALE;
         }
 
-        setSpinnerSelection(spGender_update, userGender);
+        setSpinnerSelection(binding.spGenderUpdate, userGender);
     }
 
+    /**
+     * Загрузка данных о ребенке из SharedPreferences и заполнение полей.
+     */
     private void loadChildDataFromPrefs() {
         String childFullName = childPrefs.getString("fullName", "");
         String childBirthDate = childPrefs.getString("birthDate", "");
@@ -154,11 +169,11 @@ public class UserUpdateFragment extends Fragment {
         float height = childPrefs.getFloat("height", 0.0f);
         float weight = childPrefs.getFloat("weight", 0.0f);
 
-        etFullNameChild_update.setText(childFullName);
-        etBirthDateChild_update.setText(childBirthDate);
-        etDiagnosisChild_update.setText(diagnosis);
-        etHeightChild_update.setText(String.valueOf(height));
-        etWeightChild_update.setText(String.valueOf(weight));
+        binding.etFullNameChildUpdate.setText(childFullName);
+        binding.etBirthDateChildUpdate.setText(childBirthDate);
+        binding.etDiagnosisChildUpdate.setText(diagnosis);
+        binding.etHeightChildUpdate.setText(String.valueOf(height));
+        binding.etWeightChildUpdate.setText(String.valueOf(weight));
 
         Gender childGender;
         try {
@@ -167,43 +182,54 @@ public class UserUpdateFragment extends Fragment {
             childGender = Gender.MALE;
         }
 
-        setSpinnerSelection(spGenderChild_update, childGender);
+        setSpinnerSelection(binding.spGenderChildUpdate, childGender);
     }
 
+    /**
+     * Настройка слушателей кнопок и проверки пароля.
+     */
     private void setupListeners() {
-        btnBack_update.setOnClickListener(v -> navigateBackToProfile());
+        binding.btnBackUpdate.setOnClickListener(v -> navigateBackToProfile());
 
-        btnContinue_update.setOnClickListener(v -> {
+        binding.btnContinueUpdate.setOnClickListener(v -> {
             if (checkPasswordMatch()) {
                 updateDataInFirebase();
             }
         });
     }
 
+    /**
+     * Проверка совпадения введенных паролей.
+     *
+     * @return true, если пароли совпадают, false иначе.
+     */
     private boolean checkPasswordMatch() {
-        String pass = etPasReg_update.getText().toString().trim();
-        String passConf = etPasConfirm_update.getText().toString().trim();
+        String pass = binding.etPasRegUpdate.getText().toString().trim();
+        String passConf = binding.etPasConfirmUpdate.getText().toString().trim();
 
         if (pass.equals(passConf)) {
-            tvPasswordMatch_update.setText("Пароли совпадают");
-            tvPasswordMatch_update.setTextColor(Color.GREEN);
+            binding.tvPasswordMatchUpdate.setText("Пароли совпадают");
+            binding.tvPasswordMatchUpdate.setTextColor(Color.GREEN);
             return true;
         } else {
-            tvPasswordMatch_update.setText("Пароли не совпадают");
-            tvPasswordMatch_update.setTextColor(Color.RED);
+            binding.tvPasswordMatchUpdate.setText("Пароли не совпадают");
+            binding.tvPasswordMatchUpdate.setTextColor(Color.RED);
             return false;
         }
     }
 
+    /**
+     * Обновление данных пользователя и ребенка в Firebase.
+     */
     private void updateDataInFirebase() {
         String userId = userPrefs.getString("userId", "");
-        if (userId.isEmpty()) {
+        if (TextUtils.isEmpty(userId)) {
             showToast("Не удалось определить пользователя");
             return;
         }
 
         String childId = childPrefs.getString("childId", "");
-        if (childId.isEmpty()) {
+        if (TextUtils.isEmpty(childId)) {
             showToast("Не удалось определить ребенка");
             return;
         }
@@ -218,46 +244,65 @@ public class UserUpdateFragment extends Fragment {
         }
 
         String oldEmail = userPrefs.getString("email", "");
-        String oldPassword = PASS;
-        String newPass = etPasReg_update.getText().toString().trim();
+        String oldPass = oldPassword;
+        String newPass = binding.etPasRegUpdate.getText().toString().trim();
 
-        boolean passwordChanged = isPasswordChanged(newPass, oldPassword);
+        boolean passwordChanged = !newPass.equals(oldPass);
 
         if (!passwordChanged) {
             updateFirestoreData(updatedUser, updatedChild, userId);
             return;
         }
 
-        reauthenticateAndChangePassword(oldEmail, oldPassword, newPass, () -> updateFirestoreData(updatedUser, updatedChild, userId));
+        reauthenticateAndChangePassword(oldEmail, oldPass, newPass,
+                () -> updateFirestoreData(updatedUser, updatedChild, userId));
     }
 
+    /**
+     * Создает объект User с обновленными данными.
+     *
+     * @param userId идентификатор пользователя.
+     * @return объект User с новыми данными.
+     */
     private User createUpdatedUser(String userId) {
-        String fullName = etFullName_update.getText().toString().trim();
-        String phone = etPhone_update.getText().toString().trim();
-        String birthDate = etBirthDate_update.getText().toString().trim();
-        String city = etCity_update.getText().toString().trim();
-        String email = etEmailReg_update.getText().toString().trim();
-        String pass = etPasReg_update.getText().toString().trim();
-        Gender userGender = getSelectedGender(spGender_update);
+        String fullName = binding.etFullNameUpdate.getText().toString().trim();
+        String phone = binding.etPhoneUpdate.getText().toString().trim();
+        String birthDate = binding.etBirthDateUpdate.getText().toString().trim();
+        String city = binding.etCityUpdate.getText().toString().trim();
+        // String email = binding.etEmailRegUpdate.getText().toString().trim();
+        String email = userPrefs.getString("email", "");
+
+        String pass = binding.etPasRegUpdate.getText().toString().trim();
+        Gender userGender = getSelectedGender(binding.spGenderUpdate);
 
         return new User(userId, fullName, phone, birthDate, city, userGender, email, pass);
     }
 
+    /**
+     * Создает объект Child с обновленными данными.
+     *
+     * @param childId идентификатор ребенка.
+     * @return объект Child с новыми данными.
+     */
     private Child createUpdatedChild(String childId) {
-        String childFullName = etFullNameChild_update.getText().toString().trim();
-        String childBirthDate = etBirthDateChild_update.getText().toString().trim();
-        Gender childGender = getSelectedGender(spGenderChild_update);
-        String diagnosis = etDiagnosisChild_update.getText().toString().trim();
-        float height = parseFloatOrZero(etHeightChild_update.getText().toString().trim());
-        float weight = parseFloatOrZero(etWeightChild_update.getText().toString().trim());
+        String childFullName = binding.etFullNameChildUpdate.getText().toString().trim();
+        String childBirthDate = binding.etBirthDateChildUpdate.getText().toString().trim();
+        Gender childGender = getSelectedGender(binding.spGenderChildUpdate);
+        String diagnosis = binding.etDiagnosisChildUpdate.getText().toString().trim();
+        float height = parseFloatOrZero(binding.etHeightChildUpdate.getText().toString().trim());
+        float weight = parseFloatOrZero(binding.etWeightChildUpdate.getText().toString().trim());
 
         return new Child(childId, childFullName, childBirthDate, childGender, diagnosis, height, weight);
     }
 
-    private boolean isPasswordChanged(String newPass, String oldPassword) {
-        return !newPass.equals(oldPassword);
-    }
-
+    /**
+     * Пытается реаутентифицировать пользователя и, при успехе, обновить пароль.
+     *
+     * @param oldEmail старый email.
+     * @param oldPassword старый пароль.
+     * @param newPass новый пароль.
+     * @param onSuccess действие при успешном обновлении пароля.
+     */
     private void reauthenticateAndChangePassword(String oldEmail, String oldPassword, String newPass, Runnable onSuccess) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
@@ -268,32 +313,51 @@ public class UserUpdateFragment extends Fragment {
         AuthCredential credential = EmailAuthProvider.getCredential(oldEmail, oldPassword);
         currentUser.reauthenticate(credential).addOnCompleteListener(reauthTask -> {
             if (reauthTask.isSuccessful()) {
-                updatePassword(currentUser, newPass, onSuccess);
+                currentUser.updatePassword(newPass).addOnCompleteListener(passUpdateTask -> {
+                    if (passUpdateTask.isSuccessful()) {
+                        onSuccess.run();
+                    } else {
+                        showToast("Не удалось обновить пароль: " + (passUpdateTask.getException() != null ? passUpdateTask.getException().getMessage() : ""));
+                    }
+                });
             } else {
                 showToast("Ошибка реаутентификации: " + (reauthTask.getException() != null ? reauthTask.getException().getMessage() : ""));
             }
         });
     }
 
-    private void updatePassword(FirebaseUser currentUser, String newPass, Runnable onSuccess) {
-        currentUser.updatePassword(newPass).addOnCompleteListener(passUpdateTask -> {
-            if (passUpdateTask.isSuccessful()) {
-                onSuccess.run();
-            } else {
-                showToast("Не удалось обновить пароль: " + (passUpdateTask.getException() != null ? passUpdateTask.getException().getMessage() : ""));
-            }
+    /**
+     * Обновляет данные пользователя и ребенка в Firestore.
+     *
+     * @param updatedUser обновленные данные пользователя.
+     * @param updatedChild обновленные данные ребенка.
+     * @param userId идентификатор пользователя.
+     */
+    private void updateFirestoreData(User updatedUser, Child updatedChild, String userId) {
+        userRepository.updateUser(updatedUser, requireContext());
+        childRepository.updateChild(userId, updatedChild, aVoid -> {
+            showToast("Данные ребенка обновлены");
+            navigateBackToProfile();
+        }, e -> {
+            showToast("Ошибка обновления ребенка: " + e.getMessage());
         });
     }
 
-    private void updateFirestoreData(User updatedUser, Child updatedChild, String userId) {
-        updateUserData(updatedUser);
-        updateChildData(userId, updatedChild);
-    }
-
+    /**
+     * Отображает Toast-сообщение.
+     *
+     * @param message текст сообщения.
+     */
     private void showToast(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Преобразует строку в число с плавающей точкой, возвращает 0.0f при ошибке.
+     *
+     * @param value строковое значение.
+     * @return число float или 0.0f при ошибке.
+     */
     private float parseFloatOrZero(String value) {
         try {
             return Float.parseFloat(value);
@@ -302,7 +366,13 @@ public class UserUpdateFragment extends Fragment {
         }
     }
 
-    private Gender getSelectedGender(Spinner spinner) {
+    /**
+     * Получает выбранный пол из спиннера.
+     *
+     * @param spinner спиннер выбора пола.
+     * @return выбранное значение Gender.
+     */
+    private Gender getSelectedGender(android.widget.Spinner spinner) {
         Object selectedObject = spinner.getSelectedItem();
         if (selectedObject == null) {
             return Gender.MALE;
@@ -311,7 +381,13 @@ public class UserUpdateFragment extends Fragment {
         return Gender.fromString(selected);
     }
 
-    private void setSpinnerSelection(Spinner spinner, Gender gender) {
+    /**
+     * Устанавливает выбранный элемент спиннера в соответствии с переданным полом.
+     *
+     * @param spinner спиннер.
+     * @param gender пол для установки.
+     */
+    private void setSpinnerSelection(android.widget.Spinner spinner, Gender gender) {
         String[] genderValues = Gender.getGenderValues();
         int position = 0;
         for (int i = 0; i < genderValues.length; i++) {
@@ -323,19 +399,9 @@ public class UserUpdateFragment extends Fragment {
         spinner.setSelection(position);
     }
 
-    private void updateUserData(User updatedUser) {
-        userRepository.updateUser(updatedUser, requireContext());
-    }
-
-    private void updateChildData(String userId, Child updatedChild) {
-        childRepository.updateChild(userId, updatedChild, aVoid -> {
-            Toast.makeText(requireContext(), "Данные ребенка обновлены", Toast.LENGTH_SHORT).show();
-            navigateBackToProfile();
-        }, e -> {
-            Toast.makeText(requireContext(), "Ошибка обновления ребенка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
-    }
-
+    /**
+     * Возвращается к фрагменту профиля пользователя.
+     */
     private void navigateBackToProfile() {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new UserProfileFragment());
@@ -343,4 +409,3 @@ public class UserUpdateFragment extends Fragment {
         transaction.commit();
     }
 }
-

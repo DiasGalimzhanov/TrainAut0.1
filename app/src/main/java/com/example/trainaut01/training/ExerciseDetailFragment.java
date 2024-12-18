@@ -393,6 +393,7 @@ public class ExerciseDetailFragment extends Fragment {
 
     private void updateExperienceAndProgress(Exercise exercise) {
         updateChildExperience(exercise.getRewardPoints());
+        updateChildLvl();
         updateProgress(1);
     }
 
@@ -400,6 +401,13 @@ public class ExerciseDetailFragment extends Fragment {
         int updatedExp = SharedPreferencesUtils.getInt(requireContext(), "child_data", "exp", 0) + newPoints;
         SharedPreferencesUtils.saveInt(requireContext(), "child_data", "exp", updatedExp);
         _childRepository.updateChildItem(_userId, _childId, "exp", updatedExp, requireContext());
+    }
+
+    private void updateChildLvl(){
+        int exp = SharedPreferencesUtils.getInt(requireContext(), "child_data", "exp", 0);
+        int updateLvl = (exp / 5000) + 1;
+        SharedPreferencesUtils.saveInt(requireContext(), "child_data", "lvl", updateLvl);
+        _childRepository.updateChildItem(_userId, _childId, "lvl", updateLvl, requireContext());
     }
 
     private void updateChildCountDays() {
@@ -451,6 +459,7 @@ public class ExerciseDetailFragment extends Fragment {
 
     private void handleGrossMotorCompletion(int finalPoints) {
         updateChildExperience(finalPoints);
+        updateChildLvl();
         updateChildCountDays();
     }
 

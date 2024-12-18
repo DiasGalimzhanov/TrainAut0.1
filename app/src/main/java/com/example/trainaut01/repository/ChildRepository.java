@@ -61,27 +61,6 @@ public class ChildRepository{
         return _db.collection("users").document(userId).collection("child");
     }
 
-
-//    private void saveChildDataToPreferences(Child child, Context context) {
-//        SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//
-//        editor.putString("childId", child.getChildId());
-//        editor.putString("fullName", child.getFullName());
-//        editor.putString("birthDate", child.getBirthDate());
-//        editor.putString("gender", child.getGender().toString());
-//        editor.putString("diagnosis", child.getDiagnosis());
-//        editor.putFloat("height", child.getHeight());
-//        editor.putFloat("weight", child.getWeight());
-//        editor.putInt("exp", child.getExp());
-//        editor.putInt("lvl", child.getExp());
-//        editor.putInt("countDays", child.getExp());
-//
-//        editor.apply();
-//
-//        Toast.makeText(context, "Данные ребенка сохранены", Toast.LENGTH_SHORT).show();
-//    }
-
     /**
      * Обновляет определенное поле ребенка в коллекции `child` и SharedPreferences.
      *

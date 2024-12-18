@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-
     private String userId;
     private String fullName;
     private String phone;
@@ -96,7 +95,7 @@ public class User {
         userMap.put("city", city);
         userMap.put("gender", gender != null ? gender.toString() : null);
         userMap.put("email", email);
-        userMap.put("pass", pass);
+//        userMap.put("pass", pass);
         userMap.put("role", role != null ? role.toString() : Role.USER.toString());
         return userMap;
     }
