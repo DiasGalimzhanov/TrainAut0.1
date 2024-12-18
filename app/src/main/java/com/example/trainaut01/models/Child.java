@@ -23,7 +23,7 @@ public class Child {
     private float height;
     private float weight;
     private int exp = 0;
-    private int lvl = 0;
+    private int lvl = 1;
     private int countDays = 0;
     private List<ChildNote> childNotes;
 

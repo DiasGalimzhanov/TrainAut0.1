@@ -9,7 +9,6 @@
     android:layout_marginEnd="5dp"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    android:background="@drawable/calendar_day_background"
     android:padding="8dp">
 
 
@@ -19,7 +18,7 @@
         android:layout_height="30dp"
         android:gravity="center"
         android:textSize="16sp"
-        android:background="@drawable/calendar_day_background"
-        android:textColor="@android:color/black" />
+        android:textStyle="bold"
+        android:textColor="@color/white" />
 
 </LinearLayout>

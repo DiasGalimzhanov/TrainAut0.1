@@ -1,7 +1,5 @@
 package com.example.trainaut01.dagger.module;
 
-import android.content.Context;
-
 import com.example.trainaut01.repository.AchievementRepository;
 import com.example.trainaut01.repository.AvatarRepository;
 import com.example.trainaut01.repository.ChildRepository;
@@ -16,6 +14,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+/**
+ * Модуль Dagger для предоставления зависимостей (репозиториев) из единого места.
+ * Здесь создаются и настраиваются экземпляры репозиториев, а также других необходимых зависимостей.
+ */
 @Module
 public class RepositoryModule {
 

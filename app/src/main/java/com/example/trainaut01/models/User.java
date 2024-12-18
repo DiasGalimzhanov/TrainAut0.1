@@ -40,16 +40,6 @@ public class User {
         this.pass = pass;
     }
 
-    public User(String userId, String fullName, String phone, String birthDate, String city, Gender gender, String email) {
-        this.userId = userId;
-        this.fullName = fullName;
-        this.phone = phone;
-        this.birthDate = birthDate;
-        this.city = city;
-        this.gender = gender;
-        this.email = email;
-    }
-
     public User(String fullName, String phone, String birthDate, String city, Gender gender, String email, String pass) {
         this.fullName = fullName;
         this.phone = phone;
@@ -60,27 +50,6 @@ public class User {
         this.pass = pass;
     }
 
-    public void setPass(String pass){
-        this.pass = hashPassword(pass);
-    }
-
-    private String hashPassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error while hashing password", e);
-        }
-    }
 
     /**
      * Преобразует объект User в Map<String, Object> для сохранения в базу данных.

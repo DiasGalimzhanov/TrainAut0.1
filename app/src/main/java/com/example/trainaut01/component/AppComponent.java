@@ -23,6 +23,10 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
+/**
+ * Компонент Dagger для предоставления зависимостей в приложении.
+ * Связывает модули с объектами, которые нуждаются в инъекции зависимостей.
+ */
 @Component(modules = {RepositoryModule.class})
 @Singleton
 public interface AppComponent {
@@ -43,6 +47,5 @@ public interface AppComponent {
     void inject(ChildSignUpFragment childSignUpFragment);
     void inject(TodayMusclePlanFragment todayMusclePlanFragment);
     void inject(NoteFragment noteFragment);
-//    void inject(UserRepository userRepository);
 }
 

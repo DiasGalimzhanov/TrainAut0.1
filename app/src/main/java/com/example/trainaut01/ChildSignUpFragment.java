@@ -1,6 +1,5 @@
 package com.example.trainaut01;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,12 +9,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.databinding.FragmentChildSignUpBinding;
 import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.Child;
 import com.example.trainaut01.models.User;
@@ -32,13 +29,16 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+/**
+ * Fragment для регистрации ребенка.
+ * Обеспечивает ввод данных о ребенке, их проверку и сохранение.
+ */
 public class ChildSignUpFragment extends Fragment {
+
+    private FragmentChildSignUpBinding _binding;
 
     private static final String ARG_USER = "user";
     private User _user;
-
-    private EditText _etFullNameChild, _etBirthDateChild, _etDiagnosisChild, _etHeightChild, _etWeightChild;
-    private Spinner _spGenderChild;
 
     @Inject
     UserRepository _userRepository;
@@ -49,6 +49,12 @@ public class ChildSignUpFragment extends Fragment {
     @Inject
     DayPlanRepository _dayPlanRepository;
 
+    /**
+     * Создает новый экземпляр ChildSignUpFragment с передачей объекта пользователя.
+     *
+     * @param user объект пользователя
+     * @return экземпляр ChildSignUpFragment
+     */
     public static ChildSignUpFragment newInstance(User user) {
         ChildSignUpFragment fragment = new ChildSignUpFragment();
         Bundle args = new Bundle();
@@ -57,6 +63,11 @@ public class ChildSignUpFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Вызывается при создании фрагмента для инициализации переданного объекта пользователя.
+     *
+     * @param savedInstanceState сохраненное состояние (может быть null)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,57 +80,77 @@ public class ChildSignUpFragment extends Fragment {
         }
     }
 
-    @Nullable
+    /**
+     * Создает и возвращает представление для фрагмента.
+     *
+     * @param inflater  объект LayoutInflater для создания представлений
+     * @param container контейнер для представления (может быть null)
+     * @param savedInstanceState сохраненное состояние (может быть null)
+     * @return корневое представление фрагмента
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_child_sign_up, container, false);
+        _binding = FragmentChildSignUpBinding.inflate(inflater, container, false);
+        return _binding.getRoot();
     }
 
+    /**
+     * Вызывается после создания представления фрагмента.
+     *
+     * @param view корневое представление фрагмента
+     * @param savedInstanceState сохраненное состояние (может быть null)
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        init(view);
-        setupUI();
+        init();
+        setupBirthDateChildPicker();
     }
 
-    private void init(View view) {
+    /**
+     * Вызывается при уничтожении представления фрагмента.
+     * Очищает объект binding для предотвращения утечек памяти.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        _binding = null;
+    }
+
+    /**
+     * Инициализирует компоненты, такие как Dagger и обработчики кнопок.
+     */
+    private void init() {
         AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(ChildSignUpFragment.this);
 
-        _etFullNameChild = view.findViewById(R.id.etFullNameChild);
-        _etBirthDateChild = view.findViewById(R.id.etBirthDateChild);
-        _etDiagnosisChild = view.findViewById(R.id.etDiagnosisChild);
-        _etHeightChild = view.findViewById(R.id.etHeightChild);
-        _etWeightChild = view.findViewById(R.id.etWeightChild);
-        _spGenderChild = view.findViewById(R.id.spGenderChild);
+        _binding.btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
+        _binding.btnContinue.setOnClickListener(v -> handleContinue());
 
-        Button _btnContinue = view.findViewById(R.id.btnContinue);
-        Button _btnBack = view.findViewById(R.id.btnBack);
-
-        _btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
-        _btnContinue.setOnClickListener(v -> handleContinue());
-
-        SpinnerUtils.setupGenderAdapter(ChildSignUpFragment.this.getContext(), _spGenderChild, Gender.getGenderValues());
+        SpinnerUtils.setupGenderAdapter(ChildSignUpFragment.this.getContext(), _binding.spGenderChild, Gender.getGenderValues());
     }
 
+    /**
+     * Обрабатывает нажатие кнопки "Продолжить", проверяя корректность введенных данных.
+     */
     private void handleContinue() {
-        String fullName = _etFullNameChild.getText().toString().trim();
-        String birthDate = _etBirthDateChild.getText().toString().trim();
-        String diagnosis = _etDiagnosisChild.getText().toString().trim();
-        String heightStr = _etHeightChild.getText().toString().trim();
-        String weightStr = _etWeightChild.getText().toString().trim();
-        Gender gender = Gender.fromString(_spGenderChild.getSelectedItem().toString().trim());
+        Gender gender = Gender.fromString(_binding.spGenderChild.getSelectedItem().toString().trim());
 
-        if (!ValidationUtils.areFieldsFilled(fullName, birthDate, diagnosis, heightStr, weightStr)) {
+        if (ValidationUtils.areFieldsFilled(
+                _binding.etFullNameChild.getText().toString().trim(),
+                _binding.etBirthDateChild.getText().toString().trim(),
+                _binding.etDiagnosisChild.getText().toString().trim(),
+                _binding.etHeightChild.getText().toString().trim(),
+                _binding.etWeightChild.getText().toString().trim())) {
             ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Пожалуйста, заполните все поля.");
             return;
         }
 
         float height, weight;
         try {
-            height = Float.parseFloat(heightStr);
-            weight = Float.parseFloat(weightStr);
+            height = Float.parseFloat(_binding.etHeightChild.getText().toString().trim());
+            weight = Float.parseFloat(_binding.etWeightChild.getText().toString().trim());
         } catch (NumberFormatException e) {
             ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Рост и вес должны быть числовыми значениями.");
             return;
@@ -130,9 +161,23 @@ public class ChildSignUpFragment extends Fragment {
             return;
         }
 
-        registerUser(fullName, birthDate, diagnosis, height, weight, gender);
+        registerUser(
+                _binding.etFullNameChild.getText().toString().trim(),
+                _binding.etBirthDateChild.getText().toString().trim(),
+                _binding.etDiagnosisChild.getText().toString().trim(),
+                height, weight, gender);
     }
 
+    /**
+     * Регистрирует нового пользователя и добавляет данные о ребенке.
+     *
+     * @param fullName    полное имя ребенка
+     * @param birthDate   дата рождения ребенка
+     * @param diagnosis   диагноз ребенка
+     * @param height      рост ребенка
+     * @param weight      вес ребенка
+     * @param gender      пол ребенка
+     */
     private void registerUser(String fullName, String birthDate, String diagnosis, float height, float weight, Gender gender) {
         _userRepository.addUser(_user, ChildSignUpFragment.this.getContext(), task -> {
             if (task.isSuccessful()) {
@@ -144,6 +189,17 @@ public class ChildSignUpFragment extends Fragment {
         });
     }
 
+    /**
+     * Добавляет данные о ребенке в базу данных.
+     *
+     * @param userId      идентификатор пользователя
+     * @param fullName    полное имя ребенка
+     * @param birthDate   дата рождения ребенка
+     * @param diagnosis   диагноз ребенка
+     * @param height      рост ребенка
+     * @param weight      вес ребенка
+     * @param gender      пол ребенка
+     */
     private void addChild(String userId, String fullName, String birthDate, String diagnosis, float height, float weight, Gender gender) {
         Child child = new Child(fullName, birthDate, gender, diagnosis, height, weight);
 
@@ -154,7 +210,11 @@ public class ChildSignUpFragment extends Fragment {
         });
     }
 
-
+    /**
+     * Добавляет планы на день для пользователя.
+     *
+     * @param userId идентификатор пользователя
+     */
     private void addDayPlans(String userId) {
         _dayPlanRepository.addAllDayPlansToUser(userId, unused -> {
             goToInstructionsForUseFragment();
@@ -163,6 +223,9 @@ public class ChildSignUpFragment extends Fragment {
         });
     }
 
+    /**
+     * Переход к фрагменту с инструкциями для пользователя.
+     */
     private void goToInstructionsForUseFragment(){
         InstructionsForUseFragment instructionsFragment = new InstructionsForUseFragment();
 
@@ -173,12 +236,11 @@ public class ChildSignUpFragment extends Fragment {
                 .commit();
     }
 
-    private void setupUI() {
-        setupBirthDateChildPicker();
-    }
-
+    /**
+     * Настраивает выбор даты рождения ребенка через DatePicker.
+     */
     private void setupBirthDateChildPicker() {
-        _etBirthDateChild.setOnClickListener(v -> DateUtils.showDatePickerDialog(ChildSignUpFragment.this.getContext(), _etBirthDateChild));
+        _binding.etBirthDateChild.setOnClickListener(v -> DateUtils.showDatePickerDialog(ChildSignUpFragment.this.getContext(), _binding.etBirthDateChild));
     }
 
 }

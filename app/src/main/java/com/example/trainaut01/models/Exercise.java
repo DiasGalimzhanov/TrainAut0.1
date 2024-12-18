@@ -38,6 +38,12 @@ public class Exercise implements Serializable {
         this.initializeFromMap(map);
     }
 
+    /**
+     * Инициализирует поля объекта на основе данных из переданной карты.
+     * Предполагается, что карта содержит ключи, соответствующие полям класса.
+     *
+     * @param map Карта с данными упражнения.
+     */
     public void initializeFromMap(Map<String, Object> map) {
         this.id = (String) map.get("id");
 
@@ -75,6 +81,11 @@ public class Exercise implements Serializable {
         this.restTime = map.get("restTime") != null ? ((Number) map.get("restTime")).floatValue() : 0f;
     }
 
+    /**
+     * Преобразует объект Exercise в Map<String, Object> для удобной сериализации и хранения.
+     *
+     * @return Карта, представляющая объект Exercise.
+     */
     public Map<String, Object> toMap() {
         Map<String, Object> exerciseMap = new HashMap<>();
         exerciseMap.put("id", id);
@@ -92,6 +103,12 @@ public class Exercise implements Serializable {
         return exerciseMap;
     }
 
+    /**
+     * Преобразует объекt Exercise в JSON-объект (JSONObject).
+     * Используется для сериализации в формат JSON.
+     *
+     * @return JSONObject, содержащий название упражнения и прошедшее время.
+     */
     public JSONObject toJsonObject() {
         JSONObject jsonObject = new JSONObject();
         try {

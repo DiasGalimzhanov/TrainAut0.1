@@ -8,21 +8,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.trainaut01.adapter.CalendarAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.databinding.FragmentTrainingDashboardBinding;
 import com.example.trainaut01.models.CalendarDay;
 import com.example.trainaut01.models.Exercise;
 import com.example.trainaut01.repository.ChildProgressRepository;
@@ -40,6 +37,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -47,14 +45,16 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+/**
+ * Фрагмент для отображения панели управления тренировками.
+ * Обеспечивает доступ к календарю, уровням, упражнениям и прогрессу.
+ */
 public class TrainingDashboardFragment extends Fragment implements ProgressResetListener {
 
-    private TextView _tvLevelDashboard, _tvExpDashboard;
-    private LottieAnimationView _btnExercisesMotor, _btnAAC;
-    private RecyclerView _calendarRecyclerView;
+    private FragmentTrainingDashboardBinding _binding;
+
     private CalendarAdapter _calendarAdapter;
     private List<CalendarDay> _calendarDays;
-    private LinearLayout _layoutProgress;
     private int _currentDay;
 
     private String _currentYear;
@@ -66,56 +66,86 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     @Inject
     DayPlanRepository _dayPlanRepository;
 
+    /**
+     * Создает и возвращает представление фрагмента.
+     *
+     * @param inflater           объект LayoutInflater для создания представлений
+     * @param container          контейнер для представления (может быть null)
+     * @param savedInstanceState сохраненное состояние (может быть null)
+     * @return корневое представление фрагмента
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_training_dashboard, container, false);
-        init(view);
+        _binding = FragmentTrainingDashboardBinding.inflate(inflater, container, false);
+        return _binding.getRoot();
+    }
+
+    /**
+     * Вызывается после создания представления фрагмента.
+     *
+     * @param view               корневое представление фрагмента
+     * @param savedInstanceState сохраненное состояние (может быть null)
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        init();
 
         ProgressUtils.resetDailyProgress(requireContext(), this);
-        setButtonListenerToOpenFragment(_btnExercisesMotor, new TodayMusclePlanFragment());
-        setButtonListenerToOpenFragment(_btnAAC, new CognitiveExerciseFragment());
-
+        setButtonListenerToOpenFragment(_binding.btnExercisesMotor, new TodayMusclePlanFragment());
+        setButtonListenerToOpenFragment(_binding.btnAAC, new CognitiveExerciseFragment());
         processCompletedExercises();
-
         loadChildProgress();
         loadLevel();
 
-        _layoutProgress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, new ProgressFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
+        _binding.layoutProgress.setOnClickListener(v -> {
+            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new ProgressFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
-
-        return view;
     }
 
-    private void init(View view) {
+    /**
+     * Вызывается при уничтожении представления фрагмента.
+     * Очищает объект binding для предотвращения утечек памяти.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        _binding = null;
+    }
+
+    /**
+     * Инициализирует компоненты и настраивает календарь.
+     */
+    private void init() {
         AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(this);
 
         _currentYear = DateUtils.getCurrentYear();
         _currentMonth = DateUtils.getCurrentMonth();
-
-        _tvExpDashboard = view.findViewById(R.id.tvExpDashboard);
-        _tvLevelDashboard = view.findViewById(R.id.tvLvlDashboard);
-        _btnExercisesMotor = view.findViewById(R.id.btnExercisesMotor);
-        _btnAAC = view.findViewById(R.id.btnAAC);
-        _layoutProgress = view.findViewById(R.id.layoutProgress);
-        _calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         _currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
         setupCalendar();
     }
 
+    /**
+     * Реализация интерфейса ProgressResetListener. Выполняется при сбросе прогресса.
+     */
     @Override
-    public void onProgressReset() {}
+    public void onProgressReset() {
+    }
 
+    /**
+     * Устанавливает слушатель нажатия для кнопки, чтобы открыть указанный фрагмент.
+     *
+     * @param button   кнопка (анимация Lottie)
+     * @param fragment фрагмент для открытия
+     */
     private void setButtonListenerToOpenFragment(LottieAnimationView button, Fragment fragment) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,15 +159,34 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         });
     }
 
+    /**
+     * Настраивает календарь с использованием адаптера.
+     */
     private void setupCalendar() {
         _calendarDays = new ArrayList<>();
         generateCalendarDays();
 
-        _calendarAdapter = new CalendarAdapter(_calendarDays, _currentDay);
-        _calendarRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
-        _calendarRecyclerView.setAdapter(_calendarAdapter);
+        String localizedMonth = DateUtils.getCurrentMonthLocalized();
+
+        _calendarAdapter = new CalendarAdapter(requireContext(), _calendarDays, _currentDay, localizedMonth.toUpperCase());
+
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
+
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return position == 0 ? 7 : 1;
+            }
+        });
+
+        _binding.calendarRecyclerView.setLayoutManager(layoutManager);
+        _binding.calendarRecyclerView.setAdapter(_calendarAdapter);
     }
 
+
+    /**
+     * Генерирует список дней для календаря.
+     */
     private void generateCalendarDays() {
         _calendarDays.clear();
 
@@ -159,6 +208,11 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         }
     }
 
+    /**
+     * Помечает день как завершенный в календаре.
+     *
+     * @param day номер дня
+     */
     public void markDayAsCompleted(int day) {
         int offset = getFirstDayOffset();
         int index = day + offset - 1;
@@ -174,6 +228,9 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         }
     }
 
+    /**
+     * Загружает прогресс ребенка.
+     */
     private void loadChildProgress() {
         String userId = getUserId();
         if (userId == null) return;
@@ -182,6 +239,9 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         checkTodayTrainingCompletion();
     }
 
+    /**
+     * Проверяет, завершена ли сегодняшняя тренировка.
+     */
     private void checkTodayTrainingCompletion() {
         boolean isCompletedTodayTraining = SharedPreferencesUtils.getBoolean(requireContext(), "child_progress", "isCompletedTodayTraining", false);
 
@@ -190,6 +250,11 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         }
     }
 
+    /**
+     * Загружает данные прогресса пользователя из репозитория.
+     *
+     * @param userId идентификатор пользователя
+     */
     private void loadUserProgressFromRepository(String userId) {
         _childProgressRepository.loadChildProgress(userId,
                 new OnSuccessListener<JSONObject>() {
@@ -207,13 +272,14 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         );
     }
 
+    /**
+     * Разбирает и загружает данные прогресса пользователя.
+     *
+     * @param jsonObject объект JSON с данными прогресса
+     */
     private void parseAndLoadUserProgress(JSONObject jsonObject) {
         try {
             JSONArray progressArray = jsonObject.getJSONArray("progress");
-
-//            String currentYear = DateUtils.getCurrentYear();
-//            String currentMonth = DateUtils.getCurrentMonth().toLowerCase(Locale.ENGLISH);
-
 
             for (int i = 0; i < progressArray.length(); i++) {
                 JSONObject monthProgress = progressArray.getJSONObject(i);
@@ -229,6 +295,11 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         }
     }
 
+    /**
+     * Загружает завершенные дни из объекта месяца.
+     *
+     * @param monthProgress объект JSON с данными месяца
+     */
     @SuppressLint("NotifyDataSetChanged")
     private void loadCompletedDays(JSONObject monthProgress) {
         try {
@@ -246,6 +317,11 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         }
     }
 
+    /**
+     * Возвращает смещение первого дня месяца в календаре.
+     *
+     * @return смещение в днях
+     */
     private int getFirstDayOffset() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -259,69 +335,92 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         }
     }
 
+    /**
+     * Сохраняет прогресс пользователя.
+     */
     private void saveUserProgress() {
-            String userId = getUserId();
-            if (userId == null) return;
+        String userId = getUserId();
+        if (userId == null) return;
 
-            List<Integer> completedDays = getCompletedDays();
-            if (completedDays.isEmpty()) {
-                return;
+        List<Integer> completedDays = getCompletedDays();
+        if (completedDays.isEmpty()) {
+            return;
+        }
+
+        saveProgressToRepository(userId, _currentYear, _currentMonth, completedDays);
+    }
+
+    /**
+     * Получает идентификатор пользователя из SharedPreferences.
+     *
+     * @return идентификатор пользователя или null
+     */
+    private String getUserId() {
+        return SharedPreferencesUtils.getString(requireContext(), "user_data", "userId", null);
+    }
+
+    /**
+     * Возвращает список завершенных дней.
+     *
+     * @return список завершенных дней
+     */
+    private List<Integer> getCompletedDays() {
+        List<Integer> completedDays = new ArrayList<>();
+
+        for (CalendarDay day : _calendarDays) {
+            if (day.getDay() > 0 && day.isCompleted()) {
+                completedDays.add(day.getDay());
             }
-
-//            String year = DateUtils.getCurrentYear();;
-//            String month = DateUtils.getCurrentMonth();
-
-            saveProgressToRepository(userId, _currentYear, _currentMonth, completedDays);
         }
+        return completedDays;
+    }
 
-        private String getUserId() {
-            return SharedPreferencesUtils.getString(requireContext(), "user_data", "userId", null);
-        }
-
-        private List<Integer> getCompletedDays() {
-            List<Integer> completedDays = new ArrayList<>();
-
-            for (CalendarDay day : _calendarDays) {
-                if (day.getDay() > 0 && day.isCompleted()) {
-                    completedDays.add(day.getDay());
-                }
-            }
-            return completedDays;
-        }
-
-        private void saveProgressToRepository(String userId, String year, String month, List<Integer> completedDays) {
-            _childProgressRepository.saveChildProgress(userId, year, month, completedDays,
-                    new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                        }
-                    },
-                    new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("saveUserProgress", "Failed to save progress: " + e.getMessage(), e);
-                        }
+    /**
+     * Сохраняет прогресс пользователя в репозиторий.
+     *
+     * @param userId        идентификатор пользователя
+     * @param year          текущий год
+     * @param month         текущий месяц
+     * @param completedDays список завершенных дней
+     */
+    private void saveProgressToRepository(String userId, String year, String month, List<Integer> completedDays) {
+        _childProgressRepository.saveChildProgress(userId, year, month, completedDays,
+                new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
                     }
-            );
-        }
+                },
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("saveUserProgress", "Failed to save progress: " + e.getMessage(), e);
+                    }
+                }
+        );
+    }
 
-
+    /**
+     * Загружает уровень ребенка и отображает его на экране.
+     */
     @SuppressLint("SetTextI18n")
-    public void loadLevel(){
+    public void loadLevel() {
         int exp = SharedPreferencesUtils.getInt(requireContext(), "child_data", "exp", 0);
         int level = (exp / 5000) + 1;
         int expForNextLevel = 5000;
 
-        _tvLevelDashboard.setText("Уровень: " + level);
-        _tvExpDashboard.setText(exp + " / " + level * expForNextLevel);
+        _binding.tvLvlDashboard.setText("Уровень: " + level);
+        _binding.tvExpDashboard.setText(exp + " / " + level * expForNextLevel);
     }
 
+    /**
+     * Обрабатывает завершенные упражнения и сохраняет прогресс.
+     */
     private void processCompletedExercises() {
-            boolean isCompleted = SharedPreferencesUtils.getBoolean(requireContext(), "child_progress", "isCompletedTodayTraining", false);
-            boolean isProgressAlreadySaved = SharedPreferencesUtils.getBoolean(requireContext(), "child_progress", "isProgressSavedToday", false);
-            if (!isCompleted || isProgressAlreadySaved) {
-                return;
-            }
+        boolean isCompleted = SharedPreferencesUtils.getBoolean(requireContext(), "child_progress", "isCompletedTodayTraining", false);
+        boolean isProgressAlreadySaved = SharedPreferencesUtils.getBoolean(requireContext(), "child_progress", "isProgressSavedToday", false);
+        if (!isCompleted || isProgressAlreadySaved) {
+            return;
+        }
 
         new Thread(() -> {
             String userId = getUserId();
@@ -345,7 +444,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     /**
      * Сохраняет завершенные упражнения в хранилище прогресса.
      *
-     * @param userId   Идентификатор пользователя.
+     * @param userId    Идентификатор пользователя.
      * @param exercises Список завершенных упражнений.
      */
     private void saveCompletedExercisesToStorage(String userId, List<Exercise> exercises) {
@@ -452,7 +551,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     /**
      * Сохраняет данные прогресса в хранилище.
      *
-     * @param userId      Идентификатор пользователя.
+     * @param userId       Идентификатор пользователя.
      * @param progressData Данные прогресса.
      */
     private void saveProgressDataToStorage(String userId, JSONObject progressData) {
@@ -464,11 +563,17 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
                 e -> Log.e("saveCompletedExercises", "Ошибка при сохранении данных: " + e.getMessage(), e));
     }
 
-
+    /**
+     * Обновляет состояние нижней навигации, выделяя текущий фрагмент.
+     */
     public void updateBottomNavigation() {
         ((BottomNavigationUpdater) requireActivity()).updateBottomNavigationSelection(this);
     }
 
+    /**
+     * Вызывается, когда фрагмент становится видимым для пользователя.
+     * Обновляет состояние нижней навигации.
+     */
     @Override
     public void onResume() {
         super.onResume();

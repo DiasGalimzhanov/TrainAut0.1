@@ -6,11 +6,7 @@ import android.text.InputFilter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -20,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.databinding.ActivitySignupBinding;
 import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.repository.DayPlanRepository;
@@ -38,11 +35,7 @@ import javax.inject.Inject;
  */
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText _etFullName, _etPhoneNumber, _etBirthDate, _etCity, _etEmail, _etPassReg, _etPasConfirm;
-    private TextView _tvPasswordMatch, _tvLogin, _tvCountryCode;
-    private Spinner _spGender;
-    private Button _btnContinue;
-    private CheckBox _chbUserAgreement;
+    private ActivitySignupBinding _binding;
 
     private String[] _countryNames, _countryCodes, _countryLengths;
 
@@ -64,8 +57,21 @@ public class SignUpActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
 
+        _binding = ActivitySignupBinding.inflate(getLayoutInflater());
+        setContentView(_binding.getRoot());
+
         init();
         setupUI();
+    }
+
+    /**
+     * Вызывается при уничтожении активности.
+     * Очищает объект binding для предотвращения утечек памяти.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        _binding = null;
     }
 
     /**
@@ -75,34 +81,13 @@ public class SignUpActivity extends AppCompatActivity {
         AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(SignUpActivity.this);
 
-        findViews();
-
-        SpinnerUtils.setupGenderAdapter(this, _spGender, Gender.getGenderValues());
+        SpinnerUtils.setupGenderAdapter(this, _binding.spGender, Gender.getGenderValues());
 
         _countryNames = getResources().getStringArray(R.array.country_names);
         _countryCodes = getResources().getStringArray(R.array.country_codes);
         _countryLengths = getResources().getStringArray(R.array.country_lengths);
 
-        _tvCountryCode.setOnClickListener(v -> showCountryCodeDialog());
-    }
-
-    /**
-     * Ищет и связывает элементы пользовательского интерфейса с переменными класса.
-     */
-    private void findViews() {
-        _tvLogin = findViewById(R.id.tvLogin);
-        _tvPasswordMatch = findViewById(R.id.tvPasswordMatch);
-        _etFullName = findViewById(R.id.etFullName);
-        _etPhoneNumber = findViewById(R.id.etPhoneNumber);
-        _etBirthDate = findViewById(R.id.etBirthDate);
-        _etCity = findViewById(R.id.etCity);
-        _etEmail = findViewById(R.id.etEmailReg);
-        _etPassReg = findViewById(R.id.etPasReg);
-        _etPasConfirm = findViewById(R.id.etPasConfirm);
-        _tvCountryCode = findViewById(R.id.tvCountryCode);
-        _chbUserAgreement = findViewById(R.id.chbUserAgreement);
-        _spGender = findViewById(R.id.spGender);
-        _btnContinue = findViewById(R.id.btnContinue);
+        _binding.tvCountryCode.setOnClickListener(v -> showCountryCodeDialog());
     }
 
     /**
@@ -114,9 +99,9 @@ public class SignUpActivity extends AppCompatActivity {
      * - Обработка нажатия на кнопку "Далее".
      */
     private void setupUI() {
-        _tvLogin.setOnClickListener(view -> navigateToLogin());
-        PhoneNumberFormatter.setupPhoneNumberFormatting(_etPhoneNumber, getCurrentCountryCode());
-        _etBirthDate.setOnClickListener(v -> DateUtils.showDatePickerDialog(this, _etBirthDate));
+        _binding.tvLogin.setOnClickListener(view -> navigateToLogin());
+        PhoneNumberFormatter.setupPhoneNumberFormatting(_binding.etPhoneNumber, getCurrentCountryCode());
+        _binding.etBirthDate.setOnClickListener(v -> DateUtils.showDatePickerDialog(this, _binding.etBirthDate));
         setupPasswordValidation();
         setupContinueButton();
     }
@@ -125,8 +110,8 @@ public class SignUpActivity extends AppCompatActivity {
      * Настраивает проверку совпадения паролей при их вводе.
      */
     private void setupPasswordValidation() {
-        _etPassReg.addTextChangedListener(ValidationUtils.createPasswordTextWatcher(
-                _etPassReg, _etPasConfirm, _tvPasswordMatch
+        _binding.etPassReg.addTextChangedListener(ValidationUtils.createPasswordTextWatcher(
+                _binding.etPassReg, _binding.etPasConfirm, _binding.tvPasswordMatch
         ));
     }
 
@@ -135,7 +120,7 @@ public class SignUpActivity extends AppCompatActivity {
      * Выполняется проверка формы и переход к следующему этапу регистрации.
      */
     private void setupContinueButton() {
-        _btnContinue.setOnClickListener(view -> {
+        _binding.btnContinue.setOnClickListener(view -> {
             if (!validateForm()) return;
 
             User newUser = createNewUser();
@@ -219,7 +204,7 @@ public class SignUpActivity extends AppCompatActivity {
      * @param position Позиция выбранной страны в списке.
      */
     private void onCountrySelected(int position) {
-        _tvCountryCode.setText(_countryCodes[position]);
+        _binding.tvCountryCode.setText(_countryCodes[position]);
         int maxNumberLength = getMaxPhoneLength(position);
         setPhoneNumberInputFilter(maxNumberLength);
     }
@@ -230,7 +215,7 @@ public class SignUpActivity extends AppCompatActivity {
      * @param maxNumberLength максимальная длина номера телефона.
      */
     private void setPhoneNumberInputFilter(int maxNumberLength) {
-        _etPhoneNumber.setFilters(new InputFilter[]{
+        _binding.etPhoneNumber.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(maxNumberLength)
         });
     }
@@ -252,7 +237,7 @@ public class SignUpActivity extends AppCompatActivity {
      * @return код страны.
      */
     private String getCurrentCountryCode() {
-        return _tvCountryCode.getText().toString().replace("+", "");
+        return _binding.tvCountryCode.getText().toString().replace("+", "");
     }
 
 
@@ -262,7 +247,7 @@ public class SignUpActivity extends AppCompatActivity {
      * @return индекс выбранной страны или -1, если страна не выбрана.
      */
     private int getSelectedCountryIndex() {
-        String countryCode = _tvCountryCode.getText().toString();
+        String countryCode = _binding.tvCountryCode.getText().toString();
         for (int i = 0; i < _countryCodes.length; i++) {
             if (_countryCodes[i].equals(countryCode)) {
                 return i;
@@ -277,16 +262,16 @@ public class SignUpActivity extends AppCompatActivity {
      * @return true, если все поля заполнены и соглашение принято, иначе false.
      */
     private boolean validateForm() {
-        if (!ValidationUtils.areFieldsFilled(
-                _etFullName.getText().toString().trim(), _etPhoneNumber.getText().toString().trim(),
-                _etBirthDate.getText().toString().trim(),_etCity.getText().toString().trim(),
-                _etEmail.getText().toString().trim(),_etPassReg.getText().toString().trim()
+        if (ValidationUtils.areFieldsFilled(
+                _binding.etFullName.getText().toString().trim(), _binding.etPhoneNumber.getText().toString().trim(),
+                _binding.etBirthDate.getText().toString().trim(), _binding.etCity.getText().toString().trim(),
+                _binding.etEmailReg.getText().toString().trim(), _binding.etPassReg.getText().toString().trim()
         )) {
             ToastUtils.showErrorMessage(this, "Заполните все поля");
             return false;
         }
 
-        String birthDate = _etBirthDate.getText().toString().trim();
+        String birthDate = _binding.etBirthDate.getText().toString().trim();
         if (!ValidationUtils.isAgeValid(birthDate, 18)) {
             ToastUtils.showErrorMessage(this, "Вам должно быть не менее 18 лет");
             return false;
@@ -294,7 +279,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         int countryIndex = getSelectedCountryIndex();
         if (!ValidationUtils.isPhoneNumberLengthValid(
-                _etPhoneNumber.getText().toString().replaceAll("\\s+", ""),
+                _binding.etPhoneNumber.getText().toString().replaceAll("\\s+", ""),
                 getMaxPhoneLength(countryIndex),
                 getMaxPhoneLength(countryIndex)
         )) {
@@ -302,7 +287,7 @@ public class SignUpActivity extends AppCompatActivity {
             return false;
         }
 
-        if (!_chbUserAgreement.isChecked()) {
+        if (!_binding.chbUserAgreement.isChecked()) {
             ToastUtils.showErrorMessage(this, "Примите пользовательское соглашение");
             return false;
         }
@@ -325,13 +310,13 @@ public class SignUpActivity extends AppCompatActivity {
      */
     private User createNewUser() {
         return new User(
-                _etFullName.getText().toString(),
-                _tvCountryCode.getText().toString() + _etPhoneNumber.getText().toString().replaceAll("\\s+", ""),
-                _etBirthDate.getText().toString(),
-                _etCity.getText().toString(),
-                Gender.fromString(_spGender.getSelectedItem().toString()),
-                _etEmail.getText().toString(),
-                _etPassReg.getText().toString()
+                _binding.etFullName.getText().toString(),
+                _binding.tvCountryCode.getText().toString() + _binding.etPhoneNumber.getText().toString().replaceAll("\\s+", ""),
+                _binding.etBirthDate.getText().toString(),
+                _binding.etCity.getText().toString(),
+                Gender.fromString(_binding.spGender.getSelectedItem().toString()),
+                _binding.etEmailReg.getText().toString(),
+                _binding.etPassReg.getText().toString()
         );
     }
 

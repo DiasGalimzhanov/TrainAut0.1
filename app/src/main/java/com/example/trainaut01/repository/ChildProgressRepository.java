@@ -2,7 +2,6 @@ package com.example.trainaut01.repository;
 
 import android.util.Log;
 
-import com.example.trainaut01.utils.DateUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
@@ -18,13 +17,29 @@ import java.util.List;
 
 import com.google.android.gms.tasks.OnFailureListener;
 
+/**
+ * Репозиторий для управления данными прогресса ребенка в Firestore Storage.
+ */
 public class ChildProgressRepository {
     private final FirebaseStorage _firebaseStorage;
 
+    /**
+     * Конструктор, инициализирующий Firebase Storage.
+     */
     public ChildProgressRepository() {
         this._firebaseStorage = FirebaseStorage.getInstance();
     }
 
+    /**
+     * Сохраняет прогресс ребенка.
+     *
+     * @param userId           идентификатор пользователя.
+     * @param year             год прогресса.
+     * @param month            месяц прогресса.
+     * @param completedDays    список завершенных дней.
+     * @param onSuccessListener callback при успешном выполнении.
+     * @param onFailureListener callback при ошибке.
+     */
     public void saveChildProgress(String userId, String year, String month, List<Integer> completedDays, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
         StorageReference userProgressRef = getChildProgressReference(userId);
 
@@ -41,11 +56,24 @@ public class ChildProgressRepository {
         });
     }
 
+    /**
+     * Получает ссылку на файл прогресса пользователя в Firestore Storage.
+     *
+     * @param userId идентификатор пользователя.
+     * @return ссылка на файл прогресса.
+     */
     private StorageReference getChildProgressReference(String userId) {
         StorageReference storageRef = _firebaseStorage.getReference();
         return storageRef.child("child_progress/" + userId + "/progress.json");
     }
 
+    /**
+     * Загружает текущий прогресс ребенка из Firestore Storage.
+     *
+     * @param userProgressRef   ссылка на файл прогресса.
+     * @param onSuccessListener callback при успешном выполнении.
+     * @param onFailureListener callback при ошибке.
+     */
     private void getChildProgress(StorageReference userProgressRef, OnSuccessListener<JSONObject> onSuccessListener, OnFailureListener onFailureListener) {
         userProgressRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
             try {
@@ -58,6 +86,15 @@ public class ChildProgressRepository {
         }).addOnFailureListener(onFailureListener);
     }
 
+    /**
+     * Создает или обновляет объект прогресса.
+     *
+     * @param progressData   текущие данные прогресса.
+     * @param year           год.
+     * @param month          месяц.
+     * @param completedDays  список завершенных дней.
+     * @return обновленный объект прогресса.
+     */
     private JSONObject createOrUpdateProgressObject(JSONObject progressData, String year, String month, List<Integer> completedDays) {
         try {
             JSONArray progressArray = progressData.getJSONArray("progress");
@@ -98,6 +135,14 @@ public class ChildProgressRepository {
         }
     }
 
+    /**
+     * Создает новый объект прогресса.
+     *
+     * @param year          год.
+     * @param month         месяц.
+     * @param completedDays список завершенных дней.
+     * @return объект прогресса.
+     */
     private JSONObject createNewProgressObject(String year, String month, List<Integer> completedDays) {
         try {
             JSONObject jsonObject = new JSONObject();
@@ -118,6 +163,14 @@ public class ChildProgressRepository {
         }
     }
 
+    /**
+     * Загружает данные прогресса ребенка из Firestore Storage.
+     *
+     * @param userProgressRef   ссылка на файл прогресса.
+     * @param progressData      объект JSON с прогрессом ребенка.
+     * @param onSuccessListener callback при успешной загрузке данных.
+     * @param onFailureListener callback при ошибке загрузки данных.
+     */
     private void uploadProgress(StorageReference userProgressRef, JSONObject progressData, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
         try {
             InputStream inputStream = new ByteArrayInputStream(progressData.toString().getBytes());
@@ -134,10 +187,23 @@ public class ChildProgressRepository {
         }
     }
 
+    /**
+     * Проверяет, является ли ошибка результатом отсутствия файла в Firestore Storage.
+     *
+     * @param e исключение для проверки.
+     * @return true, если файл не найден, иначе false.
+     */
     private boolean isFileNotFound(Exception e) {
         return e instanceof StorageException && ((StorageException) e).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND;
     }
 
+    /**
+     * Проверяет, содержит ли JSONArray указанное значение.
+     *
+     * @param jsonArray массив для проверки.
+     * @param value     значение для поиска.
+     * @return true, если значение найдено; false в противном случае.
+     */
     private boolean contains(JSONArray jsonArray, int value) {
         for (int i = 0; i < jsonArray.length(); i++) {
             if (jsonArray.optInt(i) == value) {
@@ -147,6 +213,13 @@ public class ChildProgressRepository {
         return false;
     }
 
+    /**
+     * Загружает данные прогресса ребенка.
+     *
+     * @param userId           идентификатор пользователя.
+     * @param onSuccessListener callback при успешной загрузке.
+     * @param onFailureListener callback при ошибке загрузки.
+     */
     public void loadChildProgress(String userId, OnSuccessListener<JSONObject> onSuccessListener, OnFailureListener onFailureListener) {
         StorageReference userProgressRef = getChildProgressReference(userId);
 
@@ -178,6 +251,14 @@ public class ChildProgressRepository {
                 });
     }
 
+    /**
+     * Сохраняет данные прогресса ребенка в Firestore Storage.
+     *
+     * @param userId           идентификатор пользователя.
+     * @param progressData     объект JSON с прогрессом ребенка.
+     * @param onSuccessListener callback при успешном сохранении данных.
+     * @param onFailureListener callback при ошибке сохранения данных.
+     */
     public void saveToStorage(String userId, JSONObject progressData, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
         try {
             String fileName = "progress_details" + ".json";
@@ -199,6 +280,13 @@ public class ChildProgressRepository {
         }
     }
 
+    /**
+     * Загружает детали прогресса ребенка из Firestore Storage.
+     *
+     * @param userId           идентификатор пользователя.
+     * @param onSuccessListener callback при успешной загрузке данных.
+     * @param onFailureListener callback при ошибке загрузки данных.
+     */
     public void loadChildProgressDetails(String userId, OnSuccessListener<JSONObject> onSuccessListener, OnFailureListener onFailureListener) {
         StorageReference storageRef = _firebaseStorage.getReference("child_progress/" + userId + "/progress_details.json");
 

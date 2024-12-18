@@ -216,7 +216,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etPasReg"
+                android:id="@+id/etPassReg"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
