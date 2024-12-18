@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.widget.EditText;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -67,13 +68,33 @@ public class DateUtils {
         return dayOfWeek >= 1 && dayOfWeek <= 7 ? days[dayOfWeek] : "Unknown";
     }
 
+    /**
+     * Возвращает текущий год в виде строки.
+     *
+     * @return Текущий год в формате строки.
+     */
     public static String getCurrentYear() {
         Calendar currentCalendar = Calendar.getInstance();
         return String.valueOf(currentCalendar.get(Calendar.YEAR));
     }
 
+    /**
+     * Возвращает текущее название месяца на английском языке.
+     *
+     * @return Название текущего месяца в длинном формате (например, "January").
+     */
     public static String getCurrentMonth() {
         Calendar currentCalendar = Calendar.getInstance();
         return currentCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
+    }
+
+    /**
+     * Возвращает локализованное название текущего месяца в именительном падеже.
+     *
+     * @return Локализованное название месяца (например, "Декабрь" для русской локали).
+     */
+    public static String getCurrentMonthLocalized() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG_STANDALONE, Locale.getDefault());
     }
 }

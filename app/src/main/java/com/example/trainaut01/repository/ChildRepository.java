@@ -17,16 +17,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Репозиторий для работы с данными ребенка в Firestore.
+ */
 public class ChildRepository{
 
     private final FirebaseFirestore _db;
 
+    /**
+     * Конструктор, инициализирующий Firestore.
+     */
     public ChildRepository() {
         this._db = FirebaseFirestore.getInstance();
     }
 
     /**
-     * Добавить ребенка в коллекцию `child` для конкретного пользователя.
+     * Добавляет ребенка в коллекцию `child` для указанного пользователя.
+     *
+     * @param userId    идентификатор пользователя
+     * @param child     объект ребенка
+     * @param context   контекст для доступа к SharedPreferences
+     * @param onSuccess callback при успешном выполнении операции
+     * @param onFailure callback при ошибке выполнения операции
      */
     public void addChild(String userId, Child child, Context context, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         Map<String, Object> childData = child.toMap();
@@ -42,7 +54,12 @@ public class ChildRepository{
     }
 
     /**
-     * Обновить данные ребенка в коллекции `child` для конкретного пользователя.
+     * Обновляет данные ребенка в коллекции `child`.
+     *
+     * @param userId       идентификатор пользователя
+     * @param updateChild  объект ребенка с обновленными данными
+     * @param onSuccess    callback при успешном выполнении операции
+     * @param onFailure    callback при ошибке выполнения операции
      */
     public void updateChild(String userId, Child updateChild, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         Map<String, Object> updatedChildData = updateChild.toMap();
@@ -55,7 +72,10 @@ public class ChildRepository{
     }
 
     /**
-     * Получить ссылку на коллекцию `child` для конкретного пользователя.
+     * Возвращает ссылку на коллекцию `child` для указанного пользователя.
+     *
+     * @param userId идентификатор пользователя
+     * @return ссылка на коллекцию `child`
      */
     private CollectionReference getChildCollection(String userId) {
         return _db.collection("users").document(userId).collection("child");
@@ -164,20 +184,12 @@ public class ChildRepository{
     }
 
     /**
-     * Сохранение заметки в Firestore и обновление списка заметок у ребенка.
-     */
-    public void addChildNote(String userId, String childId, ChildNote note, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        getChildCollection(userId)
-                .document(childId)
-                .collection("notes")
-                .document(note.getChildId())
-                .set(note.toMap())
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
-    }
-
-    /**
-     * Загрузка всех заметок для ребенка.
+     * Загружает все заметки ребенка из Firestore.
+     *
+     * @param userId    идентификатор пользователя
+     * @param childId   идентификатор ребенка
+     * @param onSuccess callback при успешном выполнении операции
+     * @param onFailure callback при ошибке выполнения операции
      */
     public void getChildNotes(String userId, String childId, OnSuccessListener<List<ChildNote>> onSuccess, OnFailureListener onFailure) {
         getChildCollection(userId)
@@ -194,6 +206,15 @@ public class ChildRepository{
                 .addOnFailureListener(onFailure);
     }
 
+    /**
+     * Сохраняет заметку ребенка в Firestore.
+     *
+     * @param userId    идентификатор пользователя
+     * @param childId   идентификатор ребенка
+     * @param note      объект заметки
+     * @param onSuccess callback при успешном выполнении операции
+     * @param onFailure callback при ошибке выполнения операции
+     */
     public void saveNoteToFirebase(String userId, String childId, ChildNote note, OnSuccessListener<Void> onSuccess,
                                    OnFailureListener onFailure) {
         _db.collection("users")
@@ -207,6 +228,15 @@ public class ChildRepository{
                 .addOnFailureListener(onFailure);
     }
 
+    /**
+     * Слушатель для обновлений списка заметок ребенка в Firestore.
+     *
+     * @param userId      идентификатор пользователя
+     * @param childId     идентификатор ребенка
+     * @param onNoteUpdate callback при обновлении заметок
+     * @param onFailure   callback при ошибке
+     * @return ListenerRegistration объект для отмены слушателя
+     */
     public ListenerRegistration listenForNotesUpdates(String userId, String childId, OnSuccessListener<List<ChildNote>> onNoteUpdate,
                                                       OnFailureListener onFailure) {
         return _db.collection("users")
@@ -230,6 +260,15 @@ public class ChildRepository{
                 });
     }
 
+    /**
+     * Удаляет заметку ребенка из Firestore.
+     *
+     * @param userId    идентификатор пользователя
+     * @param childId   идентификатор ребенка
+     * @param noteId    идентификатор заметки
+     * @param onSuccess callback при успешном выполнении операции
+     * @param onFailure callback при ошибке выполнения операции
+     */
     public void deleteNoteFromFirebase(String userId, String childId, String noteId, OnSuccessListener<Void> onSuccess,
                                        OnFailureListener onFailure) {
         _db.collection("users")
@@ -242,6 +281,4 @@ public class ChildRepository{
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }
-
-
 }

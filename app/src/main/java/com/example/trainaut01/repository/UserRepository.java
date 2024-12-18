@@ -14,6 +14,7 @@ import com.example.trainaut01.enums.Gender;
 import com.example.trainaut01.models.DayPlan;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.profile.UserProfileFragment;
+import com.example.trainaut01.utils.SharedPreferencesUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,19 +32,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Класс UserRepository предоставляет методы для работы с данными пользователя
+ * в Firebase Firestore и Firebase Authentication.
+ */
 public class UserRepository {
-    private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
+    private final FirebaseFirestore db;
+    private final FirebaseAuth mAuth;
 
-
+    /**
+     * Конструктор по умолчанию.
+     * Инициализирует объекты для работы с Firestore и Firebase Authentication.
+     */
     public UserRepository() {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public void addUser(User user, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
+    /**
+     * Регистрация нового пользователя в Firebase Authentication и сохранение его данных в Firestore.
+     *
+     * @param user                Объект User с данными пользователя.
+     * @param context             Контекст для отображения Toast-сообщений.
+     * @param onCompleteListener  Слушатель, который будет вызван после завершения операции регистрации.
+     */
+    public void addUser(User user,  Context context, OnCompleteListener<AuthResult> onCompleteListener) {
         String rawPassword = user.getPass();
-        user.setPass(rawPassword);
+//        user.setPass(rawPassword);
 
         mAuth.createUserWithEmailAndPassword(user.getEmail(), rawPassword)
                 .addOnCompleteListener(task -> {
@@ -70,6 +85,12 @@ public class UserRepository {
                 });
     }
 
+    /**
+     * Создаёт объект User из документа Firestore.
+     *
+     * @param document Документ Firestore с данными пользователя.
+     * @return Объект User, созданный на основе документа.
+     */
     private User createUserFromDocument(DocumentSnapshot document) {
         String userId = document.getString("userId");
         String fullName = document.getString("fullName");
@@ -78,7 +99,7 @@ public class UserRepository {
         String city = document.getString("city");
         Gender gender = Gender.fromString(document.getString("gender"));;
         String email = document.getString("email");
-//        String pass = document.getString("pass");
+        String pass = document.getString("pass");
 
         List<Map<String, Object>> dayPlansData = (List<Map<String, Object>>) document.get("dayPlans");
         List<DayPlan> dayPlans = new ArrayList<>();
@@ -89,14 +110,29 @@ public class UserRepository {
             }
         }
 
-        return new User(userId, fullName, phone, birthDate, city, gender, email);
+        return new User(userId, fullName, phone, birthDate, city, gender, email, pass);
     }
 
+    /**
+     * Получение данных пользователя по его уникальному идентификатору userId.
+     *
+     * @param userId             Уникальный идентификатор пользователя в Firestore.
+     * @param onCompleteListener Слушатель, вызываемый при завершении операции загрузки документа.
+     */
     public void getUserDataById(String userId, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
         DocumentReference docRef = db.collection("users").document(userId);
         docRef.get().addOnCompleteListener(onCompleteListener);
     }
 
+    /**
+     * Авторизация пользователя по email и паролю.
+     * При успешной авторизации данные пользователя загружаются из Firestore и сохраняются в SharedPreferences.
+     *
+     * @param email              Email пользователя.
+     * @param password           Пароль пользователя.
+     * @param context            Контекст для отображения Toast-сообщений.
+     * @param onCompleteListener Слушатель, вызываемый при завершении операции авторизации.
+     */
     public void loginUser(String email, String password, Context context, OnCompleteListener<AuthResult> onCompleteListener) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -122,6 +158,12 @@ public class UserRepository {
     }
 
 
+    /**
+     * Обновление данных пользователя в Firestore.
+     *
+     * @param updatedUser Обновлённый объект User.
+     * @param context     Контекст для отображения Toast-сообщений.
+     */
     public void updateUser(User updatedUser, Context context) {
         String userId = updatedUser.getUserId();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -146,14 +188,22 @@ public class UserRepository {
     }
 
 
-
-    public void saveMessageToFirestore(String theme, String messege, Context context) {
-        String userId = mAuth.getCurrentUser().getUid();
+    /**
+     * Сохранение сообщения от пользователя в коллекцию "message_users" в Firestore.
+     * После успешной отправки — переход к фрагменту профиля пользователя.
+     *
+     * @param theme    Тема сообщения.
+     * @param message  Текст сообщения.
+     * @param context  Контекст для отображения Toast-сообщений и выполнения транзакции фрагмента.
+     */
+    public void saveMessageToFirestore(String theme, String message, Context context) {
+        String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
         Map<String, Object> messageData = new HashMap<>();
         messageData.put("userId", userId);
+        messageData.put("email", SharedPreferencesUtils.getString(context,"user_data", "email", ""));
         messageData.put("theme", theme);
-        messageData.put("message", messege);
+        messageData.put("message", message);
 
         db.collection("messege_users")
                 .add(messageData)
@@ -170,7 +220,14 @@ public class UserRepository {
                 });
     }
 
-    public void deleteUserAccount(String userId, Context context, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    /**
+     * Удаление аккаунта пользователя из Firestore и Firebase Authentication.
+     *
+     * @param userId   Уникальный идентификатор пользователя, аккаунт которого нужно удалить.
+     * @param onSuccess Слушатель, вызываемый при успешном удалении аккаунта.
+     * @param onFailure Слушатель, вызываемый при ошибке удаления аккаунта.
+     */
+    public void deleteUserAccount(String userId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         db.collection("users").document(userId)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
@@ -186,6 +243,12 @@ public class UserRepository {
                 .addOnFailureListener(onFailure);
     }
 
+    /**
+     * Сохранение данных пользователя в SharedPreferences для локального кэша.
+     *
+     * @param user    Объект пользователя с актуальными данными.
+     * @param context Контекст для доступа к SharedPreferences.
+     */
     private void saveUserDataToPreferences(User user, Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("user_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -197,7 +260,6 @@ public class UserRepository {
         editor.putString("city", user.getCity());
         editor.putString("gender", user.getGender().toString());
         editor.putString("email", user.getEmail());
-//        editor.putString("pass", user.getPass());
         editor.putString("role", user.getRole().toString());
 
         editor.apply();

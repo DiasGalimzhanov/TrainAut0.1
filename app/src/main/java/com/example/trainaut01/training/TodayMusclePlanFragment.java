@@ -4,21 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.example.trainaut01.R;
 import com.example.trainaut01.adapter.FineMotorAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
+import com.example.trainaut01.databinding.FragmentTodayMusclePlanBinding;
 import com.example.trainaut01.enums.FineMotorMuscleGroup;
 import com.example.trainaut01.enums.GrossMotorMuscleGroup;
 import com.example.trainaut01.models.DayPlan;
@@ -36,66 +32,94 @@ import java.util.Calendar;
 
 import javax.inject.Inject;
 
+
+/**
+ * Фрагмент для отображения плана тренировок на текущий день.
+ */
 public class TodayMusclePlanFragment extends Fragment implements ProgressResetListener {
+
+    private FragmentTodayMusclePlanBinding _binding;
 
     private String _userId;
     private DayPlan _currentDayPlan;
-
     private boolean _isGrossMotorSelected = true;
     private int _dayOfWeek;
-
-    private TextView _tvTrainingSubTitle;
-    private ImageView _ivPerson;
-
-    private Button _btnGrossMotor, _btnFineMotor, _btnGoToTraining;
-    private RecyclerView _rvFineMotorTasks;
-
-    private LottieAnimationView _lottieCatPlaying;
 
     @Inject
     DayPlanRepository _dayPlanRepository;
 
+    /**
+     * Создает и возвращает представление фрагмента.
+     *
+     * @param inflater  объект LayoutInflater для создания представления.
+     * @param container контейнер для представления (может быть null).
+     * @param savedInstanceState сохраненное состояние (может быть null).
+     * @return корневое представление фрагмента.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_today_muscle_plan, container, false);
-        init(view);
+        _binding = FragmentTodayMusclePlanBinding.inflate(inflater, container, false);
+        return _binding.getRoot();
+    }
+
+    /**
+     * Вызывается после создания представления фрагмента.
+     *
+     * @param view корневое представление фрагмента.
+     * @param savedInstanceState сохраненное состояние (может быть null).
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        init();
 
         if (!DateUtils.isWeekend()) {
             resetDailyProgressIfNeeded();
             loadDayPlans();
             handleTrainingTypeSelection();
         }
-
-        return view;
     }
 
+    /**
+     * Вызывается при возобновлении работы фрагмента.
+     * Обновляет пользовательский интерфейс.
+     */
     @Override
     public void onResume() {
         super.onResume();
         updateUI();
     }
 
-    private void init(View view) {
+    /**
+     * Вызывается при уничтожении представления фрагмента.
+     * Очищает объект binding для предотвращения утечек памяти.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        _binding = null;
+    }
+
+    /**
+     * Инициализирует компоненты фрагмента.
+     */
+    private void init() {
         AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
 
         _userId = SharedPreferencesUtils.getString(requireContext(), "user_data", "userId", null);
         _dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
-        _tvTrainingSubTitle = view.findViewById(R.id.tvTrainingSubTitle);
-        _ivPerson = view.findViewById(R.id.ivPerson);
-        _btnGoToTraining = view.findViewById(R.id.btnGoToTraining);
-        _btnGrossMotor = view.findViewById(R.id.btn_gross_motor);
-        _btnFineMotor = view.findViewById(R.id.btn_fine_motor);
-        _rvFineMotorTasks = view.findViewById(R.id.rvFineMotorTasks);
-        _rvFineMotorTasks.setLayoutManager(new LinearLayoutManager(requireContext()));
-        _lottieCatPlaying = view.findViewById(R.id.lottieCatPlaying);
-
-        _btnGrossMotor.setOnClickListener(v -> switchToGrossMotor());
-        _btnFineMotor.setOnClickListener(v -> switchToFineMotor());
+        _binding.btnGrossMotor.setOnClickListener(v -> switchToGrossMotor());
+        _binding.btnFineMotor.setOnClickListener(v -> switchToFineMotor());
+        _binding.rvFineMotorTasks.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
 
+    /**
+     * Загружает план тренировок на текущий день.
+     */
     private void loadDayPlans() {
         String dayOfWeekString = DateUtils.getDayOfWeekString(_dayOfWeek);
 
@@ -104,6 +128,11 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         });
     }
 
+    /**
+     * Обрабатывает успешную загрузку плана тренировок.
+     *
+     * @param dayPlan объект DayPlan, представляющий план на текущий день.
+     */
     private void handleDayPlanLoaded(DayPlan dayPlan) {
         _currentDayPlan = dayPlan;
 
@@ -116,6 +145,9 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         updateUI();
     }
 
+    /**
+     * Управляет выбором типа тренировки (крупная или мелкая моторика).
+     */
     private void handleTrainingTypeSelection() {
         if (_isGrossMotorSelected) {
             switchToGrossMotor();
@@ -124,6 +156,9 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         }
     }
 
+    /**
+     * Настраивает адаптер для отображения задач на мелкую моторику.
+     */
     private void setupFineMotorAdapter() {
         if (_currentDayPlan.getExercisesFineMotor() != null) {
             FineMotorAdapter fineMotorAdapter = new FineMotorAdapter(
@@ -132,20 +167,29 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
                     this::openFineMotorTaskDetail,
                     DateUtils.getDayOfWeekString(_dayOfWeek)
             );
-            _rvFineMotorTasks.setAdapter(fineMotorAdapter);
+            _binding.rvFineMotorTasks.setAdapter(fineMotorAdapter);
         }
     }
 
+    /**
+     * Переключается на отображение упражнений для крупной моторики.
+     */
     private void switchToGrossMotor() {
         _isGrossMotorSelected = true;
         updateUI();
     }
 
+    /**
+     * Переключается на отображение упражнений для мелкой моторики.
+     */
     private void switchToFineMotor() {
         _isGrossMotorSelected = false;
         updateUI();
     }
 
+    /**
+     * Обновляет пользовательский интерфейс в зависимости от текущего состояния.
+     */
     private void updateUI() {
         updateButtonStyles();
         toggleButtonState();
@@ -156,46 +200,60 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
             updateFineMotorUI();
         }
 
-        _tvTrainingSubTitle.setText(getTrainingSubtitle());
+        _binding.tvTrainingSubTitle.setText(getTrainingSubtitle());
     }
 
+    /**
+     * Обновляет интерфейс для крупной моторики.
+     */
     private void updateGrossMotorUI() {
-        _lottieCatPlaying.setVisibility(View.GONE);
-        _lottieCatPlaying.playAnimation();
-        
-        _ivPerson.setVisibility(View.VISIBLE);
-        _rvFineMotorTasks.setVisibility(View.GONE);
-        _btnGoToTraining.setVisibility(View.VISIBLE);
+        _binding.lottieCatPlaying.setVisibility(View.GONE);
+        _binding.lottieCatPlaying.playAnimation();
+
+        _binding.ivPerson.setVisibility(View.VISIBLE);
+        _binding.rvFineMotorTasks.setVisibility(View.GONE);
+        _binding.btnGoToTraining.setVisibility(View.VISIBLE);
 
         updatePersonImage();
     }
 
+    /**
+     * Обновляет интерфейс для мелкой моторики.
+     */
     private void updateFineMotorUI() {
         if (DateUtils.isWeekend()) {
-            _lottieCatPlaying.setVisibility(View.VISIBLE);
-            _lottieCatPlaying.playAnimation();
+            _binding.lottieCatPlaying.setVisibility(View.VISIBLE);
+            _binding.lottieCatPlaying.playAnimation();
         } else {
-            _lottieCatPlaying.setVisibility(View.GONE);
-            _lottieCatPlaying.playAnimation();
+            _binding.lottieCatPlaying.setVisibility(View.GONE);
+            _binding.lottieCatPlaying.playAnimation();
         }
 
-        _ivPerson.setVisibility(View.GONE);
-        _rvFineMotorTasks.setVisibility(View.VISIBLE);
-        _btnGoToTraining.setVisibility(View.GONE);
+        _binding.ivPerson.setVisibility(View.GONE);
+        _binding.rvFineMotorTasks.setVisibility(View.VISIBLE);
+        _binding.btnGoToTraining.setVisibility(View.GONE);
     }
 
+    /**
+     * Обновляет стили кнопок в зависимости от выбранного типа тренировки.
+     */
     private void updateButtonStyles() {
-        ButtonUtils.updateButtonState(requireContext(), _btnGrossMotor, "Крупная моторика",
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnGrossMotor, "Крупная моторика",
                 _isGrossMotorSelected ? R.color.white : R.color.indigo,
                 _isGrossMotorSelected ? R.drawable.btn_active_today_muscle_plan : R.drawable.back_violet_encircle,
                 !_isGrossMotorSelected);
 
-        ButtonUtils.updateButtonState(requireContext(), _btnFineMotor, "Мелкая моторика",
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnFineMotor, "Мелкая моторика",
                 !_isGrossMotorSelected ? R.color.white : R.color.indigo,
                 !_isGrossMotorSelected ? R.drawable.btn_active_today_muscle_plan : R.drawable.back_violet_encircle,
                 _isGrossMotorSelected);
     }
 
+    /**
+     * Возвращает подзаголовок для текущей тренировки.
+     *
+     * @return строка с подзаголовком тренировки.
+     */
     private String getTrainingSubtitle() {
         if (_currentDayPlan == null) {
             return "Сегодня нет доступного плана тренировок";
@@ -212,6 +270,9 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
                 FineMotorMuscleGroup::fromString);
     }
 
+    /**
+     * Открывает фрагмент с деталями упражнения.
+     */
     private void openExerciseDetailFragment() {
         if (_currentDayPlan != null) {
             ExerciseDetailFragment detailFragment = ExerciseDetailFragment.newInstance(
@@ -224,6 +285,11 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         }
     }
 
+    /**
+     * Открывает детали упражнения для мелкой моторики.
+     *
+     * @param exercise объект упражнения.
+     */
     private void openFineMotorTaskDetail(Exercise exercise) {
         if (_currentDayPlan != null) {
             ExerciseDetailFragment detailFragment = ExerciseDetailFragment.newInstance(
@@ -236,32 +302,44 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         }
     }
 
+    /**
+     * Сбрасывает ежедневный прогресс, если это необходимо.
+     */
     private void resetDailyProgressIfNeeded() {
         ProgressUtils.resetDailyProgress(requireContext(), this);
     }
 
+    /**
+     * Вызывается при сбросе прогресса.
+     */
     @Override
     public void onProgressReset() {
         toggleButtonState();
     }
 
+    /**
+     * Обновляет изображение человека в зависимости от дня недели.
+     */
     private void updatePersonImage() {
         int imageRes = TrainingUtils.getPersonImageResource(_dayOfWeek);
-        _ivPerson.setImageResource(imageRes);
+        _binding.ivPerson.setImageResource(imageRes);
     }
 
+    /**
+     * Переключает состояние кнопки "Начать тренировку" в зависимости от прогресса.
+     */
     private void toggleButtonState() {
         boolean isCompleted = SharedPreferencesUtils.getBoolean(requireContext(), "child_progress", "isCompletedTodayTraining", false);
 
         if (isCompleted || DateUtils.isWeekend()) {
-            ButtonUtils.updateButtonState(requireContext(), _btnGoToTraining, "Начать тренировку",
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnGoToTraining, "Начать тренировку",
                     R.color.white, R.drawable.btn2inactive_login_back, false);
-            _btnGoToTraining.setOnClickListener(null);
+            _binding.btnGoToTraining.setOnClickListener(null);
         } else {
-            ButtonUtils.updateButtonState(requireContext(), _btnGoToTraining, "Начать тренировку",
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnGoToTraining, "Начать тренировку",
                     R.color.white, R.drawable.btn_active_today_muscle_plan, true);
 
-            _btnGoToTraining.setOnClickListener(v -> {
+            _binding.btnGoToTraining.setOnClickListener(v -> {
                 openExerciseDetailFragment();
                 SharedPreferencesUtils.saveBoolean(requireContext(), "child_progress", "isCompletedTodayTraining", false);
             });

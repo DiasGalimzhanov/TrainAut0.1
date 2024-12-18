@@ -11,13 +11,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * Утилитный класс для работы с тренировками и упражнениями.
+ */
 public class TrainingUtils {
 
     /**
      * Возвращает ресурс изображения для человека в зависимости от дня недели.
      *
-     * @param dayOfWeek День недели из Calendar.
-     * @return Идентификатор ресурса изображения.
+     * @param dayOfWeek день недели из Calendar.
+     * @return идентификатор ресурса изображения.
      */
     public static int getPersonImageResource(int dayOfWeek) {
         switch (dayOfWeek) {
@@ -35,12 +38,12 @@ public class TrainingUtils {
     /**
      * Формирует подзаголовок для тренировки на основе упражнений и групп мышц.
      *
-     * @param exercises Список упражнений.
-     * @param noTrainingMessage Сообщение, если тренировок нет.
-     * @param prefix Префикс для заголовка.
-     * @param groupConverter Конвертер строки в группу мышц.
-     * @param <T> Тип группы мышц (GrossMotorMuscleGroup или FineMotorMuscleGroup).
-     * @return Сформированный подзаголовок.
+     * @param exercises         список упражнений.
+     * @param noTrainingMessage сообщение, если тренировок нет.
+     * @param prefix            префикс для заголовка.
+     * @param groupConverter    конвертер строки в группу мышц.
+     * @param <T>               тип группы мышц (GrossMotorMuscleGroup или FineMotorMuscleGroup).
+     * @return сформированный подзаголовок.
      */
     public static <T extends Enum<T>> String getMuscleGroupSubtitle(
             List<Exercise> exercises,
@@ -83,6 +86,13 @@ public class TrainingUtils {
         return subtitle.toString();
     }
 
+    /**
+     * Возвращает отображаемое название для группы мышц.
+     *
+     * @param group группа мышц (грубая или мелкая моторика).
+     * @param <T>   тип группы мышц.
+     * @return строка с отображаемым названием группы мышц.
+     */
     private static <T extends Enum<T>> String getDisplayName(T group) {
         if (group instanceof GrossMotorMuscleGroup) {
             return ((GrossMotorMuscleGroup) group).getDisplayName();

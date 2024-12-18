@@ -38,6 +38,14 @@ public class DayPlan implements Serializable {
 
     }
 
+    /**
+     * Преобразует список упражнений (в формате Map) в список объектов Exercise.
+     * Проверяет соответствие группы мышц типу (крупная или мелкая моторика).
+     *
+     * @param exercisesData   Список карт с данными упражнений.
+     * @param muscleGroupEnum Класс перечисления мышечной группы (GrossMotorMuscleGroup или FineMotorMuscleGroup).
+     * @return Список объектов Exercise, отфильтрованных по типу моторики.
+     */
     private List<Exercise> parseExercises(List<Map<String, Object>> exercisesData, Class<?> muscleGroupEnum) {
         List<Exercise> exercises = new ArrayList<>();
         if (exercisesData != null) {
@@ -52,6 +60,11 @@ public class DayPlan implements Serializable {
         return exercises;
     }
 
+    /**
+     * Преобразует текущий объект DayPlan в Map<String, Object> для удобной сериализации или сохранения.
+     *
+     * @return Карта с ключами-строками и значениями-объектами, отражающими состояние DayPlan.
+     */
     public Map<String, Object> toMap() {
         Map<String, Object> dayPlanMap = new HashMap<>();
 
@@ -64,6 +77,12 @@ public class DayPlan implements Serializable {
         return dayPlanMap;
     }
 
+    /**
+     * Преобразует список упражнений в список карт, подходящий для сериализации.
+     *
+     * @param exercises Список объектов Exercise.
+     * @return Список карт, каждая из которых представляет одно упражнение.
+     */
     private List<Map<String, Object>> exercisesToMap(List<Exercise> exercises) {
         List<Map<String, Object>> exercisesMap = new ArrayList<>();
         if (exercises != null) {

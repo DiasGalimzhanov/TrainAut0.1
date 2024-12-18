@@ -289,7 +289,7 @@ public class UserProfileFragment extends Fragment {
             return;
         }
 
-        userRepository.deleteUserAccount(userId, requireContext(), aVoid -> {
+        userRepository.deleteUserAccount(userId, aVoid -> {
             Toast.makeText(requireContext(), "Аккаунт удален", Toast.LENGTH_SHORT).show();
             logOutUser();
         }, e -> Toast.makeText(requireContext(), "Ошибка удаления аккаунта: " + e.getMessage(), Toast.LENGTH_SHORT).show());

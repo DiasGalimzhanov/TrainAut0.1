@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.trainaut01.adapter.ViewPagerAdapter;
+import com.example.trainaut01.databinding.FragmentInstructionsForUseBinding;
 import com.example.trainaut01.models.InstructionPageData;
 import com.example.trainaut01.utils.ButtonUtils;
 
@@ -25,32 +25,52 @@ import java.util.List;
  */
 public class InstructionsForUseFragment extends Fragment {
 
-    private Button _btnGoToHomePage;
-    private ViewPager2 _viewPager;
+    private FragmentInstructionsForUseBinding _binding;
+
+    /**
+     * Создает и возвращает представление фрагмента.
+     *
+     * @param inflater  объект LayoutInflater для создания представлений
+     * @param container контейнер для представления (может быть null)
+     * @param savedInstanceState сохраненное состояние (может быть null)
+     * @return корневое представление фрагмента
+     */
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        _binding = FragmentInstructionsForUseBinding.inflate(inflater, container, false);
+        return _binding.getRoot();
+    }
+
+    /**
+     * Вызывается после создания представления фрагмента.
+     *
+     * @param view               корневое представление фрагмента
+     * @param savedInstanceState сохраненное состояние (может быть null)
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        init();
+        setupViewPager();
+    }
+
+    /**
+     * Вызывается при уничтожении представления фрагмента.
+     * Очищает объект binding для предотвращения утечек памяти.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        _binding = null;
+    }
 
 
     /**
-     * Создает и возвращает представление для фрагмента.
-     *
-     * @param inflater           Используется для "надувания" макета.
-     * @param container          Родительский контейнер, в который будет добавлено представление.
-     * @param savedInstanceState Сохраненное состояние фрагмента (если есть).
-     * @return Представление фрагмента.
+     * Инициализирует элементы интерфейса и задает обработчики событий.
      */
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_instructions_for_use, container, false);
-        init(view);
-        setupViewPager();
-        return view;
-    }
-
-    private void init(View view) {
-        _viewPager = view.findViewById(R.id.viewPager);
-        _btnGoToHomePage = view.findViewById(R.id.btnGoToHomePage);
-
-        _btnGoToHomePage.setOnClickListener(view1 -> navigateToBaseActivity());
+    private void init() {
+        _binding.btnGoToHomePage.setOnClickListener(view1 -> navigateToBaseActivity());
     }
 
     /**
@@ -58,14 +78,14 @@ public class InstructionsForUseFragment extends Fragment {
      */
     private void setupViewPager() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(requireActivity(), getInstructionPages());
-        _viewPager.setAdapter(adapter);
+        _binding.viewPager.setAdapter(adapter);
 
-        _viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        _binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 if (position == getInstructionPages().size() - 1) {
-                    ButtonUtils.updateButtonState(requireContext(), _btnGoToHomePage, "На  главную", R.color.white, R.drawable.btn1_login_back, true);
+                    ButtonUtils.updateButtonState(requireContext(), _binding.btnGoToHomePage, "На  главную", R.color.white, R.drawable.btn1_intro_back, true);
                 }
             }
         });
