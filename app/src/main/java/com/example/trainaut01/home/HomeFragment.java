@@ -1,7 +1,3 @@
-/**
- * Главная страница приложения. Отображает приветствие для пользователя, список новостей,
- * текущие упражнения на день, а также уровень и соответствующий ему аватар.
- */
 package com.example.trainaut01.home;
 
 import android.content.Context;
@@ -40,8 +36,13 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+/**
+ * Главная страница приложения. Отображает приветствие для пользователя, список новостей,
+ * текущие упражнения на день, а также уровень и соответствующий ему аватар.
+ */
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
+
     private SharedPreferences sharedPref;
     private NewsAdapter adapterNews;
     private final List<String> exerciseList = new ArrayList<>();
@@ -67,17 +68,6 @@ public class HomeFragment extends Fragment {
         args.putString("userId", userId);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    /**
-     * Вызывается при создании фрагмента. Инициализирует Dagger-зависимости.
-     * @param savedInstanceState Предыдущее состояние фрагмента, если есть.
-     */
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AppComponent appComponent = DaggerAppComponent.create();
-        appComponent.inject(this);
     }
 
     /**
@@ -135,7 +125,11 @@ public class HomeFragment extends Fragment {
      * Инициализирует SharedPreferences и настройку RecyclerView.
      */
     private void init() {
+        AppComponent appComponent = DaggerAppComponent.create();
+        appComponent.inject(this);
+
         sharedPref = requireContext().getSharedPreferences("child_data", Context.MODE_PRIVATE);
+
         binding.recyclerViewNews.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewExercises.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -208,6 +202,7 @@ public class HomeFragment extends Fragment {
      * Загружает упражнения для пользователя на текущий день.
      */
     private void loadExercises() {
+
         String userId = getUserId();
         if (userId.isEmpty()) {
             Log.e(TAG, "Не удалось получить userId. Пользователь не авторизован.");
@@ -234,6 +229,7 @@ public class HomeFragment extends Fragment {
      * @param exercises Список упражнений или null/пустой для отсутствия упражнений.
      */
     private void updateExerciseList(List<Exercise> exercises) {
+
         exerciseList.clear();
         if (exercises == null || exercises.isEmpty()) {
             exerciseList.add("На сегодня занятий нету");

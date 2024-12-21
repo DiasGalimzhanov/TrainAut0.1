@@ -97,8 +97,8 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         ProgressUtils.resetDailyProgress(requireContext(), this);
         setButtonListenerToOpenFragment(_binding.btnExercisesMotor, new TodayMusclePlanFragment());
         setButtonListenerToOpenFragment(_binding.btnAAC, new CognitiveExerciseFragment());
-        processCompletedExercises();
         loadChildProgress();
+        processCompletedExercises();
         loadLevel();
 
         _binding.layoutProgress.setOnClickListener(v -> {

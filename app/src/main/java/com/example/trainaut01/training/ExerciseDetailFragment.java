@@ -142,8 +142,11 @@ public class ExerciseDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        stopTimer();
+        _timer = null;
         _binding = null;
     }
+
     /**
      * Инициализирует компоненты фрагмента.
      */

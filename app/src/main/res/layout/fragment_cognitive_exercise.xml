@@ -159,8 +159,8 @@
                     android:layout_columnWeight="1"
                     android:layout_margin="4dp"
                     android:background="@drawable/back_violet_encircle"
-                    android:contentDescription="9"
-                    android:text="9"
+                    android:contentDescription="в разработке"
+                    android:text="в разработке"
                     android:textColor="@color/bright_dodger_blue" />
 
                 <Button
@@ -170,8 +170,8 @@
                     android:layout_columnWeight="1"
                     android:layout_margin="4dp"
                     android:background="@drawable/back_violet_encircle"
-                    android:contentDescription="10"
-                    android:text="10"
+                    android:contentDescription="в разработке"
+                    android:text="в разработке"
                     android:textColor="@color/bright_dodger_blue" />
 
                 <Button
@@ -181,8 +181,8 @@
                     android:layout_columnWeight="1"
                     android:layout_margin="4dp"
                     android:background="@drawable/back_violet_encircle"
-                    android:contentDescription="11"
-                    android:text="11"
+                    android:contentDescription="в разработке"
+                    android:text="в разработке"
                     android:textColor="@color/bright_dodger_blue"  />
 
                 <Button
@@ -192,8 +192,8 @@
                     android:layout_columnWeight="1"
                     android:layout_margin="4dp"
                     android:background="@drawable/back_violet_encircle"
-                    android:contentDescription="12"
-                    android:text="12"
+                    android:contentDescription="в разработке"
+                    android:text="в разработке"
                     android:textColor="@color/bright_dodger_blue"  />
             </GridLayout>
         </HorizontalScrollView>
