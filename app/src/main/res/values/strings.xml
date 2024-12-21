@@ -31,6 +31,8 @@
     <string name="child_data_updated">Данные ребенка обновлены</string>
     <string name="reauthentication_error">Ошибка реаутентификации: %s</string>
     <string name="password_update_error">Не удалось обновить пароль: %s</string>
+    <string name="reload_child_data_error">Ошибка загрузки данных ребенка: %1$s</string>
+
 
 
 </resources>

@@ -24,7 +24,7 @@ public class ImageUtils {
                 Glide.with(imageView.getContext())
                         .asGif()
                         .load(uri.toString())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL) // Полное кэширование
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
             }).addOnFailureListener(e -> {
                 System.out.println("ImageUtils: Ошибка загрузки GIF -> " + e.getMessage());
