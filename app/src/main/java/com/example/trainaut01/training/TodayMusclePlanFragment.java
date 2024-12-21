@@ -74,6 +74,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         super.onViewCreated(view, savedInstanceState);
 
         init();
+        setupListeners();
 
         if (!DateUtils.isWeekend()) {
             resetDailyProgressIfNeeded();
@@ -106,15 +107,23 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      * Инициализирует компоненты фрагмента.
      */
     private void init() {
+        if (_binding == null) return;
         AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
 
         _userId = SharedPreferencesUtils.getString(requireContext(), "user_data", "userId", null);
         _dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
+        _binding.rvFineMotorTasks.setLayoutManager(new LinearLayoutManager(requireContext()));
+    }
+
+    /**
+     * Настраивает слушатели для кнопок.
+     */
+    private void setupListeners() {
+        if (_binding == null) return;
         _binding.btnGrossMotor.setOnClickListener(v -> switchToGrossMotor());
         _binding.btnFineMotor.setOnClickListener(v -> switchToFineMotor());
-        _binding.rvFineMotorTasks.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
 
     /**
@@ -160,6 +169,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      * Настраивает адаптер для отображения задач на мелкую моторику.
      */
     private void setupFineMotorAdapter() {
+        if (_binding == null) return;
         if (_currentDayPlan.getExercisesFineMotor() != null) {
             FineMotorAdapter fineMotorAdapter = new FineMotorAdapter(
                     requireContext(),
@@ -191,6 +201,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      * Обновляет пользовательский интерфейс в зависимости от текущего состояния.
      */
     private void updateUI() {
+        if (_binding == null) return;
         updateButtonStyles();
         toggleButtonState();
 
@@ -207,11 +218,11 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      * Обновляет интерфейс для крупной моторики.
      */
     private void updateGrossMotorUI() {
+        if (_binding == null) return;
         _binding.lottieCatPlaying.setVisibility(View.GONE);
-        _binding.lottieCatPlaying.playAnimation();
+        _binding.rvFineMotorTasks.setVisibility(View.GONE);
 
         _binding.ivPerson.setVisibility(View.VISIBLE);
-        _binding.rvFineMotorTasks.setVisibility(View.GONE);
         _binding.btnGoToTraining.setVisibility(View.VISIBLE);
 
         updatePersonImage();
@@ -221,12 +232,12 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      * Обновляет интерфейс для мелкой моторики.
      */
     private void updateFineMotorUI() {
+        if (_binding == null) return;
         if (DateUtils.isWeekend()) {
             _binding.lottieCatPlaying.setVisibility(View.VISIBLE);
             _binding.lottieCatPlaying.playAnimation();
         } else {
             _binding.lottieCatPlaying.setVisibility(View.GONE);
-            _binding.lottieCatPlaying.playAnimation();
         }
 
         _binding.ivPerson.setVisibility(View.GONE);
@@ -238,6 +249,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      * Обновляет стили кнопок в зависимости от выбранного типа тренировки.
      */
     private void updateButtonStyles() {
+        if (_binding == null) return;
         ButtonUtils.updateButtonState(requireContext(), _binding.btnGrossMotor, "Крупная моторика",
                 _isGrossMotorSelected ? R.color.white : R.color.indigo,
                 _isGrossMotorSelected ? R.drawable.btn_active_today_muscle_plan : R.drawable.back_violet_encircle,
@@ -321,6 +333,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      * Обновляет изображение человека в зависимости от дня недели.
      */
     private void updatePersonImage() {
+        if (_binding == null) return;
         int imageRes = TrainingUtils.getPersonImageResource(_dayOfWeek);
         _binding.ivPerson.setImageResource(imageRes);
     }
@@ -329,6 +342,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      * Переключает состояние кнопки "Начать тренировку" в зависимости от прогресса.
      */
     private void toggleButtonState() {
+        if (_binding == null) return;
         boolean isCompleted = SharedPreferencesUtils.getBoolean(requireContext(), "child_progress", "isCompletedTodayTraining", false);
 
         if (isCompleted || DateUtils.isWeekend()) {

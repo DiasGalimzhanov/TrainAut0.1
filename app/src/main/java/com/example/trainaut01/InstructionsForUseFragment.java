@@ -112,5 +112,8 @@ public class InstructionsForUseFragment extends Fragment {
     private void navigateToBaseActivity() {
         Intent intent = new Intent(InstructionsForUseFragment.this.getContext(), BaseActivity.class);
         startActivity(intent);
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
     }
 }

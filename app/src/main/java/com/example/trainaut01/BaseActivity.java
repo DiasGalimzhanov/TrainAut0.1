@@ -22,6 +22,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import javax.inject.Inject;
 
+/**
+ * Базовая активность приложения, которая управляет фрагментами и нижней навигацией.
+ * Реализует интерфейс {@link BottomNavigationUpdater} для синхронизации состояния
+ * нижней панели навигации с текущим активным фрагментом.
+ */
 public class BaseActivity extends AppCompatActivity implements BottomNavigationUpdater {
 
     private BottomNavigationView _bottomNavigationView;
@@ -36,6 +41,12 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
     @Inject
     AppInitializer appInitializer;
 
+    /**
+     * Вызывается при создании активности.
+     * Инициализирует Dagger-компоненты, загружает стартовый фрагмент и настраивает нижнюю навигацию.
+     *
+     * @param savedInstanceState Сохраненное состояние активности, если оно существует.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +63,20 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
         initializeData();
     }
 
+    /**
+     * Загружает фрагмент в контейнер активности.
+     *
+     * @param fragment Фрагмент для отображения.
+     */
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 
+    /**
+     * Настраивает нижнюю панель навигации и слушатель выбора элемента.
+     */
     private void setupBottomNavigationView() {
         _bottomNavigationView = findViewById(R.id.bottom_navigation);
         _bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -87,6 +106,12 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
 
     }
 
+    /**
+     * Добавляет анимацию перехода между фрагментами.
+     *
+     * @param fragment    Новый фрагмент для отображения.
+     * @param newPosition Позиция нового элемента в навигации.
+     */
     private void animateFragmentTransition(Fragment fragment, int newPosition) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -108,6 +133,11 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
         _bottomNavigationView.post(() -> updateBottomNavigationSelection(fragment));
     }
 
+    /**
+     * Обновляет выбранный элемент нижней навигации в зависимости от текущего фрагмента.
+     *
+     * @param fragment Текущий активный фрагмент.
+     */
     @Override
     public void updateBottomNavigationSelection(Fragment fragment) {
         int itemId;
@@ -127,6 +157,9 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
         _bottomNavigationView.setSelectedItemId(itemId);
     }
 
+    /**
+     * Инициализирует данные приложения, включая упражнения и планы на день.
+     */
     private void initializeData() {
         appInitializer.initializeExercises(
                 unused -> Log.d("BaseActivity", "Упражнения инициализированы успешно"),
@@ -139,6 +172,10 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
         );
     }
 
+    /**
+     * Обрабатывает нажатие кнопки "Назад".
+     * Если стек возврата пуст, возвращает пользователя на главный экран.
+     */
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {

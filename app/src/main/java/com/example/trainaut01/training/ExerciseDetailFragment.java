@@ -142,8 +142,11 @@ public class ExerciseDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        stopTimer();
+        _timer = null;
         _binding = null;
     }
+
     /**
      * Инициализирует компоненты фрагмента.
      */
@@ -161,6 +164,7 @@ public class ExerciseDetailFragment extends Fragment {
      * Настраивает слушатели для кнопок.
      */
     private void setupListeners() {
+        if (_binding == null) return;
         _binding.btnStart.setOnClickListener(view -> handleButtonAction());
         _binding.btnPause.setOnClickListener(view -> handlePauseAction());
         setupMissButton();
@@ -170,6 +174,7 @@ public class ExerciseDetailFragment extends Fragment {
      * Настраивает кнопку "Пропустить" в зависимости от типа тренировки.
      */
     private void setupMissButton() {
+        if (_binding == null) return;
         if (_isGrossMotorSelected) {
             ButtonUtils.updateButtonState(requireContext(), _binding.btnMiss, "Пропустить", R.color.white, R.drawable.btn1_login_back, true);
             _binding.btnMiss.setOnClickListener(view1 -> handleMissAction());
@@ -246,6 +251,7 @@ public class ExerciseDetailFragment extends Fragment {
      */
     @SuppressLint("DefaultLocale")
     private void displayExerciseDetails(Exercise exercise) {
+        if (_binding == null) return;
         _binding.tvRecommendations.setText(_text);
         _binding.tvName.setText(exercise.getName());
         _binding.tvDescription.setText(exercise.getDescription());
@@ -270,6 +276,7 @@ public class ExerciseDetailFragment extends Fragment {
      */
     @SuppressLint("DefaultLocale")
     private void updateAllPointsForDayTextView() {
+        if (_binding == null) return;
         if (_isGrossMotorSelected)
             _binding.tvAllPointsForDay.setText(String.format("За выполнение всех упражнений вы получите +%d Exp", _remainingPoints));
         else
@@ -313,6 +320,7 @@ public class ExerciseDetailFragment extends Fragment {
      * @param exercise упражнение, для которого нужно загрузить изображение.
      */
     private void loadExerciseImage(Exercise exercise) {
+        if (_binding == null) return;
         if (_isGrossMotorSelected) {
             ImageUtils.loadGifFromFirebase(exercise.getImageUrl(), _binding.ivImageUrl);
         } else {
@@ -340,6 +348,7 @@ public class ExerciseDetailFragment extends Fragment {
      * @param totalExercises общее количество упражнений.
      */
     private void setupProgress(int totalExercises) {
+        if (_binding == null) return;
         _binding.pbTraining.setMax(totalExercises);
 
         if (totalExercises == 1) {
@@ -370,6 +379,7 @@ public class ExerciseDetailFragment extends Fragment {
      */
     @SuppressLint("DefaultLocale")
     private void configureProgress(int completed, int total) {
+        if (_binding == null) return;
         _binding.pbTraining.setProgress(completed);
         _binding.tvProgressTraining.setText(String.format("%d/%d", completed, total));
     }
@@ -378,6 +388,7 @@ public class ExerciseDetailFragment extends Fragment {
      * Обрабатывает действия кнопок на экране.
      */
     private void handleButtonAction() {
+        if (_binding == null) return;
         int totalRewardPoints = _currentDayPlan != null ? _currentDayPlan.getRewardPointsDay() : 0;
 
         switch (_binding.btnStart.getText().toString()) {
@@ -397,6 +408,7 @@ public class ExerciseDetailFragment extends Fragment {
      * Обрабатывает действие при паузе.
      */
     private void handlePauseAction() {
+        if (_binding == null) return;
         if (_timer != null) {
             stopTimer();
             ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Продолжить", R.color.white, R.drawable.back_start_exercise, true);
@@ -409,6 +421,7 @@ public class ExerciseDetailFragment extends Fragment {
      * Обрабатывает действие при возобновлении упражнения.
      */
     private void handleResumeAction() {
+        if (_binding == null) return;
         startTimer();
         ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Пауза", R.color.white, R.drawable.btn1_login_back, true);
         ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, "Завершить упражнение", R.color.white, R.drawable.finish_exercise_back, true);
@@ -419,6 +432,7 @@ public class ExerciseDetailFragment extends Fragment {
      * Обрабатывает действие при пропуске упражнения.
      */
     private void handleMissAction() {
+        if (_binding == null) return;
         if (_currentExerciseIndex < _exercises.size()) {
             Exercise missedExercise = _exercises.get(_currentExerciseIndex);
 
@@ -450,18 +464,19 @@ public class ExerciseDetailFragment extends Fragment {
      * Запускает выполнение упражнения.
      */
     private void startExercise() {
+        if (_binding == null) return;
         resetTimer();
         startTimer();
 
         ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, "Завершить упражнение", R.color.white, R.drawable.finish_exercise_back, true);
         ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Пауза", R.color.white, R.drawable.btn1_login_back, true);
-
     }
 
     /**
      * Переходит к следующему упражнению.
      */
     private void nextExercise() {
+        if (_binding == null) return;
         _currentExerciseIndex++;
         SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "currentExerciseIndex", _currentExerciseIndex);
         if (_currentExerciseIndex < _exercises.size()) {
@@ -561,6 +576,7 @@ public class ExerciseDetailFragment extends Fragment {
      * @param rewardPoints общее количество очков за тренировку.
      */
     private void handleCompletion(int rewardPoints) {
+        if (_binding == null) return;
         if (_currentExerciseIndex + 1 < _exercises.size()) {
             ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, "Далее", R.color.black, R.drawable.btn1_login_back, true);
             ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Пауза", R.color.white, R.drawable.btn2inactive_login_back, false);
@@ -638,6 +654,7 @@ public class ExerciseDetailFragment extends Fragment {
      * @param finalPoints финальное количество очков за тренировку.
      */
     private void finalizeUI(int finalPoints) {
+        if (_binding == null) return;
         ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, "Завершить", R.color.white, R.drawable.finish_exercise_back, true);
         ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Пауза", R.color.white, R.drawable.btn2inactive_login_back, false);
         if (_isGrossMotorSelected) {
@@ -674,6 +691,7 @@ public class ExerciseDetailFragment extends Fragment {
      * Запускает таймер для упражнения.
      */
     private void startTimer() {
+        if (_binding == null) return;
         _timer = new CountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -701,6 +719,7 @@ public class ExerciseDetailFragment extends Fragment {
      * Сбрасывает таймер упражнения.
      */
     private void resetTimer() {
+        if (_binding == null) return;
         stopTimer();
         _timeElapsed = 0;
         _binding.tvTimer.setText(TimeUtils.formatElapsedTime(_timeElapsed));

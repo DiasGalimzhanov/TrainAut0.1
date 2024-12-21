@@ -1,7 +1,3 @@
-/**
- * Главная страница приложения. Отображает приветствие для пользователя, список новостей,
- * текущие упражнения на день, а также уровень и соответствующий ему аватар.
- */
 package com.example.trainaut01.home;
 
 import android.content.Context;
@@ -43,6 +39,10 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+/**
+ * Главная страница приложения. Отображает приветствие для пользователя, список новостей,
+ * текущие упражнения на день, а также уровень и соответствующий ему аватар.
+ */
 public class HomeFragment extends Fragment {
     private ImageView imgAvatar;
     private TextView tvHello;

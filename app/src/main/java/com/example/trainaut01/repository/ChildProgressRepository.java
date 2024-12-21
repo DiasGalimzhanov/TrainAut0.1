@@ -268,7 +268,6 @@ public class ChildProgressRepository {
             UploadTask uploadTask = storageRef.putStream(inputStream);
 
             uploadTask.addOnSuccessListener(taskSnapshot -> {
-                Log.d("saveToStorage", "Данные успешно сохранены в Firestore Storage");
                 onSuccessListener.onSuccess(null);
             }).addOnFailureListener(e -> {
                 Log.e("saveToStorage", "Ошибка при сохранении в Firestore Storage: " + e.getMessage(), e);

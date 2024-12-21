@@ -1,7 +1,3 @@
-/**
- * Экран входа в приложение. Позволяет авторизоваться с помощью email/пароля.
- * Также можно сбросить пароль или перейти к регистрации.
- */
 package com.example.trainaut01;
 
 import android.content.Intent;
@@ -33,6 +29,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import javax.inject.Inject;
 
+/**
+ * Экран входа в приложение. Позволяет авторизоваться с помощью email/пароля.
+ * Также можно сбросить пароль или перейти к регистрации.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 9001;
