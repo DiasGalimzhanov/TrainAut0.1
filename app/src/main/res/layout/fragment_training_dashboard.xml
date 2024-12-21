@@ -30,6 +30,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="10dp"
+                android:elevation="4dp"
                 android:weightSum="1">
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -132,8 +133,11 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/btn1_login_back"
                 android:numColumns="7"
+                android:elevation="4dp"
                 android:padding="8dp" />
 
             <LinearLayout

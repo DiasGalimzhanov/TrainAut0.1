@@ -40,7 +40,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etFullName_update"
+                android:id="@+id/et_full_name_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -64,7 +64,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etPhone_update"
+                android:id="@+id/et_phone_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -88,7 +88,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etBirthDate_update"
+                android:id="@+id/et_birth_date_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -114,7 +114,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etCity_update"
+                android:id="@+id/et_city_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -138,7 +138,7 @@
                 android:textSize="16sp" />
 
             <Spinner
-                android:id="@+id/spGender_update"
+                android:id="@+id/sp_gender_update"
                 style="@style/CustomSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -184,7 +184,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etPasReg_update"
+                android:id="@+id/et_pas_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -209,7 +209,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etPasConfirm_update"
+                android:id="@+id/et_pas_confirm_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -224,7 +224,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/tvPasswordMatch_update"
+                android:id="@+id/tv_pas_match_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
@@ -264,7 +264,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etFullNameChild_update"
+                android:id="@+id/et_full_name_child_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -288,7 +288,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etBirthDateChild_update"
+                android:id="@+id/et_birth_date_child_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -314,7 +314,7 @@
                 android:textSize="16sp" />
 
             <Spinner
-                android:id="@+id/spGenderChild_update"
+                android:id="@+id/sp_gender_child_update"
                 style="@style/CustomSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -335,7 +335,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etDiagnosisChild_update"
+                android:id="@+id/et_diagnosis_child_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -358,7 +358,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etHeightChild_update"
+                android:id="@+id/et_height_child_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -382,7 +382,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etWeightChild_update"
+                android:id="@+id/et_weight_child_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -403,7 +403,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnBack_update"
+                    android:id="@+id/btn_back_update"
                     style="@android:style/Widget.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
@@ -417,7 +417,7 @@
                     android:textStyle="bold" />
 
                 <Button
-                    android:id="@+id/btnContinue_update"
+                    android:id="@+id/btn_continue_update"
                     style="@android:style/Widget.Button"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -435,7 +435,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="25dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="80dp"
                 android:background="@color/violet_blossom" />
 
         </LinearLayout>

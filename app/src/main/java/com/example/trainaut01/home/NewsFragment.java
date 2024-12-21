@@ -6,16 +6,20 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.example.trainaut01.R;
 import com.example.trainaut01.adapter.NewsAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
-import com.example.trainaut01.databinding.FragmentNewsBinding;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.NewsRepository;
 
@@ -28,8 +32,9 @@ public class NewsFragment extends Fragment {
     @Inject
     NewsRepository newsRepository;
 
-    private AppComponent appComponent;
-    private FragmentNewsBinding binding;
+    private RecyclerView recyclerView;
+    private EditText etSearchNews;
+    private LottieAnimationView lottieCatPlaying;
     private NewsAdapter adapterNews;
 
     /**
@@ -42,10 +47,10 @@ public class NewsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentNewsBinding.inflate(inflater, container, false);
+        View view = inflater.inflate(R.layout.fragment_news, container, false);
         initDependencies();
-        initViews();
-        return binding.getRoot();
+        initViews(view);
+        return view;
     }
 
     /**
@@ -59,28 +64,24 @@ public class NewsFragment extends Fragment {
     }
 
     /**
-     * Освобождает ресурсы ViewBinding при уничтожении View.
-     */
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    /**
      * Инициализирует зависимости с помощью Dagger.
      */
     private void initDependencies() {
-        appComponent = DaggerAppComponent.create();
+        AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
     }
 
     /**
      * Инициализирует визуальные элементы и настраивает слушатель для поля поиска.
      */
-    private void initViews() {
-        binding.RecyclerView1.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.etSearchNews.addTextChangedListener(new TextWatcher() {
+    private void initViews(View view) {
+        recyclerView = view.findViewById(R.id.RecyclerView1);
+        etSearchNews = view.findViewById(R.id.etSearchNews);
+        lottieCatPlaying = view.findViewById(R.id.lottieCatPlaying);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        etSearchNews.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -105,15 +106,15 @@ public class NewsFragment extends Fragment {
             @Override
             public void onNewsFetched(List<News> newsList) {
                 adapterNews = new NewsAdapter(newsList, newsItem -> {});
-                binding.RecyclerView1.setAdapter(adapterNews);
+                recyclerView.setAdapter(adapterNews);
                 updateViewVisibility();
             }
 
             @Override
             public void onError(Exception e) {
-                binding.RecyclerView1.setVisibility(View.GONE);
-                binding.lottieCatPlaying.setVisibility(View.VISIBLE);
-                binding.lottieCatPlaying.playAnimation();
+                recyclerView.setVisibility(View.GONE);
+                lottieCatPlaying.setVisibility(View.VISIBLE);
+                lottieCatPlaying.playAnimation();
             }
         });
     }
@@ -123,13 +124,13 @@ public class NewsFragment extends Fragment {
      */
     private void updateViewVisibility() {
         if (adapterNews != null && adapterNews.getItemCount() > 0) {
-            binding.RecyclerView1.setVisibility(View.VISIBLE);
-            binding.lottieCatPlaying.setVisibility(View.GONE);
-            binding.lottieCatPlaying.cancelAnimation();
+            recyclerView.setVisibility(View.VISIBLE);
+            lottieCatPlaying.setVisibility(View.GONE);
+            lottieCatPlaying.cancelAnimation();
         } else {
-            binding.RecyclerView1.setVisibility(View.GONE);
-            binding.lottieCatPlaying.setVisibility(View.VISIBLE);
-            binding.lottieCatPlaying.playAnimation();
+            recyclerView.setVisibility(View.GONE);
+            lottieCatPlaying.setVisibility(View.VISIBLE);
+            lottieCatPlaying.playAnimation();
         }
     }
 }

@@ -20,4 +20,17 @@
     <string name="title_notifications">Notifications</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="passwords_match">Пароли совпадают</string>
+    <string name="passwords_do_not_match">Пароли не совпадают</string>
+    <string name="user_not_defined">Не удалось определить пользователя</string>
+    <string name="child_not_defined">Не удалось определить ребенка</string>
+    <string name="user_not_authenticated">Пользователь не авторизован</string>
+    <string name="update_child_data_error">Ошибка обновления ребенка: %s</string>
+    <string name="child_data_updated">Данные ребенка обновлены</string>
+    <string name="reauthentication_error">Ошибка реаутентификации: %s</string>
+    <string name="password_update_error">Не удалось обновить пароль: %s</string>
+
+
 </resources>

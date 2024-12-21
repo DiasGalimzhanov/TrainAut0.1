@@ -1,18 +1,20 @@
 package com.example.trainaut01.home;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
-import com.example.trainaut01.databinding.FragmentDetailedNewsBinding;
 import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.NewsRepository;
 import com.squareup.picasso.Picasso;
@@ -25,7 +27,9 @@ public class DetailedNewsFragment extends Fragment {
     NewsRepository newsRepository;
 
     private AppComponent appComponent;
-    private FragmentDetailedNewsBinding binding;
+    private TextView detailNewsTitle;
+    private TextView detailNewsDescription;
+    private ImageView detailNewsImage;
 
     /**
      * Создает и инициализирует интерфейс фрагмента.
@@ -39,19 +43,11 @@ public class DetailedNewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = FragmentDetailedNewsBinding.inflate(inflater, container, false);
+        View view = inflater.inflate(R.layout.fragment_detailed_news, container, false);
         initDependencies();
+        initViews(view);
         loadNewsDetails();
-        return binding.getRoot();
-    }
-
-    /**
-     * Освобождает ресурсы ViewBinding при уничтожении View.
-     */
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+        return view;
     }
 
     /**
@@ -60,6 +56,16 @@ public class DetailedNewsFragment extends Fragment {
     private void initDependencies() {
         appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
+    }
+
+    /**
+     * Инициализирует визуальные элементы.
+     * @param view Корневой View фрагмента.
+     */
+    private void initViews(View view) {
+        detailNewsTitle = view.findViewById(R.id.detail_news_title);
+        detailNewsDescription = view.findViewById(R.id.detail_news_description);
+        detailNewsImage = view.findViewById(R.id.detail_news_image);
     }
 
     /**
@@ -75,24 +81,24 @@ public class DetailedNewsFragment extends Fragment {
             @Override
             public void onNewsFetched(News news) {
                 if (news.getTitle() != null) {
-                    binding.detailNewsTitle.setText(news.getTitle());
+                    detailNewsTitle.setText(news.getTitle());
                 } else {
-                    binding.detailNewsTitle.setText("Нет заголовка");
+                    detailNewsTitle.setText("Нет заголовка");
                 }
                 if (news.getDescription() != null) {
-                    binding.detailNewsDescription.setText(news.getDescription());
+                    detailNewsDescription.setText(news.getDescription());
                 } else {
-                    binding.detailNewsDescription.setText("Нет описания");
+                    detailNewsDescription.setText("Нет описания");
                 }
                 if (news.getImageUrl() != null) {
-                    Picasso.get().load(news.getImageUrl()).into(binding.detailNewsImage);
+                    Picasso.get().load(news.getImageUrl()).into(detailNewsImage);
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                binding.detailNewsTitle.setText("Ошибка загрузки");
-                binding.detailNewsDescription.setText("");
+                detailNewsTitle.setText("Ошибка загрузки");
+                detailNewsDescription.setText("");
             }
         });
     }

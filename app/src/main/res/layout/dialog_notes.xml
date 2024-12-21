@@ -28,7 +28,7 @@
         android:textColorHint="@color/black" />
 
     <EditText
-        android:id="@+id/etLongText"
+        android:id="@+id/et_long_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/edit_text_signup"

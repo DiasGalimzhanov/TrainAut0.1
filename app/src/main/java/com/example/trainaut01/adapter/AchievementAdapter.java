@@ -49,7 +49,6 @@ public class AchievementAdapter extends BaseAdapter {
         SharedPreferences sharedPref = context.getSharedPreferences("child_data", Context.MODE_PRIVATE);
         int countDays = sharedPref.getInt("countDays", 0);
 
-
         Achievement achievement = achievementList.get(position);
 
         if (achievement.getDay() <= countDays) {

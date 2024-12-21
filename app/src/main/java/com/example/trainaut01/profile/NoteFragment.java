@@ -1,12 +1,6 @@
-/**
- * Фрагмент для отображения и управления заметками о ребенке.
- * Позволяет просматривать список заметок, добавлять новые и удалять существующие.
- */
 package com.example.trainaut01.profile;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,19 +12,21 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trainaut01.R;
 import com.example.trainaut01.adapter.NoteAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
-import com.example.trainaut01.databinding.FragmentNoteBinding;
-import com.example.trainaut01.databinding.DialogNoteDetailsBinding;
-import com.example.trainaut01.databinding.DialogNotesBinding;
 import com.example.trainaut01.models.ChildNote;
 import com.example.trainaut01.repository.ChildRepository;
+import com.example.trainaut01.utils.SharedPreferencesUtils;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.text.SimpleDateFormat;
@@ -42,12 +38,17 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+/**
+ * Фрагмент для отображения и управления заметками о ребенке.
+ * Позволяет просматривать список заметок, добавлять новые и удалять существующие.
+ */
 public class NoteFragment extends Fragment {
 
     @Inject
     ChildRepository childRepository;
 
-    private FragmentNoteBinding binding;
+    private RecyclerView recyclerViewNote;
+    private Button notesAddButton;
     private NoteAdapter noteAdapter;
     private final List<ChildNote> notes = new ArrayList<>();
     private ListenerRegistration noteListener;
@@ -70,7 +71,7 @@ public class NoteFragment extends Fragment {
     }
 
     /**
-     * Создает и "надувает" макет фрагмента с использованием ViewBinding.
+     * Создает и "надувает" макет фрагмента.
      *
      * @param inflater объект для "надувания" макета.
      * @param container родительский контейнер.
@@ -82,8 +83,7 @@ public class NoteFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = FragmentNoteBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        return inflater.inflate(R.layout.fragment_note, container, false);
     }
 
     /**
@@ -97,10 +97,10 @@ public class NoteFragment extends Fragment {
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initViews();
+        initViews(view);
 
-        String userId = getUserIdFromPrefs();
-        String childId = getChildIdFromPrefs();
+        String userId = SharedPreferencesUtils.getString(requireContext(), USER_DATA_PREF, KEY_USER_ID, "");
+        String childId = SharedPreferencesUtils.getString(requireContext(), CHILD_DATA_PREF, KEY_CHILD_ID, "");
 
         if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(childId)) {
             Toast.makeText(requireContext(), "Не удалось определить пользователя или ребенка", Toast.LENGTH_SHORT).show();
@@ -120,11 +120,11 @@ public class NoteFragment extends Fragment {
                 e -> Toast.makeText(requireContext(), "Ошибка загрузки данных: " + e.getMessage(), Toast.LENGTH_SHORT).show()
         );
 
-        binding.notesAddButton.setOnClickListener(v -> showAddNoteDialog(userId, childId));
+        notesAddButton.setOnClickListener(v -> showAddNoteDialog(userId, childId));
     }
 
     /**
-     * Освобождает ресурсы ViewBinding при уничтожении View.
+     * Освобождает ресурсы при уничтожении View.
      */
     @Override
     public void onDestroyView() {
@@ -132,36 +132,18 @@ public class NoteFragment extends Fragment {
         if (noteListener != null) {
             noteListener.remove();
         }
-        binding = null;
     }
 
     /**
      * Инициализирует RecyclerView и адаптер заметок.
      */
-    private void initViews() {
-        binding.recyclerViewNote.setLayoutManager(new LinearLayoutManager(requireContext()));
+    private void initViews(View view) {
+        recyclerViewNote = view.findViewById(R.id.recycler_view_note);
+        notesAddButton = view.findViewById(R.id.notes_add_button);
+
+        recyclerViewNote.setLayoutManager(new LinearLayoutManager(requireContext()));
         noteAdapter = new NoteAdapter(notes, this::showNoteDetailsDialog);
-        binding.recyclerViewNote.setAdapter(noteAdapter);
-    }
-
-    /**
-     * Возвращает идентификатор пользователя из SharedPreferences.
-     *
-     * @return идентификатор пользователя или пустую строку при отсутствии данных.
-     */
-    private String getUserIdFromPrefs() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(USER_DATA_PREF, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(KEY_USER_ID, "");
-    }
-
-    /**
-     * Возвращает идентификатор ребенка из SharedPreferences.
-     *
-     * @return идентификатор ребенка или пустую строку при отсутствии данных.
-     */
-    private String getChildIdFromPrefs() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(CHILD_DATA_PREF, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(KEY_CHILD_ID, "");
+        recyclerViewNote.setAdapter(noteAdapter);
     }
 
     /**
@@ -171,15 +153,20 @@ public class NoteFragment extends Fragment {
      * @param childId идентификатор ребенка.
      */
     private void showAddNoteDialog(String userId, String childId) {
-        DialogNotesBinding dialogBinding = DialogNotesBinding.inflate(LayoutInflater.from(requireContext()));
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_notes, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setView(dialogBinding.getRoot());
+        builder.setView(dialogView);
         AlertDialog dialog = builder.create();
 
-        dialogBinding.btnSubmit.setOnClickListener(v -> {
-            String title = dialogBinding.etTitleNote.getText().toString().trim();
-            String description = dialogBinding.etLongText.getText().toString().trim();
+        EditText etTitleNote = dialogView.findViewById(R.id.et_title_note);
+        EditText etLongText = dialogView.findViewById(R.id.et_long_text);
+        Button btnSubmit = dialogView.findViewById(R.id.btn_submit);
+        Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
+
+        btnSubmit.setOnClickListener(v -> {
+            String title = etTitleNote.getText().toString().trim();
+            String description = etLongText.getText().toString().trim();
 
             if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description)) {
                 long currentTime = System.currentTimeMillis();
@@ -199,7 +186,7 @@ public class NoteFragment extends Fragment {
             }
         });
 
-        dialogBinding.btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
@@ -243,22 +230,28 @@ public class NoteFragment extends Fragment {
      * @param note выбранная заметка.
      */
     private void showNoteDetailsDialog(ChildNote note) {
-        DialogNoteDetailsBinding dialogBinding = DialogNoteDetailsBinding.inflate(LayoutInflater.from(requireContext()));
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_note_details, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setView(dialogBinding.getRoot());
+        builder.setView(dialogView);
 
         AlertDialog dialog = builder.create();
+
+        TextView tvNoteTitle = dialogView.findViewById(R.id.tvNoteTitle);
+        TextView tvNoteContent = dialogView.findViewById(R.id.tvNoteContent);
+        TextView tvNoteDate = dialogView.findViewById(R.id.tvNoteDate);
+        Button btnClose = dialogView.findViewById(R.id.btnClose);
+        Button btnDelete = dialogView.findViewById(R.id.btnDelete);
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
         String date = formatter.format(new Date(note.getCreatedAt()));
 
-        dialogBinding.tvNoteTitle.setText(note.getTitle());
-        dialogBinding.tvNoteContent.setText(note.getContent());
-        dialogBinding.tvNoteDate.setText(date);
+        tvNoteTitle.setText(note.getTitle());
+        tvNoteContent.setText(note.getContent());
+        tvNoteDate.setText(date);
 
-        dialogBinding.btnClose.setOnClickListener(v -> dialog.dismiss());
-        dialogBinding.btnDelete.setOnClickListener(v -> {
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+        btnDelete.setOnClickListener(v -> {
             handleNoteDelete(note, dialog);
         });
 
@@ -273,8 +266,8 @@ public class NoteFragment extends Fragment {
      */
     @SuppressLint("NotifyDataSetChanged")
     private void handleNoteDelete(ChildNote note, AlertDialog dialog) {
-        String userId = getUserIdFromPrefs();
-        String childId = getChildIdFromPrefs();
+        String userId = SharedPreferencesUtils.getString(requireContext(), USER_DATA_PREF, KEY_USER_ID, "");
+        String childId = SharedPreferencesUtils.getString(requireContext(), CHILD_DATA_PREF, KEY_CHILD_ID, "");
 
         if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(childId)) {
             Toast.makeText(requireContext(), "Не удалось определить пользователя или ребенка", Toast.LENGTH_SHORT).show();
