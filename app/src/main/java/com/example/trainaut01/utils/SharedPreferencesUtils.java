@@ -23,6 +23,14 @@ public class SharedPreferencesUtils {
     }
 
     /**
+     * Получает значение типа float из SharedPreferences.
+     */
+    public static float getFloat(Context context, String prefName, String key, int defaultValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        return sharedPreferences.getFloat(key, defaultValue);
+    }
+
+    /**
      * Сохраняет значение типа int в SharedPreferences.
      *
      * @param context  контекст приложения.

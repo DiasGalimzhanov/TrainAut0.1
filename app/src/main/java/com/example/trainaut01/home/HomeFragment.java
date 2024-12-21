@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trainaut01.BottomNavigationUpdater;
 import com.example.trainaut01.R;
@@ -18,7 +22,6 @@ import com.example.trainaut01.adapter.ExerciseAdapter;
 import com.example.trainaut01.adapter.NewsAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
-import com.example.trainaut01.databinding.FragmentHomeBinding;
 import com.example.trainaut01.models.Avatar;
 import com.example.trainaut01.models.Exercise;
 import com.example.trainaut01.models.News;
@@ -41,8 +44,11 @@ import javax.inject.Inject;
  * текущие упражнения на день, а также уровень и соответствующий ему аватар.
  */
 public class HomeFragment extends Fragment {
-    private FragmentHomeBinding binding;
-
+    private ImageView imgAvatar;
+    private TextView tvHello;
+    private TextView tvMoreNews;
+    private RecyclerView recyclerViewNews;
+    private RecyclerView recyclerViewExercises;
     private SharedPreferences sharedPref;
     private NewsAdapter adapterNews;
     private final List<String> exerciseList = new ArrayList<>();
@@ -71,7 +77,18 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Создает и инициализирует пользовательский интерфейс с помощью ViewBinding.
+     * Вызывается при создании фрагмента. Инициализирует Dagger-зависимости.
+     * @param savedInstanceState Предыдущее состояние фрагмента, если есть.
+     */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AppComponent appComponent = DaggerAppComponent.create();
+        appComponent.inject(this);
+    }
+
+    /**
+     * Создает и инициализирует пользовательский интерфейс.
      * @param inflater Объект для "надувания" макета фрагмента.
      * @param container Родительский контейнер для макета.
      * @param savedInstanceState Предыдущее состояние фрагмента (если есть).
@@ -81,8 +98,7 @@ public class HomeFragment extends Fragment {
     public android.view.View onCreateView(@NonNull android.view.LayoutInflater inflater,
                                           @Nullable android.view.ViewGroup container,
                                           @Nullable Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     /**
@@ -95,10 +111,10 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull android.view.View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        init();
+        init(view);
         loadUserData();
         fetchNews();
-        setupListeners();
+        setupListeners(view);
         loadExercises();
     }
 
@@ -113,25 +129,18 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Вызывается при уничтожении View. Освобождает ViewBinding.
-     */
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    /**
      * Инициализирует SharedPreferences и настройку RecyclerView.
      */
-    private void init() {
-        AppComponent appComponent = DaggerAppComponent.create();
-        appComponent.inject(this);
+    private void init(View view) {
+        imgAvatar = view.findViewById(R.id.imgAvatar);
+        tvHello = view.findViewById(R.id.tvHello);
+        tvMoreNews = view.findViewById(R.id.tvMoreNews);
+        recyclerViewNews = view.findViewById(R.id.recyclerViewNews);
+        recyclerViewExercises = view.findViewById(R.id.recyclerViewExercises);
 
         sharedPref = requireContext().getSharedPreferences("child_data", Context.MODE_PRIVATE);
-
-        binding.recyclerViewNews.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerViewExercises.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewNews.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewExercises.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     /**
@@ -139,7 +148,7 @@ public class HomeFragment extends Fragment {
      */
     private void loadUserData() {
         String fullName = sharedPref.getString("fullName", "Гость");
-        binding.tvHello.setText(String.format("Привет, %s", fullName));
+        tvHello.setText(String.format("Привет, %s", fullName));
         loadAvatar();
     }
 
@@ -152,7 +161,7 @@ public class HomeFragment extends Fragment {
             public void onSuccess(List<Avatar> avatars) {
                 if (!avatars.isEmpty()) {
                     Avatar avatar = avatars.get(0);
-                    Picasso.get().load(avatar.getUrlAvatar()).into(binding.imgAvatar);
+                    Picasso.get().load(avatar.getUrlAvatar()).into(imgAvatar);
                 }
             }
 
@@ -171,7 +180,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onNewsFetched(List<News> newsList) {
                 adapterNews = new NewsAdapter(newsList, newsItem -> {});
-                binding.recyclerViewNews.setAdapter(adapterNews);
+                recyclerViewNews.setAdapter(adapterNews);
             }
 
             @Override
@@ -184,8 +193,8 @@ public class HomeFragment extends Fragment {
     /**
      * Настраивает обработчик нажатия на кнопку "Подробнее о новостях".
      */
-    private void setupListeners() {
-        binding.tvMoreNews.setOnClickListener(v -> openNewsFragment());
+    private void setupListeners(View view) {
+        tvMoreNews.setOnClickListener(v -> openNewsFragment());
     }
 
     /**
@@ -202,7 +211,6 @@ public class HomeFragment extends Fragment {
      * Загружает упражнения для пользователя на текущий день.
      */
     private void loadExercises() {
-
         String userId = getUserId();
         if (userId.isEmpty()) {
             Log.e(TAG, "Не удалось получить userId. Пользователь не авторизован.");
@@ -229,7 +237,6 @@ public class HomeFragment extends Fragment {
      * @param exercises Список упражнений или null/пустой для отсутствия упражнений.
      */
     private void updateExerciseList(List<Exercise> exercises) {
-
         exerciseList.clear();
         if (exercises == null || exercises.isEmpty()) {
             exerciseList.add("На сегодня занятий нету");
@@ -239,7 +246,7 @@ public class HomeFragment extends Fragment {
             }
         }
         ExerciseAdapter exerciseAdapter = new ExerciseAdapter(exerciseList);
-        binding.recyclerViewExercises.setAdapter(exerciseAdapter);
+        recyclerViewExercises.setAdapter(exerciseAdapter);
     }
 
     /**
