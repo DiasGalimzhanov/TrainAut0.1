@@ -198,6 +198,9 @@ public class SignUpActivity extends AppCompatActivity {
         _binding.tvCountryCode.setText(_countryCodes[position]);
         int maxNumberLength = getMaxPhoneLength(position);
         setPhoneNumberInputFilter(maxNumberLength);
+
+        _binding.etPhoneNumber.setEnabled(true);
+        _binding.etPhoneNumber.setHintTextColor(getResources().getColor(R.color.violet_blossom));
     }
 
     /**
