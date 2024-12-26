@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/indigo"
@@ -26,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:text="Вместе к Прогресcу"
+            android:text="@string/together_to_progress"
             android:textColor="@color/white"
             android:textSize="28sp"
             android:textStyle="bold|italic" />
@@ -36,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginBottom="25dp"
-            android:text="Шаг за шагом"
+            android:text="@string/step_by_step"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
@@ -48,7 +47,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/btn1_intro_back"
-            android:text="Войти"
+            android:text="@string/login"
             android:textColor="#ffffff"
             android:textSize="18sp" />
 
@@ -59,7 +58,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/btn2_intro_back"
-            android:text="Регистрация"
+            android:text="@string/register"
             android:textColor="@color/dark_indigo"
             android:textSize="18sp" />
 

@@ -37,7 +37,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
-                        android:text="За выполнение всех упражнений вы получите +NNN опыта"
+                        android:text="@string/points_for_day"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="20sp"
@@ -77,9 +77,7 @@
                             android:textColor="@color/dark_indigo"
                             android:textSize="20sp"
                             android:textStyle="bold" />
-
                     </RelativeLayout>
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
@@ -88,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="160dp"
                     android:fontFamily="@font/lobster_regular"
-                    android:text="Заголовок"
+                    android:text="@string/title"
                     android:textAlignment="center"
                     android:textColor="@color/indigo"
                     android:textSize="40sp"
@@ -116,34 +114,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="20dp"/>
+                        android:layout_marginTop="20dp" />
 
-
-                        <TextView
-                            android:id="@+id/tvSet"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginBottom="10dp"
-                            android:drawableStart="@drawable/arrow_right"
-                            android:drawablePadding="10dp"
-                            android:fontFamily="@font/federo_regular"
-                            android:paddingStart="10dp"
-                            android:text="N подходов"
-                            android:gravity="center_vertical"
-                            android:textColor="@color/indigo"
-                            android:textSize="20sp" />
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/tvRep"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="20dp"-->
-<!--                            android:layout_marginBottom="10dp"-->
-<!--                            android:fontFamily="@font/federo_regular"-->
-<!--                            android:text="по N раз"-->
-<!--                            android:textColor="@color/indigo"-->
-<!--                            android:textSize="20sp" />-->
+                    <TextView
+                        android:id="@+id/tvSet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:drawableStart="@drawable/arrow_right"
+                        android:drawablePadding="10dp"
+                        android:fontFamily="@font/federo_regular"
+                        android:paddingStart="10dp"
+                        android:text="@string/sets"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/indigo"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/tvRestTime"
@@ -155,10 +141,9 @@
                         android:drawablePadding="10dp"
                         android:fontFamily="@font/federo_regular"
                         android:paddingStart="10dp"
-                        android:text="Время отдыха между подходами N минут"
+                        android:text="@string/rest_time"
                         android:textColor="@color/indigo"
                         android:textSize="20sp" />
-
 
                     <TextView
                         android:id="@+id/tvPoints"
@@ -170,11 +155,11 @@
                         android:drawablePadding="10dp"
                         android:fontFamily="@font/federo_regular"
                         android:paddingStart="10dp"
-                        android:text="За выполнение этого упражнения вы получите +N опыта"
+                        android:text="@string/points_for_exercise"
                         android:textColor="@color/indigo"
                         android:textSize="20sp" />
-
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -190,8 +175,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="20dp"
-                        android:text="Time: 00:00"
-                        android:textColor="#774CA2"
+                        android:text="@string/timer_default"
+                        android:textColor="@color/dark_indigo"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -206,7 +191,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:background="@drawable/back_start_exercise"
-                        android:text="Начать упражнение"
+                        android:text="@string/start_exercise"
                         android:textColor="#ffffff"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -230,7 +215,7 @@
                             android:layout_marginEnd="10dp"
                             android:layout_weight="1"
                             android:background="@drawable/btn2inactive_login_back"
-                            android:text="Пауза"
+                            android:text="@string/pause"
                             android:enabled="false"
                             android:layout_marginBottom="5dp"
                             android:textColor="#ffffff"
@@ -248,13 +233,11 @@
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="5dp"
                             android:background="@drawable/btn1_login_back"
-                            android:text="Пропустить"
+                            android:text="@string/miss"
                             android:textColor="#ffffff"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
-
-
 
                     <TextView
                         android:id="@+id/textView24"
@@ -264,7 +247,7 @@
                         android:layout_marginBottom="10dp"
                         android:drawablePadding="20dp"
                         android:fontFamily="@font/adventpro_semiexpanded_regular"
-                        android:text="Инструкция"
+                        android:text="@string/instruction"
                         android:textAlignment="center"
                         android:textColor="@color/dark_indigo"
                         android:textSize="30sp"
@@ -284,7 +267,7 @@
                         android:paddingTop="20dp"
                         android:paddingEnd="10dp"
                         android:paddingBottom="20dp"
-                        android:text="Описание"
+                        android:text="@string/description"
                         android:textColor="#F4EBEB"
                         android:textSize="20sp" />
 
@@ -300,7 +283,7 @@
                         android:fontFamily="@font/adventpro_semiexpanded_regular"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
-                        android:text="Важно"
+                        android:text="@string/important"
                         android:textAlignment="center"
                         android:textColor="#CC495D"
                         android:textSize="30sp"
@@ -320,7 +303,7 @@
                         android:paddingStart="15dp"
                         android:paddingTop="20dp"
                         android:paddingBottom="20dp"
-                        android:text="рекомендации"
+                        android:text="@string/recommendations"
                         android:textColor="#F4EBEB"
                         android:textSize="20sp" />
 
@@ -330,6 +313,7 @@
                         android:layout_marginTop="50dp"
                         android:layout_marginBottom="25dp"
                         android:background="#F3F4F6" />
+
 
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

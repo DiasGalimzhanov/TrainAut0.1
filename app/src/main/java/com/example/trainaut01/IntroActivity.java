@@ -1,5 +1,6 @@
 package com.example.trainaut01;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.trainaut01.helper.LocaleHelper;
 import com.example.trainaut01.utils.SharedPreferencesUtils;
 
 /**
@@ -31,6 +33,8 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
+        LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
+
         if (isUserLoggedIn()) {
             navigateToMainActivity();
             return;
@@ -39,6 +43,11 @@ public class IntroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_intro);
         init();
         setupListeners();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.setLocale(base, LocaleHelper.getLanguage(base)));
     }
 
     /**

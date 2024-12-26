@@ -30,33 +30,40 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="10dp"
-                android:elevation="4dp"
-                android:weightSum="1">
+                android:elevation="4dp">
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_marginEnd="70dp"
                     app:lottie_autoPlay="true"
                     app:lottie_fileName="progress.json"
                     app:lottie_loop="true" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvLvlDashboard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="16dp"
-                    android:text="Прогресс"
+                    android:text="@string/progress"
                     android:textSize="16sp" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvExpDashboard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="50dp"
-                    android:text="0/0"
                     android:textSize="16sp" />
+
             </LinearLayout>
+
 
 
             <LinearLayout
@@ -80,8 +87,8 @@
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/btnExercisesMotor"
-                        android:layout_width="130dp"
-                        android:layout_height="100dp"
+                        android:layout_width="150dp"
+                        android:layout_height="140dp"
                         app:lottie_autoPlay="true"
                         app:lottie_fileName="dumbbells.json"
                         app:lottie_loop="true" />
@@ -91,7 +98,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center"
-                        android:text="Упражнения на моторику"
+                        android:text="@string/motor_exercises"
                         android:textColor="@color/indigo"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -118,7 +125,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center"
-                        android:text="Альтернативная коммуникация (AAC)"
+                        android:text="@string/aac"
                         android:textColor="@color/indigo"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -169,7 +176,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="- Текущий день"
+                            android:text="@string/current_day"
                             android:textColor="@color/violet_blossom"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -189,7 +196,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="- Упражнения выполнены"
+                            android:text="@string/exercises_completed"
                             android:textColor="@color/violet_blossom"
                             android:textSize="14sp" />
                     </LinearLayout>

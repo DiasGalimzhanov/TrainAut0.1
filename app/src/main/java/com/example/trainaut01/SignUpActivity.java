@@ -1,5 +1,6 @@
 package com.example.trainaut01;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -22,6 +23,7 @@ import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.databinding.ActivitySignupBinding;
 import com.example.trainaut01.enums.Gender;
+import com.example.trainaut01.helper.LocaleHelper;
 import com.example.trainaut01.models.User;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.UserRepository;
@@ -59,6 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
         setContentView(R.layout.activity_signup);
 
         _binding = ActivitySignupBinding.inflate(getLayoutInflater());
@@ -66,6 +69,11 @@ public class SignUpActivity extends AppCompatActivity {
 
         init();
         setupUI();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.setLocale(base, LocaleHelper.getLanguage(base)));
     }
 
     /**
@@ -86,6 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
         AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(SignUpActivity.this);
 
+        Gender.initializeLocalizedNames(this);
         SpinnerUtils.setupGenderAdapter(this, _binding.spGender, Gender.getGenderValues());
 
         _countryNames = getResources().getStringArray(R.array.country_names);
@@ -263,13 +272,13 @@ public class SignUpActivity extends AppCompatActivity {
                 _binding.etBirthDate.getText().toString().trim(), _binding.etCity.getText().toString().trim(),
                 _binding.etEmailReg.getText().toString().trim(), _binding.etPassReg.getText().toString().trim()
         )) {
-            ToastUtils.showErrorMessage(this, "Заполните все поля");
+            ToastUtils.showErrorMessage(this, getString(R.string.fill_all_fields));
             return false;
         }
 
         String birthDate = _binding.etBirthDate.getText().toString().trim();
         if (!ValidationUtils.isAgeValid(birthDate, 18)) {
-            ToastUtils.showErrorMessage(this, "Вам должно быть не менее 18 лет");
+            ToastUtils.showErrorMessage(this, getString(R.string.years_18));
             return false;
         }
 
@@ -279,12 +288,12 @@ public class SignUpActivity extends AppCompatActivity {
                 getMaxPhoneLength(countryIndex),
                 getMaxPhoneLength(countryIndex)
         )) {
-            ToastUtils.showErrorMessage(this, "Номер телефона должен содержать " + getMaxPhoneLength(countryIndex) + " цифр");
+            ToastUtils.showErrorMessage(this, getString(R.string.contains_number) + getMaxPhoneLength(countryIndex) + " цифр");
             return false;
         }
 
         if (!_binding.chbUserAgreement.isChecked()) {
-            ToastUtils.showErrorMessage(this, "Примите пользовательское соглашение");
+            ToastUtils.showErrorMessage(this, getString(R.string.user_agreement_check));
             return false;
         }
 

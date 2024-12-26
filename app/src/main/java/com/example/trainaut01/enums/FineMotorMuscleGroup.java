@@ -1,6 +1,13 @@
 package com.example.trainaut01.enums;
 
 
+import android.content.Context;
+
+import com.example.trainaut01.R;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.Getter;
 
 /**
@@ -9,20 +16,38 @@ import lombok.Getter;
  */
 @Getter
 public enum FineMotorMuscleGroup {
-    HAND_CONTROL("Развитие пальцев и кистей"),
-    FINGER_STRENGTH("Сила пальцев"),
-    COORDINATION("Координация и точность"),
-    SENSORY_PERCEPTION("Сенсорные упражнения и тактильное восприятие");
+    HAND_CONTROL,
+    FINGER_STRENGTH,
+    COORDINATION,
+    SENSORY_PERCEPTION;
 
-    private final String displayName;
+    private static Map<FineMotorMuscleGroup, String> localizedNames = new HashMap<>();
 
     /**
-     * Конструктор перечисления для задания человекочитаемого названия.
+     * Инициализирует локализованные названия для групп мышц.
+     * Метод должен быть вызван до использования {@link #getDisplayName()}.
      *
-     * @param displayName Человекочитаемое название группы мелкой моторики.
+     * @param context Контекст для доступа к ресурсам строк.
      */
-    FineMotorMuscleGroup(String displayName) {
-        this.displayName = displayName;
+    public static void initializeLocalizedNames(Context context) {
+        localizedNames.put(HAND_CONTROL, context.getString(R.string.hand_control));
+        localizedNames.put(FINGER_STRENGTH, context.getString(R.string.finger_strength));
+        localizedNames.put(COORDINATION, context.getString(R.string.coordination));
+        localizedNames.put(SENSORY_PERCEPTION, context.getString(R.string.sensory_perception));
+    }
+
+    /**
+     * Возвращает локализованное название группы мышц.
+     * Если локализованное название отсутствует, возвращается имя элемента перечисления.
+     *
+     * @return Локализованное название группы мышц или имя элемента перечисления.
+     * @throws IllegalStateException Если локализованные названия не были инициализированы.
+     */
+    public String getDisplayName() {
+        if (localizedNames.isEmpty()) {
+            throw new IllegalStateException("Localized names are not initialized. Call initializeLocalizedNames() first.");
+        }
+        return localizedNames.getOrDefault(this, name());
     }
 
     /**

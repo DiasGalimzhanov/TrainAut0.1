@@ -81,14 +81,14 @@ public class ProgressFragment extends Fragment {
         int expForNextLevel = 5000;
         int progress = ((exp % expForNextLevel) * 100 / expForNextLevel);
 
-        levelTitle.setText("Уровень: " + level);
-        levelProgressText.setText(exp + " / " + level * expForNextLevel + " опыта");
+        levelTitle.setText(String.format(requireContext().getString(R.string.level_title), level));
+        levelProgressText.setText(String.format(requireContext().getString(R.string.experience_progress), exp, level * expForNextLevel));
         levelProgressBar.setProgress(progress);
     }
 
     @SuppressLint("SetTextI18n")
     private void setStreakProgress(int streakDays) {
-        streakTitle.setText("Дней: " + streakDays);
+        streakTitle.setText(String.format(requireContext().getString(R.string.streak_days), streakDays));
     }
 
     private void loadAchievements() {
@@ -100,7 +100,7 @@ public class ProgressFragment extends Fragment {
 
             @Override
             public void onFailure(Exception e) {
-                Log.e("ProgressFragment", "Ошибка загрузки достижений", e);
+                Log.e("ProgressFragment", requireContext().getString(R.string.achievement_load_error), e);
             }
         });
     }
@@ -118,8 +118,9 @@ public class ProgressFragment extends Fragment {
 
             @Override
             public void onFailure(Exception e) {
-                Log.e("ProgressFragment", "Ошибка загрузки аватара", e);
+                Log.e("ProgressFragment", requireContext().getString(R.string.avatar_load_error), e);
             }
         });
     }
+
 }

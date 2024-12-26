@@ -7,7 +7,7 @@
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="24dp"
     android:orientation="vertical">
 
@@ -15,12 +15,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
+        <Spinner
+            android:id="@+id/spinnerLanguages"
+            style="@style/CustomSpinner"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+
+
+
         <TextView
             android:id="@+id/screen_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Профиль"
+            android:text="@string/profile"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/dark_indigo" />
@@ -108,7 +118,7 @@
             android:id="@+id/parent_info_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Информация о родителe"
+            android:text="@string/info_child"
             android:textSize="16sp"
             android:textColor="@color/indigo"
             android:textStyle="bold"
@@ -135,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Город: Москва"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/dark_indigo" />
 
         <TextView
@@ -172,7 +182,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Заметки о ребенке"
+            android:text="@string/notes_about_child"
             android:drawableStart="@drawable/ic_note"
             android:paddingStart="10dp"
             android:paddingEnd="25dp"
@@ -184,7 +194,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Редактировать профиль"
+            android:text="@string/edit_profile"
             android:drawableStart="@drawable/ic_edit"
             android:paddingStart="10dp"
             android:paddingEnd="25dp"
@@ -195,8 +205,8 @@
             android:id="@+id/support_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Служба поддержки"
             android:layout_marginBottom="8dp"
+            android:text="@string/support_service"
             android:drawableStart="@drawable/bottom_btn3"
             android:paddingStart="10dp"
             android:paddingEnd="25dp"
@@ -207,8 +217,8 @@
             android:id="@+id/watch_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Подключить часы"
             android:layout_marginBottom="8dp"
+            android:text="@string/connect_watch"
             android:drawableStart="@drawable/ic_watch"
             android:paddingStart="10dp"
             android:paddingEnd="25dp"
@@ -219,7 +229,7 @@
             android:id="@+id/delete_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Удалить аккаунт"
+            android:text="@string/delete_account"
             android:drawableStart="@drawable/ic_delete"
             android:paddingStart="10dp"
             android:paddingEnd="25dp"

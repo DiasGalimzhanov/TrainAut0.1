@@ -36,7 +36,7 @@ public class Child {
         this.weight = weight;
     }
 
-    public Child(String childId, String fullName, String birthDate, Gender gender, String diagnosis, float height, float weight) {
+    public Child(String childId, String fullName, String birthDate, Gender gender, String diagnosis, float height, float weight, int exp, int lvl, int countDays) {
         this.childId = childId;
         this.fullName = fullName;
         this.birthDate = birthDate;
@@ -44,6 +44,9 @@ public class Child {
         this.diagnosis = diagnosis;
         this.height = height;
         this.weight = weight;
+        this.exp = exp;
+        this.lvl = lvl;
+        this.countDays = countDays;
     }
 
     /**

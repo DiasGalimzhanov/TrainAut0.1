@@ -95,6 +95,7 @@ public class UserUpdateFragment extends Fragment {
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Gender.initializeLocalizedNames(requireContext());
         initViews(view);
         setupSpinners();
         loadUserDataFromPrefs();
@@ -144,7 +145,6 @@ public class UserUpdateFragment extends Fragment {
         String birthDate = SharedPreferencesUtils.getString(requireContext(), USER_PREFS, "birthDate", "");
         String city = SharedPreferencesUtils.getString(requireContext(), USER_PREFS, "city", "");
         String genderStr = SharedPreferencesUtils.getString(requireContext(), USER_PREFS, "gender", Gender.MALE.toString());
-        String email = SharedPreferencesUtils.getString(requireContext(), USER_PREFS, "email", "");
 
         if (getArguments() != null) {
             oldPassword = getArguments().getString("PASSWORD_KEY", "");
@@ -205,11 +205,11 @@ public class UserUpdateFragment extends Fragment {
         String passConf = etPasConfirmUpdate.getText().toString().trim();
 
         if (pass.equals(passConf)) {
-            tvPasswordMatchUpdate.setText(R.string.passwords_match);
+            tvPasswordMatchUpdate.setText(getString(R.string.passwords_match));
             tvPasswordMatchUpdate.setTextColor(Color.GREEN);
             return true;
         } else {
-            tvPasswordMatchUpdate.setText(R.string.passwords_do_not_match);
+            tvPasswordMatchUpdate.setText(getString(R.string.passwords_do_not_match));
             tvPasswordMatchUpdate.setTextColor(Color.RED);
             return false;
         }
@@ -221,13 +221,13 @@ public class UserUpdateFragment extends Fragment {
     private void updateDataInFirebase() {
         String userId = SharedPreferencesUtils.getString(requireContext(), USER_PREFS, "userId", "");
         if (TextUtils.isEmpty(userId)) {
-            showToast(String.valueOf(R.string.user_not_defined));
+            showToast(getString(R.string.user_not_defined));
             return;
         }
 
         String childId = SharedPreferencesUtils.getString(requireContext(), CHILD_PREFS, "childId", "");
         if (TextUtils.isEmpty(childId)) {
-            showToast("Не удалось определить ребенка");
+            showToast(getString(R.string.child_not_defined));
             return;
         }
 
@@ -236,7 +236,7 @@ public class UserUpdateFragment extends Fragment {
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            showToast("Пользователь не авторизован");
+            showToast(getString(R.string.user_not_authenticated));
             return;
         }
 
@@ -284,10 +284,13 @@ public class UserUpdateFragment extends Fragment {
         String childBirthDate = etBirthDateChildUpdate.getText().toString().trim();
         Gender childGender = getSelectedGender(spGenderChildUpdate);
         String diagnosis = etDiagnosisChildUpdate.getText().toString().trim();
+        int lvl = SharedPreferencesUtils.getInt(requireContext(), CHILD_PREFS, "lvl", 0);
+        int exp = SharedPreferencesUtils.getInt(requireContext(), CHILD_PREFS, "exp", 0);
+        int countDays = SharedPreferencesUtils.getInt(requireContext(), CHILD_PREFS, "countDays", 0);
         float height = parseFloatOrZero(etHeightChildUpdate.getText().toString().trim());
         float weight = parseFloatOrZero(etWeightChildUpdate.getText().toString().trim());
 
-        return new Child(childId, childFullName, childBirthDate, childGender, diagnosis, height, weight);
+        return new Child(childId, childFullName,childBirthDate, childGender, diagnosis, height, weight, exp,lvl,countDays);
     }
 
     /**
@@ -301,7 +304,7 @@ public class UserUpdateFragment extends Fragment {
     private void reauthenticateAndChangePassword(String oldEmail, String oldPassword, String newPass, Runnable onSuccess) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            showToast("Пользователь не авторизован");
+            showToast(getString(R.string.user_not_authenticated));
             return;
         }
 
@@ -312,11 +315,15 @@ public class UserUpdateFragment extends Fragment {
                     if (passUpdateTask.isSuccessful()) {
                         onSuccess.run();
                     } else {
-                        showToast("Не удалось обновить пароль: " + (passUpdateTask.getException() != null ? passUpdateTask.getException().getMessage() : ""));
+                        showToast(String.format(getString(R.string.password_update_error),
+                                passUpdateTask.getException() != null ?
+                                        passUpdateTask.getException().getMessage() : ""));
                     }
                 });
             } else {
-                showToast("Ошибка реаутентификации: " + (reauthTask.getException() != null ? reauthTask.getException().getMessage() : ""));
+                showToast(String.format(getString(R.string.reauthentication_error),
+                        reauthTask.getException() != null ?
+                                reauthTask.getException().getMessage() : ""));
             }
         });
     }
@@ -331,17 +338,43 @@ public class UserUpdateFragment extends Fragment {
     private void updateFirestoreData(User updatedUser, Child updatedChild, String userId) {
         userRepository.updateUser(updatedUser, requireContext());
         childRepository.updateChild(userId, updatedChild, aVoid -> {
-            showToast("Данные ребенка обновлены");
+            showToast(getString(R.string.child_data_updated));
+            reloadChildDataFromFirebase(userId);
             navigateBackToProfile();
         }, e -> {
-            showToast("Ошибка обновления ребенка: " + e.getMessage());
+            showToast(String.format(getString(R.string.update_child_data_error), e.getMessage()));
+        });
+    }
+
+    private void reloadChildDataFromFirebase(String userId) {
+        String childId = SharedPreferencesUtils.getString(requireContext(), CHILD_PREFS, "childId", "");
+        if (TextUtils.isEmpty(childId)) {
+            showToast(getString(R.string.child_not_defined));
+            return;
+        }
+
+        childRepository.getChild(userId, childId, updatedChild -> {
+            if (updatedChild != null) {
+                SharedPreferencesUtils.saveString(requireContext(), CHILD_PREFS, "fullName", updatedChild.getFullName());
+                SharedPreferencesUtils.saveString(requireContext(), CHILD_PREFS, "birthDate", updatedChild.getBirthDate());
+                SharedPreferencesUtils.saveString(requireContext(), CHILD_PREFS, "gender", updatedChild.getGender().toString());
+                SharedPreferencesUtils.saveString(requireContext(), CHILD_PREFS, "diagnosis", updatedChild.getDiagnosis());
+                SharedPreferencesUtils.saveFloat(requireContext(), CHILD_PREFS, "height", updatedChild.getHeight());
+                SharedPreferencesUtils.saveFloat(requireContext(), CHILD_PREFS, "weight", updatedChild.getWeight());
+                SharedPreferencesUtils.saveInt(requireContext(), CHILD_PREFS, "exp", updatedChild.getExp());
+                SharedPreferencesUtils.saveInt(requireContext(), CHILD_PREFS, "lvl", updatedChild.getLvl());
+                SharedPreferencesUtils.saveInt(requireContext(), CHILD_PREFS, "countDays", updatedChild.getCountDays());
+
+                loadChildDataFromPrefs();
+            }
+        }, e -> {
+            showToast(String.format(getString(R.string.reload_child_data_error), e.getMessage()));
         });
     }
 
     /**
      * Отображает Toast-сообщение.
      *
-
      * @param message текст сообщения.
      */
     private void showToast(String message) {

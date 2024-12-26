@@ -54,6 +54,30 @@ public class ChildRepository{
     }
 
     /**
+     * Получает данные ребенка из коллекции `child` для указанного пользователя.
+     *
+     * @param userId    идентификатор пользователя
+     * @param childId   идентификатор ребенка
+     * @param onSuccess callback при успешном выполнении операции, возвращает данные ребенка
+     * @param onFailure callback при ошибке выполнения операции
+     */
+    public void getChild(String userId, String childId, OnSuccessListener<Child> onSuccess, OnFailureListener onFailure) {
+        getChildCollection(userId)
+                .document(childId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Child child = documentSnapshot.toObject(Child.class);
+                        onSuccess.onSuccess(child);
+                    } else {
+                        onSuccess.onSuccess(null);
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+
+    /**
      * Обновляет данные ребенка в коллекции `child`.
      *
      * @param userId       идентификатор пользователя

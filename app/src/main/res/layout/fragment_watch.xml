@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/btn1_login_back"
-        android:text="Поиск часов" />
+        android:text="@string/find_whatch" />
 
     <Button
         android:id="@+id/paired_button"
@@ -19,7 +19,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/btn1_login_back"
-        android:text="Подключенные устройства" />
+        android:text="@string/connected_devices" />
 
     <TextView
         android:id="@+id/data_text"

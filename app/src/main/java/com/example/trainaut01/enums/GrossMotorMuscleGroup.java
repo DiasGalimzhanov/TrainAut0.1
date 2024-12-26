@@ -1,5 +1,12 @@
 package com.example.trainaut01.enums;
 
+import android.content.Context;
+
+import com.example.trainaut01.R;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.Getter;
 
 /**
@@ -8,33 +15,49 @@ import lombok.Getter;
  */
 @Getter
 public enum GrossMotorMuscleGroup {
-    BICEPS("Бицепс"),
-    PECTORAL_MUSCLES("Грудные мышцы"),
-    TRICEPS("Трицепс"),
-    DELTOID_MUSCLES("Дельтовидные мышцы"),
-    PRESS("Пресс"),
-    UPPER_BACK_MUSCLES("Верхняя часть спины"),
-    QUADRICEPS("Квадрицепсы"),
-    LOWER_BACK_MUSCLES("Нижняя часть спины"),
-    FULL_BODY("Всё тело");
+    BICEPS, PECTORAL_MUSCLES, TRICEPS, DELTOID_MUSCLES, PRESS,
+    UPPER_BACK_MUSCLES, QUADRICEPS, LOWER_BACK_MUSCLES, FULL_BODY;
 
-    private final String displayName;
+    private static Map<GrossMotorMuscleGroup, String> localizedNames = new HashMap<>();
 
     /**
-     * Конструктор перечисления для присвоения читабельного названия мышечной группе.
+     * Инициализирует локализованные названия для групп мышц.
+     * Метод должен быть вызван до использования {@link #getDisplayName()}.
      *
-     * @param displayName Человекочитаемое название мышечной группы.
+     * @param context Контекст для доступа к ресурсам строк.
      */
-    GrossMotorMuscleGroup(String displayName) {
-        this.displayName = displayName;
+    public static void initializeLocalizedNames(Context context) {
+        localizedNames.put(BICEPS, context.getString(R.string.biceps));
+        localizedNames.put(PECTORAL_MUSCLES, context.getString(R.string.pectoral_muscles));
+        localizedNames.put(TRICEPS, context.getString(R.string.triceps));
+        localizedNames.put(DELTOID_MUSCLES, context.getString(R.string.deltoid_muscles));
+        localizedNames.put(PRESS, context.getString(R.string.press));
+        localizedNames.put(UPPER_BACK_MUSCLES, context.getString(R.string.upper_back_muscles));
+        localizedNames.put(QUADRICEPS, context.getString(R.string.quadriceps));
+        localizedNames.put(LOWER_BACK_MUSCLES, context.getString(R.string.lower_back_muscles));
+        localizedNames.put(FULL_BODY, context.getString(R.string.full_body));
     }
 
     /**
-     * Преобразует строку в соответствующий элемент перечисления GrossMotorMuscleGroup.
+     * Возвращает локализованное название группы мышц.
+     * Если локализованное название отсутствует, возвращается имя элемента перечисления.
      *
-     * @param value Строковое название группы.
+     * @return Локализованное название группы мышц или имя элемента перечисления.
+     * @throws IllegalStateException Если локализованные названия не были инициализированы.
+     */
+    public String getDisplayName() {
+        if (localizedNames.isEmpty()) {
+            throw new IllegalStateException("Localized names are not initialized. Call initializeLocalizedNames() first.");
+        }
+        return localizedNames.getOrDefault(this, name());
+    }
+
+    /**
+     * Преобразует строку в соответствующий элемент перечисления {@link GrossMotorMuscleGroup}.
+     *
+     * @param value Название группы мышц (например, "BICEPS").
      * @return Соответствующий элемент перечисления.
-     * @throws IllegalArgumentException Если значение не соответствует ни одной группе.
+     * @throws IllegalArgumentException Если переданное значение не соответствует ни одной группе мышц.
      */
     public static GrossMotorMuscleGroup fromString(String value) {
         for (GrossMotorMuscleGroup group : values()) {

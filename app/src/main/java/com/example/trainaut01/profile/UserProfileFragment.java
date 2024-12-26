@@ -10,28 +10,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.trainaut01.BottomNavigationUpdater;
 import com.example.trainaut01.LoginActivity;
 import com.example.trainaut01.R;
+import com.example.trainaut01.adapter.LanguageSpinnerAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.enums.Gender;
+import com.example.trainaut01.enums.Language;
 import com.example.trainaut01.enums.PasswordAction;
+import com.example.trainaut01.helper.LocaleHelper;
 import com.example.trainaut01.models.Avatar;
 import com.example.trainaut01.repository.AvatarRepository;
 import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.utils.SharedPreferencesUtils;
+import com.example.trainaut01.utils.ToastUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -58,6 +65,7 @@ public class UserProfileFragment extends Fragment {
     private TextView childName, childGenderDiagnosis, childHeightWeight;
     private ImageView profileImage, btnExit;
     private Button editProfileButton, deleteButton, supportButton, watchButton, notesButton;
+    private Spinner spinnerLanguages;
 
     /**
      * Инициализирует зависимости с помощью Dagger.
@@ -97,7 +105,9 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Gender.initializeLocalizedNames(requireContext());
         initViews(view);
+        spinnerAdapter();
         loadUserData();
         loadAvatar();
         setupListeners();
@@ -135,6 +145,7 @@ public class UserProfileFragment extends Fragment {
         supportButton = view.findViewById(R.id.support_button);
         watchButton = view.findViewById(R.id.watch_button);
         notesButton = view.findViewById(R.id.notes_button);
+        spinnerLanguages = view.findViewById(R.id.spinnerLanguages);
     }
 
     /**
@@ -148,11 +159,11 @@ public class UserProfileFragment extends Fragment {
         String phone = SharedPreferencesUtils.getString(requireActivity(), "user_data", "phone", "");
         String birthDate = SharedPreferencesUtils.getString(requireActivity(), "user_data", "birthDate", "");
 
-        parentName.setText("Имя Фамилия: " + firstName);
-        parentEmail.setText("Почта: " + email);
-        parentCity.setText("Город: " + city);
-        parentPhone.setText("Телефон: " + phone);
-        parentBd.setText("Дата рождения: " + birthDate);
+        parentName.setText(getString(R.string.user_name, firstName));
+        parentEmail.setText(getString(R.string.user_email, email));
+        parentCity.setText(getString(R.string.user_city, city));
+        parentPhone.setText(getString(R.string.user_phone, phone));
+        parentBd.setText(getString(R.string.user_birth_date, birthDate));
 
         loadChildData();
     }
@@ -167,8 +178,9 @@ public class UserProfileFragment extends Fragment {
         float childHeight = SharedPreferencesUtils.getFloat(requireActivity(), "child_data", "height", 0);
         float childWeight = SharedPreferencesUtils.getFloat(requireActivity(), "child_data", "weight", 0);
 
-        String genderDiagnosis = "Пол: " + Gender.fromString(childGender).getDisplayName() + " • Диагноз: " + childDiagnosis;
-        String heightWeight = "Рост: " + childHeight + " • Вес: " + childWeight;
+        String genderDiagnosis = getString(R.string.child_gender_diagnosis,
+                Gender.fromString(childGender).getDisplayName(), childDiagnosis);
+        String heightWeight = getString(R.string.child_height_weight, childHeight, childWeight);
 
         childName.setText(childNameStr);
         childGenderDiagnosis.setText(genderDiagnosis);
@@ -216,7 +228,7 @@ public class UserProfileFragment extends Fragment {
         clearSharedPreferences("child_data");
 
         FirebaseAuth.getInstance().signOut();
-        Toast.makeText(getActivity(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
+        ToastUtils.showShortMessage(requireActivity(), getString(R.string.user_logged_out));
 
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -257,7 +269,7 @@ public class UserProfileFragment extends Fragment {
             String password = input.getText().toString().trim();
 
             if (password.isEmpty()) {
-                Toast.makeText(requireContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
+                ToastUtils.showShortMessage(requireContext(),"Введите пароль");
                 return;
             }
 
@@ -282,7 +294,7 @@ public class UserProfileFragment extends Fragment {
                 : null;
 
         if (email == null) {
-            Toast.makeText(requireContext(), "Пользователь не авторизован", Toast.LENGTH_SHORT).show();
+            ToastUtils.showErrorMessage(requireContext(), getString(R.string.user_not_authenticated));
             return;
         }
 
@@ -300,7 +312,7 @@ public class UserProfileFragment extends Fragment {
                             deleteUserAccount();
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Неправильный пароль", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showErrorMessage(getActivity(), getString(R.string.incorrect_password));
                     }
                 });
     }
@@ -311,14 +323,61 @@ public class UserProfileFragment extends Fragment {
     private void deleteUserAccount() {
         String userId = SharedPreferencesUtils.getString(requireActivity(), "user_data", "userId", "");
         if (userId.isEmpty()) {
-            Toast.makeText(requireContext(), "Не удалось определить пользователя", Toast.LENGTH_SHORT).show();
+            ToastUtils.showErrorMessage(requireContext(), getString(R.string.user_not_defined));
             return;
         }
 
         userRepository.deleteUserAccount(userId, aVoid -> {
-            Toast.makeText(requireContext(), "Аккаунт удален", Toast.LENGTH_SHORT).show();
+            ToastUtils.showShortMessage(requireContext(), getString(R.string.account_deleted));
             logOutUser();
-        }, e -> Toast.makeText(requireContext(), "Ошибка удаления аккаунта: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        }, e -> ToastUtils.showErrorMessage(requireContext(),
+                getString(R.string.delete_account_error, e.getMessage())));
+    }
+
+    public void spinnerAdapter(){
+        Language[] languages = Language.values();
+
+        LanguageSpinnerAdapter adapter = new LanguageSpinnerAdapter(
+                requireContext(),
+                languages,
+                R.layout.item_spinner_language,
+                R.layout.item_spinner_dropdown_language
+        );
+
+        spinnerLanguages.setAdapter(adapter);
+        spinnerListener();
+
+        String currentLanguageCode = LocaleHelper.getLanguage(requireContext());
+        Language currentLanguage = Language.fromCode(currentLanguageCode);
+        int spinnerPosition = adapter.getPosition(currentLanguage);
+        spinnerLanguages.setSelection(spinnerPosition);
+    }
+
+
+    public void spinnerListener(){
+        spinnerLanguages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            boolean isFirstSelection = true;
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isFirstSelection) {
+                    isFirstSelection = false;
+                    return;
+                }
+                Language selectedLanguage = (Language) parent.getItemAtPosition(position);
+
+                if (!selectedLanguage.getCode().equals(LocaleHelper.getLanguage(getContext()))) {
+                    LocaleHelper.setLocale(getContext(), selectedLanguage.getCode());
+
+                    if (getActivity() != null) {
+                        getActivity().recreate();
+                    }
+                }
+                ToastUtils.showShortMessage(requireContext(), getString(R.string.language) + selectedLanguage.getDisplayName());
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
     }
 
     /**

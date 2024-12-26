@@ -27,6 +27,7 @@ import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.models.ChildNote;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.utils.SharedPreferencesUtils;
+import com.example.trainaut01.utils.ToastUtils;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.text.SimpleDateFormat;
@@ -103,7 +104,7 @@ public class NoteFragment extends Fragment {
         String childId = SharedPreferencesUtils.getString(requireContext(), CHILD_DATA_PREF, KEY_CHILD_ID, "");
 
         if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(childId)) {
-            Toast.makeText(requireContext(), "Не удалось определить пользователя или ребенка", Toast.LENGTH_SHORT).show();
+            ToastUtils.showErrorMessage(requireContext(), getString(R.string.error_user_or_child_not_found));
             return;
         }
 
@@ -117,7 +118,7 @@ public class NoteFragment extends Fragment {
                     notes.addAll(updatedNotes);
                     noteAdapter.notifyDataSetChanged();
                 },
-                e -> Toast.makeText(requireContext(), "Ошибка загрузки данных: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                e -> ToastUtils.showErrorMessage(requireContext(), getString(R.string.error_loading_notes, e.getMessage()))
         );
 
         notesAddButton.setOnClickListener(v -> showAddNoteDialog(userId, childId));
@@ -182,7 +183,7 @@ public class NoteFragment extends Fragment {
                 saveNoteToFirebase(userId, childId, newNote);
                 dialog.dismiss();
             } else {
-                Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();
+                ToastUtils.showErrorMessage(requireContext(), getString(R.string.fill_all_fields));
             }
         });
 
@@ -199,8 +200,8 @@ public class NoteFragment extends Fragment {
      */
     private void saveNoteToFirebase(String userId, String childId, ChildNote note) {
         childRepository.saveNoteToFirebase(userId, childId, note,
-                aVoid -> Toast.makeText(requireContext(), "Заметка успешно сохранена", Toast.LENGTH_SHORT).show(),
-                e -> Toast.makeText(requireContext(), "Ошибка сохранения заметки: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                aVoid -> ToastUtils.showShortMessage(requireContext(), getString(R.string.note_saved_successfully)),
+                e -> ToastUtils.showErrorMessage(requireContext(), getString(R.string.error_saving_note, e.getMessage()))
         );
     }
 
@@ -220,7 +221,7 @@ public class NoteFragment extends Fragment {
                     notes.addAll(loadedNotes);
                     noteAdapter.notifyDataSetChanged();
                 },
-                e -> Toast.makeText(requireContext(), "Ошибка загрузки заметок: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                e -> ToastUtils.showErrorMessage(requireContext(), getString(R.string.error_loading_notes, e.getMessage()))
         );
     }
 
@@ -270,18 +271,19 @@ public class NoteFragment extends Fragment {
         String childId = SharedPreferencesUtils.getString(requireContext(), CHILD_DATA_PREF, KEY_CHILD_ID, "");
 
         if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(childId)) {
-            Toast.makeText(requireContext(), "Не удалось определить пользователя или ребенка", Toast.LENGTH_SHORT).show();
+            ToastUtils.showErrorMessage(requireContext(), getString(R.string.error_user_or_child_not_found));
             return;
         }
 
         childRepository.deleteNoteFromFirebase(userId, childId, note.getId(),
                 aVoid -> {
-                    Toast.makeText(requireContext(), "Заметка удалена", Toast.LENGTH_SHORT).show();
+                    ToastUtils.showShortMessage(requireContext(), getString(R.string.note_deleted));
                     notes.remove(note);
                     noteAdapter.notifyDataSetChanged();
                     dialog.dismiss();
                 },
-                e -> Toast.makeText(requireContext(), "Ошибка удаления заметки: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                e -> ToastUtils.showErrorMessage(requireContext(), getString(R.string.error_deleting_note, e.getMessage()))
         );
     }
 }
+

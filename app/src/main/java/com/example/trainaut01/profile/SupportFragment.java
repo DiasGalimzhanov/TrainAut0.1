@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +20,7 @@ import com.example.trainaut01.R;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.repository.UserRepository;
+import com.example.trainaut01.utils.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -93,7 +93,7 @@ public class SupportFragment extends Fragment {
             String message = etMessage.getText().toString().trim();
 
             if (TextUtils.isEmpty(theme) || TextUtils.isEmpty(message)) {
-                Toast.makeText(getActivity(), "Заполните все поля", Toast.LENGTH_SHORT).show();
+                ToastUtils.showErrorMessage(requireActivity(), getString(R.string.fill_all_fields));
             } else {
                 userRepository.saveMessageToFirestore(theme, message, requireActivity());
             }

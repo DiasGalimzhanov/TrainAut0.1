@@ -23,7 +23,7 @@
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="35dp"
-                android:text="Родитель"
+                android:text="@string/parent"
                 android:textAlignment="center"
                 android:textColor="@color/dark_indigo"
                 android:textSize="24sp"
@@ -35,7 +35,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="20dp"
-                android:text="ФИО родителя"
+                android:text="@string/parent_full_name"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -46,7 +46,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
-                android:hint="Введите ваше ФИО"
+                android:hint="@string/enter_full_name_hint"
                 android:inputType="text"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
@@ -59,7 +59,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="Номер Телефона"
+                android:text="@string/phone_number"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -70,7 +70,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
-                android:hint="+7 708 123 45 67"
+                android:hint="@string/phone_number_hint"
                 android:inputType="number|phone"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
@@ -83,7 +83,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="Дата Рождения"
+                android:text="@string/birth_date"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -96,7 +96,7 @@
                 android:background="@drawable/edit_text_signup"
                 android:clickable="true"
                 android:focusable="false"
-                android:hint="ДД.ММ.ГГГГ"
+                android:hint="@string/birth_date_hint"
                 android:inputType="number|date"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
@@ -109,7 +109,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="Город"
+                android:text="@string/city"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -120,7 +120,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
-                android:hint="Введите город"
+                android:hint="@string/city_hint"
                 android:inputType="text"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
@@ -133,7 +133,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="Пол"
+                android:text="@string/gender"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -148,38 +148,13 @@
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="20dp"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:layout_marginEnd="20dp"-->
-<!--                android:text="E-mail"-->
-<!--                android:textColor="@color/dark_indigo"-->
-<!--                android:textSize="16sp" />-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/etEmailReg_update"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:layout_marginStart="20dp"-->
-<!--                android:layout_marginEnd="20dp"-->
-<!--                android:background="@drawable/edit_text_signup"-->
-<!--                android:ems="10"-->
-<!--                android:hint="example@gmail.com"-->
-<!--                android:inputType="textEmailAddress"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textColor="@color/indigo"-->
-<!--                android:textColorHint="@color/violet_blossom"-->
-<!--                android:textSize="18sp" />-->
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="Пароль"
+                android:text="@string/password"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -191,7 +166,7 @@
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
                 android:ems="10"
-                android:hint="Example1256"
+                android:hint="@string/password_hint"
                 android:inputType="textPassword"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
@@ -204,7 +179,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="Повторите пароль"
+                android:text="@string/confirm_password"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -216,12 +191,13 @@
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
                 android:ems="10"
-                android:hint="Повторите пароль"
+                android:hint="@string/confirm_password_hint"
                 android:inputType="textPassword"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
+
 
             <TextView
                 android:id="@+id/tv_pas_match_update"
@@ -247,7 +223,7 @@
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="35dp"
-                android:text="Ребенок"
+                android:text="@string/child"
                 android:textAlignment="center"
                 android:textColor="@color/dark_indigo"
                 android:textSize="24sp"
@@ -259,7 +235,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
-                android:text="ФИО ребенка"
+                android:text="@string/child_full_name"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -270,7 +246,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
-                android:hint="Введите ФИО ребенка"
+                android:hint="@string/child_full_name_hint"
                 android:inputType="text"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
@@ -283,7 +259,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:text="Дата Рождения"
+                android:text="@string/child_birth_date"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -296,7 +272,7 @@
                 android:background="@drawable/edit_text_signup"
                 android:clickable="true"
                 android:focusable="false"
-                android:hint="ДД.ММ.ГГГГ"
+                android:hint="@string/child_birth_date_hint"
                 android:inputType="number|date"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
@@ -309,7 +285,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:text="Пол"
+                android:text="@string/child_gender"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -330,7 +306,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:text="Диагноз"
+                android:text="@string/child_diagnosis"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -341,7 +317,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
-                android:hint="Введите диагноз ребенка"
+                android:hint="@string/child_diagnosis_hint"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
@@ -353,7 +329,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:text="Рост(см)"
+                android:text="@string/child_height"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -364,7 +340,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
-                android:hint="Введите рост ребенка"
+                android:hint="@string/child_height_hint"
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
@@ -377,7 +353,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:text="Вес(кг)"
+                android:text="@string/child_weight"
                 android:textColor="@color/dark_indigo"
                 android:textSize="16sp" />
 
@@ -388,12 +364,13 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_signup"
-                android:hint="Введите вес ребенка"
+                android:hint="@string/child_weight_hint"
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
                 android:textColorHint="@color/violet_blossom"
                 android:textSize="18sp" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -411,7 +388,7 @@
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/btn2active_login_back"
                     android:enabled="true"
-                    android:text="Назад"
+                    android:text="@string/back"
                     android:textColor="@color/indigo"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -424,7 +401,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/btn1_login_back"
-                    android:text="Далее"
+                    android:text="@string/next"
                     android:textColor="#ffffff"
                     android:textSize="18sp"
                     android:textStyle="bold" />

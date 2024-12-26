@@ -1,5 +1,6 @@
 package com.example.trainaut01;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.databinding.ActivityLoginBinding;
+import com.example.trainaut01.helper.LocaleHelper;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.utils.ToastUtils;
@@ -49,12 +51,15 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Вызывается при создании активности.
+     *
      * @param savedInstanceState сохраненное состояние.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -66,8 +71,14 @@ public class LoginActivity extends AppCompatActivity {
         setupClickListeners();
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.setLocale(base, LocaleHelper.getLanguage(base)));
+    }
+
     /**
      * Обрабатывает результат выполнения другой активности, в частности авторизации через Google.
+     *
      * @param requestCode код запроса.
      * @param resultCode код результата.
      * @param data данные, возвращаемые другой активностью.
@@ -114,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         if (!log.isEmpty() && !pas.isEmpty()) {
             loginUser(log, pas);
         } else {
-            ToastUtils.showShortMessage(this, "Заполните все поля");
+            ToastUtils.showShortMessage(this, getString(R.string.fill_all_fields));
         }
     }
 
@@ -127,27 +138,22 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.sendPasswordResetEmail(email)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(this,
-                                            "Ссылка для сброса пароля отправлена на " + email,
-                                            Toast.LENGTH_SHORT)
-                                    .show();
+                            ToastUtils.showShortMessage(this,
+                                    String.format(getString(R.string.password_reset_link_sent), email));
                         } else {
-                            Toast.makeText(this,
-                                            "Ошибка: " + (task.getException() != null ? task.getException().getMessage() : "Неизвестная ошибка"),
-                                            Toast.LENGTH_SHORT)
-                                    .show();
+                            ToastUtils.showShortMessage(this,
+                                    String.format(getString(R.string.google_sign_in_failed),
+                                            task.getException() != null ? task.getException().getMessage() : getString(R.string.error_unknown)));
                         }
                     });
         } else {
-            Toast.makeText(this,
-                            "Пожалуйста, введите свой адрес электронной почты",
-                            Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtils.showShortMessage(this, getString(R.string.enter_email));
         }
     }
 
     /**
      * Обрабатывает результат авторизации через Google.
+     *
      * @param data данные, возвращаемые GoogleSignInIntent.
      */
     private void handleGoogleSignInResult(Intent data) {
@@ -157,15 +163,16 @@ public class LoginActivity extends AppCompatActivity {
             if (account != null) {
                 firebaseAuthWithGoogle(account.getIdToken());
             } else {
-                Toast.makeText(this, "Google Sign-In failed: Account is null", Toast.LENGTH_SHORT).show();
+                ToastUtils.showShortMessage(this, getString(R.string.google_sign_in_failed, "Account is null"));
             }
         } catch (ApiException e) {
-            Toast.makeText(this, "Google Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            ToastUtils.showShortMessage(this, getString(R.string.google_sign_in_failed, e.getMessage()));
         }
     }
 
     /**
      * Выполняет авторизацию в Firebase с помощью учетных данных Google.
+     *
      * @param idToken токен, полученный от Google.
      */
     private void firebaseAuthWithGoogle(String idToken) {
@@ -173,25 +180,26 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Google Sign-In successful", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShortMessage(this, getString(R.string.google_sign_in_successful));
                         navigateToBaseActivity();
                     } else {
-                        Toast.makeText(this,
-                                "Google Sign-In failed: " + (task.getException() != null ? task.getException().getMessage() : "Неизвестная ошибка"),
-                                Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShortMessage(this,
+                                String.format(getString(R.string.login_failed),
+                                        task.getException() != null ? task.getException().getMessage() : getString(R.string.error_unknown)));
                     }
                 });
     }
 
     /**
      * Выполняет вход в систему с помощью email и пароля.
+     *
      * @param email email пользователя.
      * @param password пароль пользователя.
      */
     private void loginUser(String email, String password) {
         userRepository.loginUser(email, password, this, task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(this, "Вход успешен", Toast.LENGTH_SHORT).show();
+                ToastUtils.showShortMessage(this, getString(R.string.login_successful));
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
                 if (firebaseUser != null) {
@@ -199,14 +207,14 @@ public class LoginActivity extends AppCompatActivity {
                     ChildRepository childRepositoryLocal = new ChildRepository();
                     childRepositoryLocal.saveChildData( userId, this,
                             unused -> navigateToBaseActivity(),
-                            e -> ToastUtils.showErrorMessage(LoginActivity.this, "Не удалось сохранить данные ребёнка: " + e.getMessage())
+                            e -> ToastUtils.showErrorMessage(LoginActivity.this, getString(R.string.failed_to_save_child_data) + e.getMessage())
                     );
 
                 }
             } else {
-                Toast.makeText(this,
-                        "Ошибка входа: " + (task.getException() != null ? task.getException().getMessage() : "Неизвестная ошибка"),
-                        Toast.LENGTH_SHORT).show();
+                ToastUtils.showShortMessage(this,
+                        String.format(getString(R.string.login_failed),
+                                task.getException() != null ? task.getException().getMessage() : getString(R.string.error_unknown)));
             }
         });
     }

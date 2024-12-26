@@ -85,7 +85,14 @@ public class InstructionsForUseFragment extends Fragment {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 if (position == getInstructionPages().size() - 1) {
-                    ButtonUtils.updateButtonState(requireContext(), _binding.btnGoToHomePage, "На  главную", R.color.white, R.drawable.btn1_intro_back, true);
+                    ButtonUtils.updateButtonState(
+                            requireContext(),
+                            _binding.btnGoToHomePage,
+                            getString(R.string.btn_go_to_home),
+                            R.color.white,
+                            R.drawable.btn1_intro_back,
+                            true
+                    );
                 }
             }
         });
@@ -98,15 +105,18 @@ public class InstructionsForUseFragment extends Fragment {
      */
     private List<InstructionPageData> getInstructionPages() {
         List<InstructionPageData> pages = new ArrayList<>();
-        pages.add(new InstructionPageData("ic_home", "Главная страница — отправная точка вашего взаимодействия с приложением.", false));
-        pages.add(new InstructionPageData("ic_training", "Тренировки включают упражнения на моторику и когнитивные навыки.\n\n", false));
-        pages.add(new InstructionPageData("dumbbells.json", "Моторные тренировки: упражнения для мелкой и крупной моторики.\nРазвивают координацию, ловкость и уверенность.", true));
-        pages.add(new InstructionPageData("mind.json", "Когнитивные тренировки развивают память, внимание и навыки коммуникации (AAC).\nПомогают улучшить концентрацию и общение.", true));
-        pages.add(new InstructionPageData("ic_profile", "На странице профиля вы можете управлять личными данными\n\n", false));
+//        pages.add(new InstructionPageData(R.drawable.ic_home, getString(R.string.instruction_home_page)));
+//        pages.add(new InstructionPageData(R.drawable.ic_training, getString(R.string.instruction_training)));
+//        pages.add(new InstructionPageData(R.drawable.img_dum, getString(R.string.instruction_motor_training)));
+//        pages.add(new InstructionPageData(R.drawable.img_idea, getString(R.string.instruction_cognitive_training)));
+//        pages.add(new InstructionPageData(R.drawable.ic_profile, getString(R.string.instruction_profile_page)));
+        pages.add(new InstructionPageData("ic_home", getString(R.string.instruction_home_page), false));
+        pages.add(new InstructionPageData("ic_training", getString(R.string.instruction_training), false));
+        pages.add(new InstructionPageData("dumbbells.json", getString(R.string.instruction_motor_training), true));
+        pages.add(new InstructionPageData("mind.json", getString(R.string.instruction_cognitive_training), true));
+        pages.add(new InstructionPageData("ic_profile", getString(R.string.instruction_profile_page), false));
         return pages;
     }
-
-
 
     /**
      * Переход на главный экран приложения.

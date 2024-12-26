@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingBottom="8dp"
-        android:text="Выберите страну"
+        android:text="@string/select_country"
         android:textColor="@color/indigo"
         android:textSize="18sp"
         android:textStyle="bold" />

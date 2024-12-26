@@ -74,6 +74,13 @@ public class SharedPreferencesUtils {
         editor.apply();
     }
 
+    public static void saveFloat(Context context, String prefName, String key, Float value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat(key, value);
+        editor.apply();
+    }
+
     /**
      * Получает значение типа boolean из SharedPreferences.
      *
