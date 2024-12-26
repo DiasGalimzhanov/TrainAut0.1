@@ -15,47 +15,38 @@ public class SelectedSoundsManager {
         this.soundPlayer = new SoundPlayer();
     }
 
-    // Добавляем звук в список
     public void addSound(String soundFileName) {
         selectedSounds.add(soundFileName);
     }
 
-    // Воспроизводим все выбранные звуки
     public void playAllSounds(Context context) {
         currentIndex = 0;
         playNextSound(context);
     }
 
-    // Воспроизводим следующий звук
     private void playNextSound(Context context) {
         if (currentIndex < selectedSounds.size()) {
             String soundFileName = selectedSounds.get(currentIndex);
-            currentIndex++; // Переходим к следующему звуку
+            currentIndex++;
 
-            // Воспроизведение звука
             soundPlayer.playSound(soundFileName, context, () -> {
-                // После завершения воспроизведения идем к следующему звуку
                 playNextSound(context);
             });
         } else {
-            // Все звуки воспроизведены
             Toast.makeText(context, "Все звуки воспроизведены", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Удаление последнего добавленного звука
     public void removeLastSound() {
         if (!selectedSounds.isEmpty()) {
             selectedSounds.remove(selectedSounds.size() - 1);
         }
     }
 
-    // Очистка всех звуков
     public void clearAllSounds() {
         selectedSounds.clear();
     }
 
-    // Получение списка выбранных звуков
     public List<String> getSelectedSounds() {
         return selectedSounds;
     }

@@ -7,12 +7,9 @@ import android.widget.Toast;
 public class SoundPlayer {
 
     public SoundPlayer() {
-        // Инициализация
     }
 
-    // Воспроизведение звука из ресурсов raw
     public void playSound(String fileName, Context context, Runnable onComplete) {
-        // Получаем идентификатор ресурса по имени файла
         int resId = context.getResources().getIdentifier(fileName, "raw", context.getPackageName());
 
         if (resId == 0) {
@@ -24,7 +21,6 @@ public class SoundPlayer {
             MediaPlayer mediaPlayer = MediaPlayer.create(context, resId);
             mediaPlayer.start();
 
-            // После завершения воспроизведения вызываем onComplete
             mediaPlayer.setOnCompletionListener(mp -> {
                 mp.release();
                 if (onComplete != null) {
