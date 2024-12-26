@@ -1,6 +1,7 @@
 package com.example.trainaut01.training;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -176,10 +177,10 @@ public class ExerciseDetailFragment extends Fragment {
     private void setupMissButton() {
         if (_binding == null) return;
         if (_isGrossMotorSelected) {
-            ButtonUtils.updateButtonState(requireContext(), _binding.btnMiss, "Пропустить", R.color.white, R.drawable.btn1_login_back, true);
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnMiss, getString(R.string.skip), R.color.white, R.drawable.btn1_login_back, true);
             _binding.btnMiss.setOnClickListener(view1 -> handleMissAction());
         } else {
-            ButtonUtils.updateButtonState(requireContext(), _binding.btnMiss, "Пропустить", R.color.white, R.drawable.btn2inactive_login_back, false);
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnMiss, getString(R.string.skip), R.color.white, R.drawable.btn2inactive_login_back, false);
         }
     }
 
@@ -188,7 +189,7 @@ public class ExerciseDetailFragment extends Fragment {
      */
     private void loadFragmentArguments() {
         if (getArguments() == null) {
-            ToastUtils.showErrorMessage(ExerciseDetailFragment.this.getContext(), "Ошибка: аргументы не переданы.");
+            ToastUtils.showErrorMessage(ExerciseDetailFragment.this.getContext(), getString(R.string.error_no_arguments));
             return;
         }
 
@@ -218,7 +219,7 @@ public class ExerciseDetailFragment extends Fragment {
         _currentDayPlan = (DayPlan) requireArguments().getSerializable(ARG_DAY_PLAN);
 
         if (_currentDayPlan == null || (_exercises = _currentDayPlan.getExercisesGrossMotor()) == null || _exercises.isEmpty()) {
-            ToastUtils.showShortMessage(requireContext(), "Нет упражнений для данного дня.");
+            ToastUtils.showShortMessage(requireContext(), getString(R.string.no_exercises_for_day));
             return;
         }
 
@@ -234,7 +235,7 @@ public class ExerciseDetailFragment extends Fragment {
         _singleExercise = (Exercise) requireArguments().getSerializable(ARG_SINGLE_EXERCISE);
 
         if (_singleExercise == null) {
-            ToastUtils.showErrorMessage(getContext(), "Упражнение не найдено.");
+            ToastUtils.showErrorMessage(getContext(), getString(R.string.exercise_not_found));
             return;
         }
 
@@ -252,14 +253,14 @@ public class ExerciseDetailFragment extends Fragment {
     @SuppressLint("DefaultLocale")
     private void displayExerciseDetails(Exercise exercise) {
         if (_binding == null) return;
-        _binding.tvRecommendations.setText(_text);
+        _binding.tvRecommendations.setText(getString(R.string.warmup_recommendations));
         _binding.tvName.setText(exercise.getName());
         _binding.tvDescription.setText(exercise.getDescription());
 
         if (_isGrossMotorSelected) {
             configureTextView(_binding.tvSet, getSetAndRepsText(exercise.getSets(), exercise.getReps(), exercise.getDuration()), true);
-            configureTextView(_binding.tvRestTime, String.format("Время отдыха между подходами %.0f минуты", exercise.getRestTime()), true);
-            configureTextView(_binding.tvPoints, String.format("За выполнение этого упражнения вы получите +%d EXP", exercise.getRewardPoints()), true);
+            configureTextView(_binding.tvRestTime, String.format(getString(R.string.exercise_rest_time), exercise.getRestTime()), true);
+            configureTextView(_binding.tvPoints, String.format(getString(R.string.exercise_reward_points), exercise.getRewardPoints()), true);
         } else {
             configureTextView(_binding.tvSet, "", false);
             configureTextView(_binding.tvRestTime, "", false);
@@ -278,9 +279,9 @@ public class ExerciseDetailFragment extends Fragment {
     private void updateAllPointsForDayTextView() {
         if (_binding == null) return;
         if (_isGrossMotorSelected)
-            _binding.tvAllPointsForDay.setText(String.format("За выполнение всех упражнений вы получите +%d Exp", _remainingPoints));
+            _binding.tvAllPointsForDay.setText(String.format(getString(R.string.day_exercise_points), _remainingPoints));
         else
-            _binding.tvAllPointsForDay.setText(String.format("За выполнение этого бонусного упражнения вы получите +%d Exp", _remainingPoints));
+            _binding.tvAllPointsForDay.setText(String.format(getString(R.string.bonus_exercise_points), _remainingPoints));
     }
 
     /**
@@ -303,16 +304,39 @@ public class ExerciseDetailFragment extends Fragment {
      * @param duration длительность упражнения.
      * @return строка с текстом подходов и повторений.
      */
+    @SuppressLint("StringFormatInvalid")
     private String getSetAndRepsText(int sets, int reps, String duration) {
-        String setsText = sets == 1 ? sets + " подход" : sets + " подхода";
+        Context context = requireContext();
+        String setsText;
+
+        if (sets == 1) {
+            setsText = context.getString(R.string.sets_single);
+        } else {
+            setsText = String.format(context.getString(R.string.sets_multiple), sets);
+        }
+
         String repsText;
         if (!duration.isEmpty()) {
-            repsText = "по " + reps + " " + duration;
+            repsText = String.format(context.getString(R.string.reps_with_duration), reps, duration);
+        } else if (reps >= 2 && reps <= 4) {
+            repsText = String.format(context.getString(R.string.reps_few), reps);
         } else {
-            repsText = (reps >= 2 && reps <= 4) ? "по " + reps + " раза" : "по " + reps + " раз";
+            repsText = String.format(context.getString(R.string.reps_single), reps);
         }
+
         return setsText + " " + repsText;
     }
+
+//    private String getSetAndRepsText(int sets, int reps, String duration) {
+//        String setsText = sets == 1 ? sets + getString(R.string.sets_single) : sets + getString(R.string.sets_multiple);
+//        String repsText;
+//        if (!duration.isEmpty()) {
+//            repsText = getString(R.string.reps_with_duration) + reps + " " + duration;
+//        } else {
+//            repsText = (reps >= 2 && reps <= 4) ? "по " + reps + " раза" : "по " + reps + " раз";
+//        }
+//        return setsText + " " + repsText;
+//    }
 
     /**
      * Загружает изображение упражнения.
@@ -334,12 +358,7 @@ public class ExerciseDetailFragment extends Fragment {
      * @return строка с рекомендациями.
      */
     private String getDefaultRecommendationText() {
-        return "Поддерживайте друг друга, чтобы создать дружескую атмосферу и следите за их техникой, чтобы избежать травм.\n\n" +
-                "Объясняйте ребенку каждое движение.\n\n" +
-                "Выполняйте упражнения в спокойном темпе, делая акцент на правильную технику.\n\n" +
-                "Ребенок всегда должен дышать ровно и не спешить.\n\n" +
-                "Всегда подстраивайте нагрузку под возможности ребёнка.\n\n" +
-                "Включайте разминку перед началом тренировки: несколько легких упражнений для разогрева мышц";
+        return requireContext().getString(R.string.default_recommendation_text);
     }
 
     /**
@@ -391,16 +410,14 @@ public class ExerciseDetailFragment extends Fragment {
         if (_binding == null) return;
         int totalRewardPoints = _currentDayPlan != null ? _currentDayPlan.getRewardPointsDay() : 0;
 
-        switch (_binding.btnStart.getText().toString()) {
-            case "Начать упражнение":
-                startExercise();
-                break;
-            case "Завершить упражнение":
-                handleExerciseCompletion(totalRewardPoints);
-                break;
-            case "Далее":
-                nextExercise();
-                break;
+        String buttonText = _binding.btnStart.getText().toString();
+
+        if (buttonText.equals(requireContext().getString(R.string.start_exercise))) {
+            startExercise();
+        } else if (buttonText.equals(requireContext().getString(R.string.complete_exercise))) {
+            handleExerciseCompletion(totalRewardPoints);
+        } else if (buttonText.equals(requireContext().getString(R.string.next))) {
+            nextExercise();
         }
     }
 
@@ -411,8 +428,8 @@ public class ExerciseDetailFragment extends Fragment {
         if (_binding == null) return;
         if (_timer != null) {
             stopTimer();
-            ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Продолжить", R.color.white, R.drawable.back_start_exercise, true);
-            ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, "Завершить упражнение", R.color.white, R.drawable.btn2inactive_login_back, false);
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, getString(R.string.resume), R.color.white, R.drawable.back_start_exercise, true);
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, getString(R.string.complete_exercise), R.color.white, R.drawable.btn2inactive_login_back, false);
             _binding.btnPause.setOnClickListener(view -> handleResumeAction());
         }
     }
@@ -423,8 +440,8 @@ public class ExerciseDetailFragment extends Fragment {
     private void handleResumeAction() {
         if (_binding == null) return;
         startTimer();
-        ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Пауза", R.color.white, R.drawable.btn1_login_back, true);
-        ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, "Завершить упражнение", R.color.white, R.drawable.finish_exercise_back, true);
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, getString(R.string.pause), R.color.white, R.drawable.btn1_login_back, true);
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, getString(R.string.complete_exercise), R.color.white, R.drawable.finish_exercise_back, true);
         _binding.btnPause.setOnClickListener(view -> handlePauseAction());
     }
 
@@ -447,7 +464,7 @@ public class ExerciseDetailFragment extends Fragment {
         updateAllPointsForDayTextView();
         SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "remainingPoints", _remainingPoints);
 
-        ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Пауза", R.color.white, R.drawable.btn2inactive_login_back, false);
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, getString(R.string.pause), R.color.white, R.drawable.btn2inactive_login_back, false);
 
         if (_currentExerciseIndex >= _exercises.size() - 1) {
             if (_skippedExercises == _exercises.size()) {
@@ -468,9 +485,10 @@ public class ExerciseDetailFragment extends Fragment {
         resetTimer();
         startTimer();
 
-        ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, "Завершить упражнение", R.color.white, R.drawable.finish_exercise_back, true);
-        ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Пауза", R.color.white, R.drawable.btn1_login_back, true);
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, getString(R.string.complete_exercise), R.color.white, R.drawable.finish_exercise_back, true);
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, getString(R.string.pause), R.color.white, R.drawable.btn1_login_back, true);
     }
+
 
     /**
      * Переходит к следующему упражнению.
@@ -482,7 +500,7 @@ public class ExerciseDetailFragment extends Fragment {
         if (_currentExerciseIndex < _exercises.size()) {
             resetTimer();
             displayExerciseDetails(_exercises.get(_currentExerciseIndex));
-            ButtonUtils.updateButtonState(requireContext(), _binding.btnStart,"Начать упражнение", R.color.black, R.drawable.back_start_exercise, true);
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, getString(R.string.start_exercise), R.color.black, R.drawable.back_start_exercise, true);
         } else {
             int totalRewardPoints = _currentDayPlan != null ? _currentDayPlan.getRewardPointsDay() : 0;
             finalizeTraining(totalRewardPoints);
@@ -515,7 +533,7 @@ public class ExerciseDetailFragment extends Fragment {
      */
     private void updateExerciseTime(Exercise exercise, float timeElapsed, Runnable onSuccessAction) {
         if (_currentDayPlan == null) {
-            ToastUtils.showErrorMessage(getContext(), "План дня отсутствует.");
+            ToastUtils.showErrorMessage(getContext(), getString(R.string.error_no_day_plan));
             return;
         }
 
@@ -528,7 +546,7 @@ public class ExerciseDetailFragment extends Fragment {
                         onSuccessAction.run();
                     }
                 },
-                e -> ToastUtils.showErrorMessage(getContext(), "Ошибка обновления времени выполнения упражнения.")
+                e -> ToastUtils.showErrorMessage(getContext(), getString(R.string.error_update_exercise_time))
         );
     }
 
@@ -578,8 +596,8 @@ public class ExerciseDetailFragment extends Fragment {
     private void handleCompletion(int rewardPoints) {
         if (_binding == null) return;
         if (_currentExerciseIndex + 1 < _exercises.size()) {
-            ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, "Далее", R.color.black, R.drawable.btn1_login_back, true);
-            ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Пауза", R.color.white, R.drawable.btn2inactive_login_back, false);
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, getString(R.string.next), R.color.black, R.drawable.btn1_login_back, true);
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, getString(R.string.pause), R.color.white, R.drawable.btn2inactive_login_back, false);
         } else {
             finalizeTraining(rewardPoints);
         }
@@ -592,12 +610,12 @@ public class ExerciseDetailFragment extends Fragment {
      */
     private void finalizeTraining(int totalRewardPoints) {
         if (_isGrossMotorSelected && _currentDayPlan == null) {
-            ToastUtils.showErrorMessage(getContext(), "Ошибка: План дня отсутствует.");
+            ToastUtils.showErrorMessage(getContext(), getString(R.string.no_daily_plan));
             return;
         }
 
         if (_exercises == null || _exercises.isEmpty()) {
-            ToastUtils.showErrorMessage(getContext(), "Нет упражнений для завершения.");
+            ToastUtils.showErrorMessage(getContext(), getString(R.string.no_exersice_for_end));
             return;
         }
 
@@ -655,8 +673,8 @@ public class ExerciseDetailFragment extends Fragment {
      */
     private void finalizeUI(int finalPoints) {
         if (_binding == null) return;
-        ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, "Завершить", R.color.white, R.drawable.finish_exercise_back, true);
-        ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, "Пауза", R.color.white, R.drawable.btn2inactive_login_back, false);
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnStart, getString(R.string.end), R.color.white, R.drawable.finish_exercise_back, true);
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnPause, getString(R.string.pause), R.color.white, R.drawable.btn2inactive_login_back, false);
         if (_isGrossMotorSelected) {
             SharedPreferencesUtils.saveInt(requireContext(), "child_progress", "currentExerciseIndex", 0);
             SharedPreferencesUtils.saveBoolean(requireContext(), "child_progress", "isCompletedTodayTraining", true);
@@ -743,7 +761,7 @@ public class ExerciseDetailFragment extends Fragment {
      */
     private void returnToPreviousPageWithoutCompletion() {
         ProgressUtils.resetAllProgress(requireContext());
-        ToastUtils.showShortMessage(requireContext(), "Все упражнения пропущены. Прогресс сброшен.");
+        ToastUtils.showShortMessage(requireContext(), getString(R.string.all_exersice_missed));
         requireActivity().getSupportFragmentManager().popBackStack();
     }
 

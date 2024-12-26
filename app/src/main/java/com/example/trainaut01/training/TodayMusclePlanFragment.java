@@ -107,6 +107,9 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      * Инициализирует компоненты фрагмента.
      */
     private void init() {
+        GrossMotorMuscleGroup.initializeLocalizedNames(requireContext());
+        FineMotorMuscleGroup.initializeLocalizedNames(requireContext());
+
         if (_binding == null) return;
         AppComponent appComponent = DaggerAppComponent.create();
         appComponent.inject(this);
@@ -133,7 +136,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         String dayOfWeekString = DateUtils.getDayOfWeekString(_dayOfWeek);
 
         _dayPlanRepository.getDayPlanForUserAndDay(_userId, dayOfWeekString, this::handleDayPlanLoaded, error -> {
-            ToastUtils.showShortMessage(requireContext(), "Ошибка загрузки плана: " + error.getMessage());
+            ToastUtils.showShortMessage(requireContext(), String.format(getString(R.string.training_load_error), error.getMessage()));
         });
     }
 
@@ -146,7 +149,7 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         _currentDayPlan = dayPlan;
 
         if (_currentDayPlan == null) {
-            ToastUtils.showShortMessage(requireContext(), "План на сегодня отсутствует.");
+            ToastUtils.showShortMessage(requireContext(), getString(R.string.plan_not_available));
             return;
         }
 
@@ -250,12 +253,12 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      */
     private void updateButtonStyles() {
         if (_binding == null) return;
-        ButtonUtils.updateButtonState(requireContext(), _binding.btnGrossMotor, "Крупная моторика",
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnGrossMotor, getString(R.string.gross_motor_training),
                 _isGrossMotorSelected ? R.color.white : R.color.indigo,
                 _isGrossMotorSelected ? R.drawable.btn_active_today_muscle_plan : R.drawable.back_violet_encircle,
                 !_isGrossMotorSelected);
 
-        ButtonUtils.updateButtonState(requireContext(), _binding.btnFineMotor, "Мелкая моторика",
+        ButtonUtils.updateButtonState(requireContext(), _binding.btnFineMotor, getString(R.string.fine_motor_training),
                 !_isGrossMotorSelected ? R.color.white : R.color.indigo,
                 !_isGrossMotorSelected ? R.drawable.btn_active_today_muscle_plan : R.drawable.back_violet_encircle,
                 _isGrossMotorSelected);
@@ -268,17 +271,17 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
      */
     private String getTrainingSubtitle() {
         if (_currentDayPlan == null) {
-            return "Сегодня нет доступного плана тренировок";
+            return getString(R.string.no_training_plan);
         }
 
         return _isGrossMotorSelected
                 ? TrainingUtils.getMuscleGroupSubtitle(_currentDayPlan.getExercisesGrossMotor(),
-                "Сегодня нет тренировки на крупную моторику",
-                "Сегодня тренировка на ",
+                getString(R.string.no_gross_motor_plan),
+                getString(R.string.training_today),
                 GrossMotorMuscleGroup::fromString)
                 : TrainingUtils.getMuscleGroupSubtitle(_currentDayPlan.getExercisesFineMotor(),
-                "Сегодня нет тренировки на мелкую моторику",
-                "Сегодня тренировка на ",
+                getString(R.string.no_fine_motor_plan),
+                getString(R.string.training_today),
                 FineMotorMuscleGroup::fromString);
     }
 
@@ -346,11 +349,11 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         boolean isCompleted = SharedPreferencesUtils.getBoolean(requireContext(), "child_progress", "isCompletedTodayTraining", false);
 
         if (isCompleted || DateUtils.isWeekend()) {
-            ButtonUtils.updateButtonState(requireContext(), _binding.btnGoToTraining, "Начать тренировку",
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnGoToTraining, getString(R.string.start_training),
                     R.color.white, R.drawable.btn2inactive_login_back, false);
             _binding.btnGoToTraining.setOnClickListener(null);
         } else {
-            ButtonUtils.updateButtonState(requireContext(), _binding.btnGoToTraining, "Начать тренировку",
+            ButtonUtils.updateButtonState(requireContext(), _binding.btnGoToTraining, getString(R.string.start_training),
                     R.color.white, R.drawable.btn_active_today_muscle_plan, true);
 
             _binding.btnGoToTraining.setOnClickListener(v -> {

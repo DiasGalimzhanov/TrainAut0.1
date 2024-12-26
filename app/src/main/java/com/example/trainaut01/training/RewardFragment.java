@@ -65,6 +65,7 @@ public class RewardFragment extends Fragment {
         Button btnReturnTrainingDashboard = view.findViewById(R.id.btnReturnTrainingDashboard);
 
         rewardDescriptionText.setText(getRewardDescription());
+        btnReturnTrainingDashboard.setText(getString(R.string.return_to_training_dashboard));
         btnReturnTrainingDashboard.setOnClickListener(v -> goToTrainingDashboardFragment());
     }
 
@@ -76,7 +77,7 @@ public class RewardFragment extends Fragment {
     @SuppressLint("DefaultLocale")
     private String getRewardDescription() {
         int rewardPoints = getArguments() != null ? getArguments().getInt(ARG_REWARD_POINTS, 0) : 0;
-        return String.format("Ты заслужил награду! 🎉 Теперь у тебя +%d Exp. Продолжай в том же духе!", rewardPoints);
+        return String.format(getString(R.string.reward_description), rewardPoints);
     }
 
     /**

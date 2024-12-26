@@ -83,12 +83,12 @@ public class DetailedNewsFragment extends Fragment {
                 if (news.getTitle() != null) {
                     detailNewsTitle.setText(news.getTitle());
                 } else {
-                    detailNewsTitle.setText("Нет заголовка");
+                    detailNewsTitle.setText(getString(R.string.no_title));
                 }
                 if (news.getDescription() != null) {
                     detailNewsDescription.setText(news.getDescription());
                 } else {
-                    detailNewsDescription.setText("Нет описания");
+                    detailNewsDescription.setText(getString(R.string.no_description));
                 }
                 if (news.getImageUrl() != null) {
                     Picasso.get().load(news.getImageUrl()).into(detailNewsImage);
@@ -97,7 +97,7 @@ public class DetailedNewsFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                detailNewsTitle.setText("Ошибка загрузки");
+                detailNewsTitle.setText(getString(R.string.error_loading_news));
                 detailNewsDescription.setText("");
             }
         });

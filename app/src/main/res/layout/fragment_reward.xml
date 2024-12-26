@@ -19,7 +19,7 @@
             android:id="@+id/congratulationsText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Поздравляем, ты справился со всеми упражнениями!"
+            android:text="@string/congratulations"
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -31,12 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
 
-<!--            <ImageView-->
-<!--                android:id="@+id/rewardImage"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:src="@drawable/ic_trophy" />-->
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/rewardImage"
                 android:layout_width="match_parent"
@@ -59,7 +53,7 @@
             android:id="@+id/rewardDescriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ты заслужил награду! 🎉 Теперь у тебя +0 EXP. Продолжай в том же духе!"
+            android:text="@string/reward_description"
             android:textSize="22sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -73,7 +67,7 @@
             android:id="@+id/btnReturnTrainingDashboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Готово, возвращаемся!"
+            android:text="@string/return_to_training_dashboard"
             android:background="@drawable/btn1_login_back"
             android:textColor="@color/white"
             android:padding="12dp"/>

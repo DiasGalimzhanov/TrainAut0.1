@@ -79,7 +79,7 @@ public class TrainingUtils {
         for (T group : muscleGroups) {
             subtitle.append(getDisplayName(group));
             if (index < muscleGroups.size() - 1) {
-                subtitle.append(" и ");
+                subtitle.append(", ");
             }
             index++;
         }

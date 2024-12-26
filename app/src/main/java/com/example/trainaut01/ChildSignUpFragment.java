@@ -125,6 +125,8 @@ public class ChildSignUpFragment extends Fragment {
         AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(ChildSignUpFragment.this);
 
+        Gender.initializeLocalizedNames(requireContext());
+
         _binding.btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
         _binding.btnContinue.setOnClickListener(v -> handleContinue());
 
@@ -143,7 +145,7 @@ public class ChildSignUpFragment extends Fragment {
                 _binding.etDiagnosisChild.getText().toString().trim(),
                 _binding.etHeightChild.getText().toString().trim(),
                 _binding.etWeightChild.getText().toString().trim())) {
-            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Пожалуйста, заполните все поля.");
+            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), getString(R.string.fill_all_fields));
             return;
         }
 
@@ -152,12 +154,12 @@ public class ChildSignUpFragment extends Fragment {
             height = Float.parseFloat(_binding.etHeightChild.getText().toString().trim());
             weight = Float.parseFloat(_binding.etWeightChild.getText().toString().trim());
         } catch (NumberFormatException e) {
-            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Рост и вес должны быть числовыми значениями.");
+            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), getString(R.string.height_weght_numeric));
             return;
         }
 
         if (_user == null) {
-            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка: пользователь не найден.");
+            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), getString(R.string.error_user_not_found));
             return;
         }
 
@@ -184,7 +186,7 @@ public class ChildSignUpFragment extends Fragment {
                 String newUserId = Objects.requireNonNull(task.getResult().getUser()).getUid();
                 addChild(newUserId, fullName, birthDate, diagnosis, height, weight, gender);
             } else {
-                ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка регистрации пользователя: " + Objects.requireNonNull(task.getException()).getMessage());
+                ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), getString(R.string.error_register_user) + Objects.requireNonNull(task.getException()).getMessage());
             }
         });
     }
@@ -206,7 +208,7 @@ public class ChildSignUpFragment extends Fragment {
         _childRepository.addChild(userId, child, ChildSignUpFragment.this.getContext(), aVoid -> {
             addDayPlans(userId);
         }, error -> {
-            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления ребенка: " + error.getMessage());
+            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), getString(R.string.error_add_child) + error.getMessage());
         });
     }
 
@@ -219,7 +221,7 @@ public class ChildSignUpFragment extends Fragment {
         _dayPlanRepository.addAllDayPlansToUser(userId, unused -> {
             goToInstructionsForUseFragment();
         }, error -> {
-            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), "Ошибка добавления DayPlans: " + error.getMessage());
+            ToastUtils.showShortMessage(ChildSignUpFragment.this.getContext(), getString(R.string.error_add_dayplans) + error.getMessage());
         });
     }
 

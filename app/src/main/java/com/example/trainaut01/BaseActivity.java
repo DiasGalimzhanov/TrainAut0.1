@@ -1,9 +1,11 @@
 package com.example.trainaut01;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.trainaut01.helper.LocaleHelper;
 import com.example.trainaut01.home.HomeFragment;
 import com.example.trainaut01.profile.UserProfileFragment;
 
@@ -40,6 +42,13 @@ public class BaseActivity extends AppCompatActivity implements BottomNavigationU
 
     @Inject
     AppInitializer appInitializer;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        String language = LocaleHelper.getLanguage(newBase);
+        Context context = LocaleHelper.setLocale(newBase, language);
+        super.attachBaseContext(context);
+    }
 
     /**
      * Вызывается при создании активности.

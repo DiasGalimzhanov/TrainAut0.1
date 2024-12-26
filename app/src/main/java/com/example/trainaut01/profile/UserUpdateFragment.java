@@ -95,6 +95,7 @@ public class UserUpdateFragment extends Fragment {
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Gender.initializeLocalizedNames(requireContext());
         initViews(view);
         setupSpinners();
         loadUserDataFromPrefs();
@@ -339,6 +340,7 @@ public class UserUpdateFragment extends Fragment {
         childRepository.updateChild(userId, updatedChild, aVoid -> {
             showToast(getString(R.string.child_data_updated));
             reloadChildDataFromFirebase(userId);
+            navigateBackToProfile();
         }, e -> {
             showToast(String.format(getString(R.string.update_child_data_error), e.getMessage()));
         });

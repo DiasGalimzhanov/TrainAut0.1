@@ -1,26 +1,47 @@
 package com.example.trainaut01.enums;
 
-import lombok.Getter;
+import android.content.Context;
+
+import com.example.trainaut01.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Перечисление для представления гендера.
- * Содержит варианты мужской, женский и другое.
+ * Содержит варианты: мужской, женский и другое.
  */
-@Getter
 public enum Gender {
-    MALE("Мужской"),
-    FEMALE("Женский"),
-    OTHER("Другое");
+    MALE,
+    FEMALE,
+    OTHER;
 
-    private final String displayName;
+    private static Map<Gender, String> localizedNames = new HashMap<>();
 
     /**
-     * Конструктор для задания локализованного названия.
+     * Инициализирует локализованные названия для гендеров.
+     * Метод должен быть вызван до использования {@link #getDisplayName()}.
      *
-     * @param displayName локализованное название гендера.
+     * @param context Контекст для доступа к ресурсам строк.
      */
-    Gender(String displayName) {
-        this.displayName = displayName;
+    public static void initializeLocalizedNames(Context context) {
+        localizedNames.put(MALE, context.getString(R.string.gender_male));
+        localizedNames.put(FEMALE, context.getString(R.string.gender_female));
+        localizedNames.put(OTHER, context.getString(R.string.gender_other));
+    }
+
+    /**
+     * Возвращает локализованное название гендера.
+     * Если локализованное название отсутствует, возвращается имя элемента перечисления.
+     *
+     * @return Локализованное название гендера или имя элемента перечисления.
+     * @throws IllegalStateException Если локализованные названия не были инициализированы.
+     */
+    public String getDisplayName() {
+        if (localizedNames.isEmpty()) {
+            throw new IllegalStateException("Localized names are not initialized. Call initializeLocalizedNames() first.");
+        }
+        return localizedNames.getOrDefault(this, name());
     }
 
     /**
@@ -29,6 +50,9 @@ public enum Gender {
      * @return массив строк с названиями гендеров.
      */
     public static String[] getGenderValues() {
+        if (localizedNames.isEmpty()) {
+            throw new IllegalStateException("Localized names are not initialized. Call initializeLocalizedNames() first.");
+        }
         Gender[] values = Gender.values();
         String[] genderNames = new String[values.length];
         for (int i = 0; i < values.length; i++) {
@@ -39,7 +63,7 @@ public enum Gender {
 
     /**
      * Преобразует строку в объект Gender.
-     * Сравнивает строку с названием объекта (name) и локализованным названием (displayName).
+     * Сравнивает строку с названием объекта (name) и локализованным названием.
      *
      * @param text строка для преобразования.
      * @return соответствующий объект Gender.
@@ -51,12 +75,11 @@ public enum Gender {
         }
 
         for (Gender gender : Gender.values()) {
-            if (gender.name().equalsIgnoreCase(text) || gender.displayName.equalsIgnoreCase(text)) {
+            if (gender.name().equalsIgnoreCase(text) || gender.getDisplayName().equalsIgnoreCase(text)) {
                 return gender;
             }
         }
 
         throw new IllegalArgumentException("Unknown gender: " + text);
     }
-
 }

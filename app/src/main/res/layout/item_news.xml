@@ -40,8 +40,7 @@
                 android:textStyle="bold"
                 android:textColor="#545454"
                 android:maxLines="2"
-                android:ellipsize="end"
-                android:text="Title" />
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/tv_subtitle_news"
@@ -49,8 +48,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="#545454"
-                android:layout_marginTop="4dp"
-                android:text="Subtitle" />
+                android:layout_marginTop="4dp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

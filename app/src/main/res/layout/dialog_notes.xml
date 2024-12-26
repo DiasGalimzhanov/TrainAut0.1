@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
-        android:text="Создать заметку"
+        android:text="@string/create_note"
         android:textColor="@color/dark_indigo"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -21,26 +21,24 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/edit_text_signup"
-        android:hint="Заголовок"
+        android:hint="@string/note_title_hint"
         android:padding="10dp"
-        android:textColor="@color/black"
+        android:textColor="@color/dark_indigo"
         android:layout_marginBottom="16dp"
-        android:textColorHint="@color/black" />
+        android:textColorHint="@color/dark_indigo" />
 
     <EditText
         android:id="@+id/et_long_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/edit_text_signup"
-        android:hint="Описание"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
+        android:hint="@string/note_description_hint"
+        android:textColor="@color/dark_indigo"
+        android:textColorHint="@color/dark_indigo"
         android:minLines="10"
         android:gravity="top|start"
         android:overScrollMode="ifContentScrolls"
         android:padding="16dp"/>
-
-
 
     <Button
         android:id="@+id/btn_submit"
@@ -49,7 +47,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/btn1_login_back"
         android:padding="12dp"
-        android:text="Добавить"
+        android:text="@string/add_button"
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
@@ -60,7 +58,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/btn1_login_back"
         android:padding="12dp"
-        android:text="Отмена"
+        android:text="@string/cancel_button"
         android:textSize="16sp"
         android:textColor="#FFFFFF" />
 

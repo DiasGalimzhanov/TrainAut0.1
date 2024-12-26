@@ -147,16 +147,11 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
      * @param fragment фрагмент для открытия
      */
     private void setButtonListenerToOpenFragment(LottieAnimationView button, Fragment fragment) {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.fragment_enter, R.anim.fragment_exit, R.anim.fragment_enter, R.anim.fragment_exit)
-                        .add(R.id.mainTraining, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+        button.setOnClickListener(view -> requireActivity().getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fragment_enter, R.anim.fragment_exit, R.anim.fragment_enter, R.anim.fragment_exit)
+                .add(R.id.mainTraining, fragment)
+                .addToBackStack(null)
+                .commit());
     }
 
     /**
@@ -182,7 +177,6 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         _binding.calendarRecyclerView.setLayoutManager(layoutManager);
         _binding.calendarRecyclerView.setAdapter(_calendarAdapter);
     }
-
 
     /**
      * Генерирует список дней для календаря.
@@ -257,18 +251,8 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
      */
     private void loadUserProgressFromRepository(String userId) {
         _childProgressRepository.loadChildProgress(userId,
-                new OnSuccessListener<JSONObject>() {
-                    @Override
-                    public void onSuccess(JSONObject jsonObject) {
-                        parseAndLoadUserProgress(jsonObject);
-                    }
-                },
-                new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("TrainingDashboardFragment", "Failed to load progress: " + e.getMessage(), e);
-                    }
-                }
+                jsonObject -> parseAndLoadUserProgress(jsonObject),
+                e -> Log.e("TrainingDashboardFragment", String.format(getString(R.string.progress_load_failed), e.getMessage()), e)
         );
     }
 
@@ -291,7 +275,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
                 }
             }
         } catch (Exception e) {
-            Log.e("TrainingDashboardFragment", "Failed to parse progress: " + e.getMessage(), e);
+            Log.e("TrainingDashboardFragment", String.format(getString(R.string.progress_parse_failed), e.getMessage()), e);
         }
     }
 
@@ -313,7 +297,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
             }
             _calendarAdapter.notifyDataSetChanged();
         } catch (Exception e) {
-            Log.e("TrainingDashboardFragment", "Failed to load completed days: " + e.getMessage(), e);
+            Log.e("TrainingDashboardFragment", String.format(getString(R.string.completed_days_load_failed), e.getMessage()), e);
         }
     }
 
@@ -385,17 +369,8 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
      */
     private void saveProgressToRepository(String userId, String year, String month, List<Integer> completedDays) {
         _childProgressRepository.saveChildProgress(userId, year, month, completedDays,
-                new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                    }
-                },
-                new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("saveUserProgress", "Failed to save progress: " + e.getMessage(), e);
-                    }
-                }
+                unused -> Log.d("saveUserProgress", getString(R.string.progress_save_success)),
+                e -> Log.e("saveUserProgress", String.format(getString(R.string.progress_save_failed), e.getMessage()), e)
         );
     }
 
@@ -408,8 +383,8 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         int level = SharedPreferencesUtils.getInt(requireContext(), "child_data", "lvl", 1);
         int expForNextLevel = 5000;
 
-        _binding.tvLvlDashboard.setText("Уровень: " + level);
-        _binding.tvExpDashboard.setText(exp + " / " + level * expForNextLevel);
+        _binding.tvLvlDashboard.setText(String.format(getString(R.string.level_text), level));
+        _binding.tvExpDashboard.setText(String.format(getString(R.string.experience_text), exp, level * expForNextLevel));
     }
 
     /**
@@ -425,7 +400,7 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         new Thread(() -> {
             String userId = getUserId();
             if (userId == null) {
-                Log.e("processCompletedExercises", "User ID не найден, невозможно обработать завершенные упражнения.");
+                Log.e("processCompletedExercises", getString(R.string.user_not_found));
                 return;
             }
 
@@ -433,10 +408,8 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
             String dayOfWeekString = DateUtils.getDayOfWeekString(dayOfWeek);
 
             _dayPlanRepository.getDayPlanForUserAndDay(userId, dayOfWeekString,
-                    dayPlan -> {
-                        new Handler(Looper.getMainLooper()).post(() -> saveCompletedExercisesToStorage(userId, dayPlan.getExercisesGrossMotor()));
-                    },
-                    e -> Log.e("processCompletedExercises", "Ошибка при загрузке дневного плана: " + e.getMessage(), e)
+                    dayPlan -> new Handler(Looper.getMainLooper()).post(() -> saveCompletedExercisesToStorage(userId, dayPlan.getExercisesGrossMotor())),
+                    e -> Log.e("processCompletedExercises", String.format(getString(R.string.day_plan_load_failed), e.getMessage()), e)
             );
         }).start();
     }
@@ -458,10 +431,10 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
                         JSONObject progressData = prepareProgressData(existingData, exercises);
                         saveProgressDataToStorage(userId, progressData);
                     } catch (Exception e) {
-                        Log.e("saveCompletedExercises", "Ошибка при обработке данных прогресса: " + e.getMessage(), e);
+                        Log.e("saveCompletedExercises", String.format(getString(R.string.exercises_process_failed), e.getMessage()), e);
                     }
                 },
-                e -> Log.e("saveCompletedExercises", "Ошибка загрузки существующих данных: " + e.getMessage(), e));
+                e -> Log.e("saveCompletedExercises", String.format(getString(R.string.exercise_save_failed), e.getMessage()), e));
     }
 
     /**
@@ -579,5 +552,4 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
         super.onResume();
         updateBottomNavigation();
     }
-
 }

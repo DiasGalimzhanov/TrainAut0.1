@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -16,11 +16,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="200dp"
             android:gravity="center"
-            android:text="Авторизация"
+            android:text="@string/authorization"
             android:textColor="@color/dark_indigo"
             android:textSize="30sp"
             android:textStyle="bold" />
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,7 +27,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="70dp"
             android:layout_marginEnd="20dp"
-            android:text="Логин"
+            android:text="@string/login_label"
             android:textColor="@color/dark_indigo"
             android:textSize="16sp" />
 
@@ -41,7 +40,7 @@
             android:background="@drawable/edit_text_signup"
             android:drawableStart="@drawable/ic_email"
             android:ems="10"
-            android:hint="Введите E-mail"
+            android:hint="@string/enter_email_hint"
             android:inputType="text"
             android:paddingStart="10dp"
             android:textAlignment="center"
@@ -55,7 +54,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="25dp"
             android:layout_marginEnd="20dp"
-            android:text="Пароль"
+            android:text="@string/password_label"
             android:textColor="@color/dark_indigo"
             android:textSize="16sp" />
 
@@ -68,14 +67,13 @@
             android:background="@drawable/edit_text_signup"
             android:drawableStart="@drawable/ic_pass"
             android:ems="10"
-            android:hint="Введите Пароль"
+            android:hint="@string/enter_password_hint"
             android:inputType="textPassword"
             android:paddingStart="8dp"
             android:textAlignment="center"
             android:textColor="@color/indigo"
             android:textColorHint="@color/violet_blossom"
             android:textSize="18sp" />
-
 
         <TextView
             android:id="@+id/tvForgotPas"
@@ -84,7 +82,7 @@
             android:layout_gravity="end"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
-            android:text="Забыли свой пароль?"
+            android:text="@string/forgot_password"
             android:textColor="@color/bright_sky_blue"
             android:textSize="16sp" />
 
@@ -97,35 +95,17 @@
             android:layout_marginTop="100dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/btn1_login_back"
-            android:text="Войти"
+            android:text="@string/login"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
-
-<!--        <Button-->
-<!--            android:id="@+id/btnGoogleReg"-->
-<!--            style="@android:style/Widget.Button"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginStart="20dp"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:layout_marginEnd="20dp"-->
-<!--            android:background="@drawable/edit_text_signup"-->
-<!--            android:drawableStart="@drawable/googleg_standard_color_18"-->
-<!--            android:drawablePadding="10dp"-->
-<!--            android:padding="8dp"-->
-<!--            android:text="Войти через Google"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textSize="18sp"-->
-<!--            android:textStyle="italic" />-->
 
         <TextView
             android:id="@+id/tvRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Нет аккаунта? Зарегистироваться"
+            android:text="@string/register_prompt"
             android:textAlignment="center"
             android:textColor="@color/bright_sky_blue"
             android:textSize="16sp" />
@@ -136,7 +116,5 @@
             android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
             android:textColor="@color/violet_blossom" />
-
-
     </LinearLayout>
 </ScrollView>

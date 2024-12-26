@@ -28,6 +28,8 @@ import com.example.trainaut01.models.News;
 import com.example.trainaut01.repository.AvatarRepository;
 import com.example.trainaut01.repository.DayPlanRepository;
 import com.example.trainaut01.repository.NewsRepository;
+import com.example.trainaut01.utils.SharedPreferencesUtils;
+import com.example.trainaut01.utils.ToastUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +51,6 @@ public class HomeFragment extends Fragment {
     private TextView tvMoreNews;
     private RecyclerView recyclerViewNews;
     private RecyclerView recyclerViewExercises;
-    private SharedPreferences sharedPref;
     private NewsAdapter adapterNews;
     private final List<String> exerciseList = new ArrayList<>();
     private static final String TAG = "HomeFragment";
@@ -138,7 +139,6 @@ public class HomeFragment extends Fragment {
         recyclerViewNews = view.findViewById(R.id.recyclerViewNews);
         recyclerViewExercises = view.findViewById(R.id.recyclerViewExercises);
 
-        sharedPref = requireContext().getSharedPreferences("child_data", Context.MODE_PRIVATE);
         recyclerViewNews.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewExercises.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -147,8 +147,8 @@ public class HomeFragment extends Fragment {
      * Загружает данные пользователя (имя) и аватар.
      */
     private void loadUserData() {
-        String fullName = sharedPref.getString("fullName", "Гость");
-        tvHello.setText(String.format("Привет, %s", fullName));
+        String fullName = SharedPreferencesUtils.getString(requireActivity(),"child_data","fullName", "Гость");
+        tvHello.setText(String.format(getString(R.string.greeting), fullName));
         loadAvatar();
     }
 
@@ -214,7 +214,7 @@ public class HomeFragment extends Fragment {
         String userId = getUserId();
         if (userId.isEmpty()) {
             Log.e(TAG, "Не удалось получить userId. Пользователь не авторизован.");
-            Toast.makeText(getContext(), "Ошибка: пользователь не авторизован.", Toast.LENGTH_SHORT).show();
+            ToastUtils.showErrorMessage(getContext(), getString(R.string.error_user_not_authenticated));
             return;
         }
 
@@ -228,7 +228,7 @@ public class HomeFragment extends Fragment {
                 } else {
                     updateExerciseList(null);
                 }
-            }, error -> Toast.makeText(getActivity(), "Не удалось загрузить упражнения", Toast.LENGTH_SHORT).show());
+            }, error -> ToastUtils.showErrorMessage(getActivity(), getString(R.string.error_loading_exercises)));
         }
     }
 
@@ -239,7 +239,7 @@ public class HomeFragment extends Fragment {
     private void updateExerciseList(List<Exercise> exercises) {
         exerciseList.clear();
         if (exercises == null || exercises.isEmpty()) {
-            exerciseList.add("На сегодня занятий нету");
+            exerciseList.add(getString(R.string.no_exercises_today));
         } else {
             for (Exercise exercise : exercises) {
                 exerciseList.add(exercise.getName());
@@ -255,7 +255,7 @@ public class HomeFragment extends Fragment {
      */
     private String getUserId() {
         return FirebaseAuth.getInstance().getCurrentUser() != null
-                ? FirebaseAuth.getInstance().getCurrentUser().getUid()
+                ? FirebaseAuth.getInstance().getUid()
                 : "";
     }
 

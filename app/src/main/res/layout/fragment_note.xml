@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Заметки о ребенке"
+            android:text="@string/note_child"
             android:textSize="18sp"
             android:textColor="@color/dark_indigo"
             android:textStyle="bold"
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Добавить"
+            android:text="@string/add"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn1_login_back" />
     </LinearLayout>

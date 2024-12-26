@@ -23,12 +23,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
                 <TextView
                     android:id="@+id/parentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Служба поддержки"
+                    android:text="@string/support_service"
                     android:textColor="@color/dark_indigo"
                     android:textSize="36sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +56,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -70,7 +68,7 @@
                             android:layout_weight="1"
                             android:drawableStart="@drawable/ic_email"
                             android:drawablePadding="10dp"
-                            android:text="Тема"
+                            android:text="@string/subject"
                             android:textColor="@color/dark_indigo"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -87,10 +85,8 @@
                         android:textColor="@color/dark_indigo"
                         android:textColorHint="@color/dark_indigo"
                         android:background="@drawable/edit_text_signup"
-                        android:hint="Напишите тему"/>
+                        android:hint="@string/subject_hint" />
                 </LinearLayout>
-
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -117,7 +113,7 @@
                             android:layout_weight="1"
                             android:drawableStart="@drawable/ic_email"
                             android:drawablePadding="10dp"
-                            android:text="Сообщение"
+                            android:text="@string/message"
                             android:textColor="@color/dark_indigo"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -136,30 +132,27 @@
                         android:layout_marginBottom="10dp"
                         android:gravity="top|start"
                         android:background="@drawable/edit_text_signup"
-                        android:hint="Напишите сообщение"/>
+                        android:hint="@string/message_hint" />
                 </LinearLayout>
-
-                </LinearLayout>
-
-
-
-                <Button
-                    android:id="@+id/btn_support"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/btn1_login_back"
-                    android:drawableStart="@drawable/bottom_btn3"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="25dp"
-                    android:text="Отправить"
-                    android:textColor="@color/white"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_support"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/btn1_login_back"
+                android:drawableStart="@drawable/bottom_btn3"
+                android:paddingStart="10dp"
+                android:paddingEnd="25dp"
+                android:text="@string/send"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

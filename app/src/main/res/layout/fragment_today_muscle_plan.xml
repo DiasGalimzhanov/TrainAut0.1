@@ -35,7 +35,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/btn_active_today_muscle_plan"
                     android:padding="10dp"
-                    android:text="Крупная моторика"
+                    android:text="@string/gross_motor"
                     android:textColor="@color/white" />
 
                 <Button
@@ -45,7 +45,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/edit_text_signup"
                     android:padding="10dp"
-                    android:text="Мелкая моторика"
+                    android:text="@string/fine_motor"
                     android:textColor="@color/indigo" />
             </LinearLayout>
 
@@ -59,7 +59,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/card_background"
                 android:elevation="4dp"
-                android:text="Название тренировок"
+                android:text="@string/training_title"
                 android:textAlignment="center"
                 android:textColor="@color/indigo"
                 android:textSize="24sp" />
@@ -98,7 +98,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/btn_active_today_muscle_plan"
-                android:text="Перейти к тренировке"
+                android:text="@string/go_to_training"
                 android:textColor="@color/white"
                 tools:layout_editor_absoluteX="7dp"
                 tools:layout_editor_absoluteY="614dp" />

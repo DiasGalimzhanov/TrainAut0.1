@@ -82,6 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
         AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(SignUpActivity.this);
 
+        Gender.initializeLocalizedNames(this);
         SpinnerUtils.setupGenderAdapter(this, _binding.spGender, Gender.getGenderValues());
 
         _countryNames = getResources().getStringArray(R.array.country_names);
@@ -269,13 +270,13 @@ public class SignUpActivity extends AppCompatActivity {
                 _binding.etBirthDate.getText().toString().trim(), _binding.etCity.getText().toString().trim(),
                 _binding.etEmailReg.getText().toString().trim(), _binding.etPassReg.getText().toString().trim()
         )) {
-            ToastUtils.showErrorMessage(this, "Заполните все поля");
+            ToastUtils.showErrorMessage(this, getString(R.string.fill_all_fields));
             return false;
         }
 
         String birthDate = _binding.etBirthDate.getText().toString().trim();
         if (!ValidationUtils.isAgeValid(birthDate, 18)) {
-            ToastUtils.showErrorMessage(this, "Вам должно быть не менее 18 лет");
+            ToastUtils.showErrorMessage(this, getString(R.string.years_18));
             return false;
         }
 
@@ -285,12 +286,12 @@ public class SignUpActivity extends AppCompatActivity {
                 getMaxPhoneLength(countryIndex),
                 getMaxPhoneLength(countryIndex)
         )) {
-            ToastUtils.showErrorMessage(this, "Номер телефона должен содержать " + getMaxPhoneLength(countryIndex) + " цифр");
+            ToastUtils.showErrorMessage(this, getString(R.string.contains_number) + getMaxPhoneLength(countryIndex) + " цифр");
             return false;
         }
 
         if (!_binding.chbUserAgreement.isChecked()) {
-            ToastUtils.showErrorMessage(this, "Примите пользовательское соглашение");
+            ToastUtils.showErrorMessage(this, getString(R.string.user_agreement_check));
             return false;
         }
 
