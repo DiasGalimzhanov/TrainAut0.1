@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,8 +74,8 @@ public class UserProfileFragment extends Fragment {
     /**
      * Создает и инициализирует макет фрагмента.
      *
-     * @param inflater объект для создания представлений
-     * @param container родительский контейнер
+     * @param inflater           объект для создания представлений
+     * @param container          родительский контейнер
      * @param savedInstanceState состояние фрагмента при его пересоздании (если есть)
      * @return корневой View фрагмента
      */
@@ -89,7 +90,7 @@ public class UserProfileFragment extends Fragment {
      * Вызывается, когда представление фрагмента полностью создано.
      * Здесь производится инициализация данных и настройка обработчиков.
      *
-     * @param view корневой вид фрагмента
+     * @param view               корневой вид фрагмента
      * @param savedInstanceState состояние фрагмента при пересоздании (если есть)
      */
     @Override
@@ -229,7 +230,10 @@ public class UserProfileFragment extends Fragment {
      * @param prefName имя файла SharedPreferences
      */
     private void clearSharedPreferences(String prefName) {
-        SharedPreferencesUtils.saveString(requireActivity(), prefName, "", "");
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
     /**
@@ -263,8 +267,8 @@ public class UserProfileFragment extends Fragment {
      * Проверяет введенный пароль, и если он корректен, выполняет запрошенное действие.
      *
      * @param password введенный пароль
-     * @param action действие для выполнения после проверки пароля
-     * @param dialog диалоговое окно ввода пароля
+     * @param action   действие для выполнения после проверки пароля
+     * @param dialog   диалоговое окно ввода пароля
      */
     private void verifyPassword(String password, PasswordAction action, AlertDialog dialog) {
         String email = FirebaseAuth.getInstance().getCurrentUser() != null

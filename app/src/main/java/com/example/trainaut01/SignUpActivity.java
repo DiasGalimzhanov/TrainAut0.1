@@ -14,7 +14,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.trainaut01.adapter.CountryAdapter;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.databinding.ActivitySignupBinding;
@@ -79,6 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
      * Инициализирует компоненты интерфейса и подключает зависимости через Dagger.
      */
     private void init() {
+        if (_binding == null) return;
         AppComponent _appComponent = DaggerAppComponent.create();
         _appComponent.inject(SignUpActivity.this);
 
@@ -98,20 +102,23 @@ public class SignUpActivity extends AppCompatActivity {
      * - Выбор даты рождения.
      * - Проверка совпадения паролей.
      * - Обработка нажатия на кнопку "Далее".
+     * - Добавляет обработчик клика для ссылки на пользовательское соглашение.
      */
     private void setupUI() {
+        if (_binding == null) return;
         _binding.tvLogin.setOnClickListener(view -> navigateToLogin());
         PhoneNumberFormatter.setupPhoneNumberFormatting(_binding.etPhoneNumber, getCurrentCountryCode());
         _binding.etBirthDate.setOnClickListener(v -> DateUtils.showDatePickerDialog(this, _binding.etBirthDate));
         setupPasswordValidation();
-
         setupContinueButton();
+        setupUserAgreementLink();
     }
 
     /**
      * Настраивает проверку совпадения паролей при их вводе.
      */
     private void setupPasswordValidation() {
+        if (_binding == null) return;
         _binding.etPassReg.addTextChangedListener(ValidationUtils.createPasswordTextWatcher(
                 _binding.etPassReg, _binding.etPasConfirm, _binding.tvPasswordMatch
         ));
@@ -122,6 +129,8 @@ public class SignUpActivity extends AppCompatActivity {
      * Выполняется проверка формы и переход к следующему этапу регистрации.
      */
     private void setupContinueButton() {
+        if (_binding == null) return;
+
         _binding.btnContinue.setOnClickListener(view -> {
             if (!validateForm()) return;
 
@@ -131,22 +140,30 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     /**
+     * Настраивает ссылку на пользовательское соглашение.
+     */
+    private void setupUserAgreementLink() {
+        if (_binding == null) return;
+
+        _binding.tvUserAgreementLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SignUpActivity.this, AgreementActivity.class);
+                intent.putExtra(AgreementActivity.EXTRA_TITLE, getString(R.string.user_agreement_title));
+                intent.putExtra(AgreementActivity.EXTRA_CONTENT_FILE, R.raw.user_agreement_russian);
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    /**
      * Показывает диалоговое окно для выбора кода страны.
      */
     private void showCountryCodeDialog() {
         AlertDialog dialog = createCountryPickerDialog();
         dialog.show();
-
-        ListView lvCountryList = dialog.findViewById(R.id.lvCountryList);
-        if (lvCountryList != null) {
-            lvCountryList.setOnItemClickListener((parent, view, position, id) -> {
-                onCountrySelected(position);
-
-                dialog.dismiss();
-            });
-        }
     }
-
 
     /**
      * Создает и настраивает диалог выбора кода страны.
@@ -159,46 +176,17 @@ public class SignUpActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_country_picker, null);
         builder.setView(dialogView);
 
-        ListView lvCountryList = dialogView.findViewById(R.id.lvCountryList);
+        AlertDialog dialog = builder.create();
 
-        setupCountryListView(lvCountryList);
+        RecyclerView rvCountryList = dialogView.findViewById(R.id.rvCountryList);
+        rvCountryList.setLayoutManager(new LinearLayoutManager(this));
 
-        return builder.create();
+        CountryAdapter adapter = new CountryAdapter(_countryNames, _countryCodes, dialog, this::onCountrySelected);
+        rvCountryList.setAdapter(adapter);
+
+        return dialog;
     }
 
-    /**
-     * Настраивает список стран в диалоге.
-     *
-     * @param lvCountryList ListView для отображения списка стран.
-     */
-    private void setupCountryListView(ListView lvCountryList) {
-        ArrayAdapter<String> adapter = createCountryListAdapter();
-        lvCountryList.setAdapter(adapter);
-
-    }
-
-    /**
-     * Создает адаптер для списка стран.
-     *
-     * @return Настроенный ArrayAdapter.
-     */
-    private ArrayAdapter<String> createCountryListAdapter() {
-        return new ArrayAdapter<String>(
-                this,
-                R.layout.item_country,
-                R.id.tvCountryName,
-                _countryNames
-        ) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView tvCountryCode = view.findViewById(R.id.tvCountryCode);
-                tvCountryCode.setText(_countryCodes[position]);
-                return view;
-            }
-        };
-    }
 
     /**
      * Выполняет действия при выборе страны.
@@ -206,6 +194,7 @@ public class SignUpActivity extends AppCompatActivity {
      * @param position Позиция выбранной страны в списке.
      */
     private void onCountrySelected(int position) {
+        if (_binding == null) return;
         _binding.tvCountryCode.setText(_countryCodes[position]);
         int maxNumberLength = getMaxPhoneLength(position);
         setPhoneNumberInputFilter(maxNumberLength);
@@ -217,6 +206,7 @@ public class SignUpActivity extends AppCompatActivity {
      * @param maxNumberLength максимальная длина номера телефона.
      */
     private void setPhoneNumberInputFilter(int maxNumberLength) {
+        if (_binding == null) return;
         _binding.etPhoneNumber.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(maxNumberLength)
         });
@@ -264,6 +254,7 @@ public class SignUpActivity extends AppCompatActivity {
      * @return true, если все поля заполнены и соглашение принято, иначе false.
      */
     private boolean validateForm() {
+        if (_binding == null) return false;
         if (ValidationUtils.areFieldsFilled(
                 _binding.etFullName.getText().toString().trim(), _binding.etPhoneNumber.getText().toString().trim(),
                 _binding.etBirthDate.getText().toString().trim(), _binding.etCity.getText().toString().trim(),

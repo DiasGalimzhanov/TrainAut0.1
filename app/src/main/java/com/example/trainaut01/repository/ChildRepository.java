@@ -113,7 +113,6 @@ public class ChildRepository{
                     }
 
                     editor.apply();
-                    Toast.makeText(context, "Поле успешно обновлено", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(context, "Ошибка при обновлении поля: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -126,13 +125,17 @@ public class ChildRepository{
      * @param userId  Идентификатор пользователя.
      * @param context Контекст для доступа к SharedPreferences.
      */
-    public void saveChildData(String userId, Context context) {
+    public void saveChildData(String userId, Context context, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         getFirstChild(userId, childData -> {
             if (childData != null) {
                 saveChildToPreferences(childData, context);
+                onSuccess.onSuccess(null);
+            } else {
+                onFailure.onFailure(new Exception("No child document found for userId: " + userId));
             }
         }, error -> {
             Toast.makeText(context, "Ошибка загрузки данных ребенка: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            onFailure.onFailure(error);
         });
     }
 

@@ -5,5 +5,5 @@ package com.example.trainaut01.enums;
  * в течение которых может быть запланирована тренировка.
  */
 public enum WeekDay {
-    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY
+    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
 }

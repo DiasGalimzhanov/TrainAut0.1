@@ -9,6 +9,8 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.trainaut01.utils.SharedPreferencesUtils;
+
 /**
  * Активность приветствия, отображаемая при запуске приложения.
  * Позволяет пользователю выбрать между авторизацией или регистрацией.
@@ -45,8 +47,7 @@ public class IntroActivity extends AppCompatActivity {
      * @return true, если пользователь авторизован, иначе false.
      */
     private boolean isUserLoggedIn() {
-        SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
-        return sharedPreferences.getString("userId", null) != null;
+        return SharedPreferencesUtils.getString(this, "user_data", "userId", null) != null;
     }
 
     /**

@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -196,10 +197,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (firebaseUser != null) {
                     String userId = firebaseUser.getUid();
                     ChildRepository childRepositoryLocal = new ChildRepository();
-                    childRepositoryLocal.saveChildData(userId, this);
-                }
+                    childRepositoryLocal.saveChildData( userId, this,
+                            unused -> navigateToBaseActivity(),
+                            e -> ToastUtils.showErrorMessage(LoginActivity.this, "Не удалось сохранить данные ребёнка: " + e.getMessage())
+                    );
 
-                navigateToBaseActivity();
+                }
             } else {
                 Toast.makeText(this,
                         "Ошибка входа: " + (task.getException() != null ? task.getException().getMessage() : "Неизвестная ошибка"),

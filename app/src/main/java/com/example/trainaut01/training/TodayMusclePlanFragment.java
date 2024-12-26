@@ -274,11 +274,11 @@ public class TodayMusclePlanFragment extends Fragment implements ProgressResetLi
         return _isGrossMotorSelected
                 ? TrainingUtils.getMuscleGroupSubtitle(_currentDayPlan.getExercisesGrossMotor(),
                 "Сегодня нет тренировки на крупную моторику",
-                "Сегодня тренировка на ",
+                "Сегодня тренировка на: ",
                 GrossMotorMuscleGroup::fromString)
                 : TrainingUtils.getMuscleGroupSubtitle(_currentDayPlan.getExercisesFineMotor(),
                 "Сегодня нет тренировки на мелкую моторику",
-                "Сегодня тренировка на ",
+                "Сегодня тренировка на: ",
                 FineMotorMuscleGroup::fromString);
     }
 

@@ -58,7 +58,6 @@ public class UserRepository {
      */
     public void addUser(User user,  Context context, OnCompleteListener<AuthResult> onCompleteListener) {
         String rawPassword = user.getPass();
-//        user.setPass(rawPassword);
 
         mAuth.createUserWithEmailAndPassword(user.getEmail(), rawPassword)
                 .addOnCompleteListener(task -> {
