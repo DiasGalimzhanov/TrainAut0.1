@@ -90,7 +90,7 @@ public class AgreementActivity extends AppCompatActivity {
      * @return SpannableString с кликабельными ссылками.
      */
     private SpannableString createSpannableContent(String content) {
-        String clickableText = getString(R.string.privacy_policy);
+        String clickableText = getString(R.string.privacy_policy_title);
         SpannableString spannableString = new SpannableString(content);
 
         int startIndex = content.indexOf(clickableText);

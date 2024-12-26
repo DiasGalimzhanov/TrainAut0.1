@@ -255,6 +255,12 @@ public class UserProfileFragment extends Fragment {
 
         btnSubmit.setOnClickListener(v -> {
             String password = input.getText().toString().trim();
+
+            if (password.isEmpty()) {
+                Toast.makeText(requireContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             verifyPassword(password, action, dialog);
         });
 

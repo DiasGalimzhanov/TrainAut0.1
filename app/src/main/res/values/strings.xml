@@ -31,7 +31,7 @@
     <string name="child_data_updated">Данные ребенка обновлены</string>
     <string name="reauthentication_error">Ошибка реаутентификации: %s</string>
     <string name="password_update_error">Не удалось обновить пароль: %s</string>
-    <string name="privacy_policy_title">Политика конфиденциальности</string>
+    <string name="privacy_policy_title">Политикой конфиденциальности</string>
     <string name="user_agreement_title">Пользовательское соглашение</string>
 
 
