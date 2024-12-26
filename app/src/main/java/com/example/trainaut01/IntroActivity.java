@@ -1,5 +1,6 @@
 package com.example.trainaut01;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +9,9 @@ import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.trainaut01.helper.LocaleHelper;
+import com.example.trainaut01.utils.SharedPreferencesUtils;
 
 /**
  * Активность приветствия, отображаемая при запуске приложения.
@@ -29,6 +33,8 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
+        LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
+
         if (isUserLoggedIn()) {
             navigateToMainActivity();
             return;
@@ -39,14 +45,18 @@ public class IntroActivity extends AppCompatActivity {
         setupListeners();
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.setLocale(base, LocaleHelper.getLanguage(base)));
+    }
+
     /**
      * Проверяет, авторизован ли пользователь.
      *
      * @return true, если пользователь авторизован, иначе false.
      */
     private boolean isUserLoggedIn() {
-        SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
-        return sharedPreferences.getString("userId", null) != null;
+        return SharedPreferencesUtils.getString(this, "user_data", "userId", null) != null;
     }
 
     /**

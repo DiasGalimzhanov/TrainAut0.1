@@ -168,7 +168,8 @@
     <string name="example_password_hint">Example1256</string>
     <string name="confirm_password">Repeat password</string>
     <string name="repeat_password_hint">Repeat password</string>
-    <string name="user_agreement">I accept the terms of the user agreement</string>
+    <string name="user_agreement">I accept the terms of </string>
+    <string name="user_agreement_link">User Agreement</string>
     <string name="step">Step 1</string>
     <string name="already_have_account">Already have an account? Log in</string>
     <string name="back">Back</string>
@@ -294,4 +295,8 @@
     <string name="error_register_user">User registration error: </string>
     <string name="error_add_child">Error adding child: </string>
     <string name="error_add_dayplans">Error adding DayPlans: </string>
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="user_agreement_title">User Agreement</string>
+    <string name="failed_to_save_child_data">Failed to save child data: </string>
+
 </resources>

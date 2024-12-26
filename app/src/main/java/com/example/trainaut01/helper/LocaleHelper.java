@@ -41,7 +41,7 @@ public class LocaleHelper {
      * @return Код текущего языка в формате ISO 639-1.
      */
     public static String getLanguage(Context context) {
-        return getPersistedData(context, Locale.getDefault().getLanguage());
+        return getPersistedData(context, "ru");
     }
 
     /**

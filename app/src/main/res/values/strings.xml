@@ -169,7 +169,8 @@
     <string name="example_password_hint">Example1256</string>
     <string name="confirm_password">Повторите пароль</string>
     <string name="repeat_password_hint">Повторите пароль</string>
-    <string name="user_agreement">Я принимаю условия пользовательского соглашения</string>
+    <string name="user_agreement">Я принимаю условия </string>
+    <string name="user_agreement_link">пользовательского соглашения</string>
     <string name="step">Шаг 1</string>
     <string name="already_have_account">Уже есть аккаунт? Войти</string>
     <string name="back">Назад</string>
@@ -295,5 +296,8 @@
     <string name="error_register_user">"Ошибка регистрации пользователя: "</string>
     <string name="error_add_child">"Ошибка добавления ребенка: "</string>
     <string name="error_add_dayplans">"Ошибка добавления DayPlans: "</string>
+    <string name="privacy_policy_title">Политикой конфиденциальности</string>
+    <string name="user_agreement_title">Пользовательское соглашение</string>
+    <string name="failed_to_save_child_data">"Не удалось сохранить данные ребёнка: "</string>
 
 </resources>

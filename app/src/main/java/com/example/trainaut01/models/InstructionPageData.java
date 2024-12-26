@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class InstructionPageData {
-    private final int iconResId;
+    private final String resourcePath;
     private final String text;
-
+    private final boolean isLottie;
 }

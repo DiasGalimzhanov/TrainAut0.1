@@ -52,6 +52,7 @@ import javax.inject.Inject;
  * удалять аккаунт, а также выходить из системы.
  */
 public class UserProfileFragment extends Fragment {
+
     @Inject
     AvatarRepository avatarRepository;
 
@@ -65,12 +66,6 @@ public class UserProfileFragment extends Fragment {
     private ImageView profileImage, btnExit;
     private Button editProfileButton, deleteButton, supportButton, watchButton, notesButton;
     private Spinner spinnerLanguages;
-
-//
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(LocaleHelper.setLocale(context, LocaleHelper.getLanguage(context)));
-//    }
 
     /**
      * Инициализирует зависимости с помощью Dagger.
@@ -87,8 +82,8 @@ public class UserProfileFragment extends Fragment {
     /**
      * Создает и инициализирует макет фрагмента.
      *
-     * @param inflater объект для создания представлений
-     * @param container родительский контейнер
+     * @param inflater           объект для создания представлений
+     * @param container          родительский контейнер
      * @param savedInstanceState состояние фрагмента при его пересоздании (если есть)
      * @return корневой View фрагмента
      */
@@ -103,8 +98,8 @@ public class UserProfileFragment extends Fragment {
      * Вызывается, когда представление фрагмента полностью создано.
      * Здесь производится инициализация данных и настройка обработчиков.
      *
-     * @param view корневой вид фрагмента
-     * @param savedInstanceState состояние фрагмента при его пересоздании (если есть)
+     * @param view               корневой вид фрагмента
+     * @param savedInstanceState состояние фрагмента при пересоздании (если есть)
      */
     @Override
     public void onViewCreated(@NonNull View view,
@@ -272,6 +267,12 @@ public class UserProfileFragment extends Fragment {
 
         btnSubmit.setOnClickListener(v -> {
             String password = input.getText().toString().trim();
+
+            if (password.isEmpty()) {
+                ToastUtils.showShortMessage(requireContext(),"Введите пароль");
+                return;
+            }
+
             verifyPassword(password, action, dialog);
         });
 
@@ -284,8 +285,8 @@ public class UserProfileFragment extends Fragment {
      * Проверяет введенный пароль, и если он корректен, выполняет запрошенное действие.
      *
      * @param password введенный пароль
-     * @param action действие для выполнения после проверки пароля
-     * @param dialog диалоговое окно ввода пароля
+     * @param action   действие для выполнения после проверки пароля
+     * @param dialog   диалоговое окно ввода пароля
      */
     private void verifyPassword(String password, PasswordAction action, AlertDialog dialog) {
         String email = FirebaseAuth.getInstance().getCurrentUser() != null

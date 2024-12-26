@@ -530,7 +530,6 @@ public class TrainingDashboardFragment extends Fragment implements ProgressReset
     private void saveProgressDataToStorage(String userId, JSONObject progressData) {
         _childProgressRepository.saveToStorage(userId, progressData,
                 unused -> {
-                    Log.d("saveCompletedExercises", "Данные успешно сохранены в Firestore Storage.");
                     SharedPreferencesUtils.saveBoolean(requireContext(), "child_progress", "isProgressSavedToday", true);
                 },
                 e -> Log.e("saveCompletedExercises", "Ошибка при сохранении данных: " + e.getMessage(), e));

@@ -1,5 +1,6 @@
 package com.example.trainaut01;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trainaut01.component.AppComponent;
 import com.example.trainaut01.component.DaggerAppComponent;
 import com.example.trainaut01.databinding.ActivityLoginBinding;
+import com.example.trainaut01.helper.LocaleHelper;
 import com.example.trainaut01.repository.ChildRepository;
 import com.example.trainaut01.repository.UserRepository;
 import com.example.trainaut01.utils.ToastUtils;
@@ -20,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -55,6 +58,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -64,6 +69,11 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         setupGoogleSignInOptions();
         setupClickListeners();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.setLocale(base, LocaleHelper.getLanguage(base)));
     }
 
     /**
@@ -195,10 +205,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (firebaseUser != null) {
                     String userId = firebaseUser.getUid();
                     ChildRepository childRepositoryLocal = new ChildRepository();
-                    childRepositoryLocal.saveChildData(userId, this);
-                }
+                    childRepositoryLocal.saveChildData( userId, this,
+                            unused -> navigateToBaseActivity(),
+                            e -> ToastUtils.showErrorMessage(LoginActivity.this, getString(R.string.failed_to_save_child_data) + e.getMessage())
+                    );
 
-                navigateToBaseActivity();
+                }
             } else {
                 ToastUtils.showShortMessage(this,
                         String.format(getString(R.string.login_failed),

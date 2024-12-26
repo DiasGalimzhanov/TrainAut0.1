@@ -168,7 +168,8 @@
     <string name="example_password_hint">Example1256</string>
     <string name="confirm_password">重复密码</string>
     <string name="repeat_password_hint">请再次输入密码</string>
-    <string name="user_agreement">我接受用户协议的条款</string>
+    <string name="user_agreement">我接受 </string>
+    <string name="user_agreement_link">用户协议的条款</string>
     <string name="step">步骤 1</string>
     <string name="already_have_account">已有账号？去登录</string>
     <string name="back">返回</string>
@@ -294,4 +295,8 @@
     <string name="error_register_user">用户注册错误： </string>
     <string name="error_add_child">添加孩子错误： </string>
     <string name="error_add_dayplans">添加DayPlans错误： </string>
+    <string name="privacy_policy_title">隐私政策</string>
+    <string name="user_agreement_title">用户协议</string>
+    <string name="failed_to_save_child_data">无法保存儿童数据: </string>
+
 </resources>

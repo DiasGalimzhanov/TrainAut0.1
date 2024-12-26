@@ -168,7 +168,8 @@
     <string name="example_password_hint">Example1256</string>
     <string name="confirm_password">Құпия сөзді қайталау</string>
     <string name="repeat_password_hint">Құпия сөзді қайта енгізіңіз</string>
-    <string name="user_agreement">Мен пайдаланушы келісімінің шарттарын қабылдаймын</string>
+    <string name="user_agreement">Мен келесі шарттарды қабылдаймын: </string>
+    <string name="user_agreement_link">Пайдаланушы келісімі</string>
     <string name="step">1-қадам</string>
     <string name="already_have_account">Аккаунтыңыз бар ма? Кіру</string>
     <string name="back">Артқа</string>
@@ -294,4 +295,8 @@
     <string name="error_register_user">Пайдаланушыны тіркеу қатесі: </string>
     <string name="error_add_child">Бала қосу қатесі: </string>
     <string name="error_add_dayplans">DayPlans қосу қатесі: </string>
+    <string name="privacy_policy_title">Құпиялылық саясаты</string>
+    <string name="user_agreement_title">Пайдаланушы келісімі</string>
+    <string name="failed_to_save_child_data">Баланың мәліметтерін сақтауға қол жеткізбеді: </string>
+
 </resources>

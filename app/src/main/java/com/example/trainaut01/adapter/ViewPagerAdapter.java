@@ -39,7 +39,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         InstructionPageData data = _pageDataList.get(position);
-        return PageFragment.newInstance(data.getIconResId(), data.getText());
+        return PageFragment.newInstance(data.getResourcePath(), data.getText());
     }
 
     /**

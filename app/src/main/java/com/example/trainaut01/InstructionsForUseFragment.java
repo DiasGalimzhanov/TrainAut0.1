@@ -105,11 +105,16 @@ public class InstructionsForUseFragment extends Fragment {
      */
     private List<InstructionPageData> getInstructionPages() {
         List<InstructionPageData> pages = new ArrayList<>();
-        pages.add(new InstructionPageData(R.drawable.ic_home, getString(R.string.instruction_home_page)));
-        pages.add(new InstructionPageData(R.drawable.ic_training, getString(R.string.instruction_training)));
-        pages.add(new InstructionPageData(R.drawable.img_dum, getString(R.string.instruction_motor_training)));
-        pages.add(new InstructionPageData(R.drawable.img_idea, getString(R.string.instruction_cognitive_training)));
-        pages.add(new InstructionPageData(R.drawable.ic_profile, getString(R.string.instruction_profile_page)));
+//        pages.add(new InstructionPageData(R.drawable.ic_home, getString(R.string.instruction_home_page)));
+//        pages.add(new InstructionPageData(R.drawable.ic_training, getString(R.string.instruction_training)));
+//        pages.add(new InstructionPageData(R.drawable.img_dum, getString(R.string.instruction_motor_training)));
+//        pages.add(new InstructionPageData(R.drawable.img_idea, getString(R.string.instruction_cognitive_training)));
+//        pages.add(new InstructionPageData(R.drawable.ic_profile, getString(R.string.instruction_profile_page)));
+        pages.add(new InstructionPageData("ic_home", getString(R.string.instruction_home_page), false));
+        pages.add(new InstructionPageData("ic_training", getString(R.string.instruction_training), false));
+        pages.add(new InstructionPageData("dumbbells.json", getString(R.string.instruction_motor_training), true));
+        pages.add(new InstructionPageData("mind.json", getString(R.string.instruction_cognitive_training), true));
+        pages.add(new InstructionPageData("ic_profile", getString(R.string.instruction_profile_page), false));
         return pages;
     }
 

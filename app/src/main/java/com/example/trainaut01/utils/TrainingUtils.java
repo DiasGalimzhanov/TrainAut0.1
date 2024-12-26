@@ -95,9 +95,9 @@ public class TrainingUtils {
      */
     private static <T extends Enum<T>> String getDisplayName(T group) {
         if (group instanceof GrossMotorMuscleGroup) {
-            return ((GrossMotorMuscleGroup) group).getDisplayName();
+            return ((GrossMotorMuscleGroup) group).getDisplayName().toLowerCase();
         } else if (group instanceof FineMotorMuscleGroup) {
-            return ((FineMotorMuscleGroup) group).getDisplayName();
+            return ((FineMotorMuscleGroup) group).getDisplayName().toLowerCase();
         }
         return group.name();
     }
